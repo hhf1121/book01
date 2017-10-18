@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.borrowMapper">
+
+	<insert id="AddBorrow" parameterType="borrow">
+	insert into borrow(userName,bookName,userId,bookId) values(#{userName},#{bookName},#{userId},#{bookId})
+	</insert>
+	
+	<select id="QueryBorrowBy2id" parameterType="borrow" resultType="borrow">
+	select * from borrow where userId=#{userId} and bookId=#{bookId}
+	</select>
+	
+	<select id="QueryBorrowCount" parameterType="borrow" resultType="Integer">
+	select count(1) from borrow where userId=#{userId}
+	</select>
+	
+	<select id="QueryBorrow" parameterType="borrow" resultType="borrow">
+	select * from borrow where userId=#{id} limit #{currentPage},#{pageSize}
+	</select>
+	
+	<delete id="deleteBorrow">
+	delete from borrow where userId=#{userId} and bookId=#{bookId}
+	</delete>
+	
+
+</mapper>

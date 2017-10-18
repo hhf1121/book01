@@ -1,0 +1,10 @@
+/controller/
+/dao/
+/database.properties
+/log4j.properties
+/mvc.xml
+/mybatis.xml
+/pojo/
+/service/
+/spring.xml
+/tools/

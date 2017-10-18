@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.upLoadfileMapper">
+	<insert id="AddFile" parameterType="upLoadfile">
+	insert into upLoadfile(userid,upName,path) values(#{userid},#{upName},#{path})
+	</insert>
+	
+	<delete id="DeleteFile" parameterType="upLoadfile">
+	delete from upLoadfile where id=#{id}
+	</delete>
+	
+	<select id="getList" parameterType="upLoadfile" resultMap="UP">
+	select f.*,u.name from upLoadfile f,user u where f.userid=u.id
+	
+	<if test="userid!=null and userid!=''">and userid=#{userid}</if>
+	
+	</select>
+	<resultMap type="upLoadfile" id="UP">
+		<result property="userName" column="name"/>
+	</resultMap>
+
+	<select id="upLoadfileById" parameterType="Integer" resultType="upLoadfile">
+	select * from upLoadfile where id=#{id}
+	</select>
+
+
+</mapper>

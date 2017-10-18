@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BookMapper">
+
+	<select id="CountBooks" resultType="int">
+		select count(1) from book
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="name!=null and name!=''">and name like concat('%',#{name},'%')</if>
+			<if test="author!=null and author!=''">and author like concat('%',#{author},'%')</if>
+		</trim>
+	</select>
+
+
+	<select id="getList" resultType="book">
+		select * from book
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="name!=null and name!=''">and name like concat('%',#{name},'%')</if>
+			<if test="author!=null and author!=''">and author like concat('%',#{author},'%')</if>
+		</trim>
+		limit #{indexPage},#{PageSize}
+	</select>
+
+	<update id="upDateCountById" parameterType="Integer">
+		update book set count=count-1 where id=#{id}
+	</update>
+	
+	<update id="downDateCountById" parameterType="Integer">
+		update book set count=count+1 where id=#{id}
+	</update>
+	
+	<select id="QueryUserById" parameterType="book" resultType="book">
+		select * from book where id=#{id}
+	</select>
+	
+	<select id="QueryCountById" resultType="book">
+	select count from book where id=#{id}
+	</select>
+	
+	<insert id="addBook" parameterType="book">
+	insert into book(name,author,count,countSize)
+	values(#{name},#{author},#{count},#{count})
+	</insert>
+
+	<select id="QueryCC" parameterType="book" resultType="book">
+	select count,countSize from book where id=#{id}
+	</select>
+
+	<delete id="deleteBook" parameterType="book">
+	delete from book where id=#{id}
+	</delete>
+</mapper>
