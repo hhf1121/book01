@@ -2,7 +2,6 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -40,11 +39,11 @@ public class UserController {
 	@Resource
 	private RoleService roleService;
 	
-	// ÑéÖ¤ÕËºÅÊÇ·ñ´æÔÚ
+	// éªŒè¯è´¦å·æ˜¯å¦å­˜åœ¨
 	@RequestMapping(value = "/ifExist")
 	@ResponseBody
 	public String ifExist(@RequestParam("userName") String userName) {
-		System.err.println("..................ajaxÑéÖ¤.....");
+		System.err.println("..................ajaxéªŒè¯.....");
 		if (userService.ifExist(userName) > 0) {
 			return "false";
 		}
@@ -56,10 +55,10 @@ public class UserController {
 			@RequestParam(value="pic",required=false) MultipartFile file) {
 		String picPath="";
 		if(!file.isEmpty()){
-			System.err.println("------------------------Í·ÏñÎÄ¼şÉÏ´«");
-			String Name=file.getOriginalFilename();//ÎÄ¼şÃû
-			String fileEndName=FilenameUtils.getExtension(Name);//ºó×º
-			String path=request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadPath");//´æ´¢Â·¾¶
+			System.err.println("------------------------å¤´åƒæ–‡ä»¶ä¸Šä¼ ");
+			String Name=file.getOriginalFilename();//æ–‡ä»¶å
+			String fileEndName=FilenameUtils.getExtension(Name);//åç¼€
+			String path=request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadPath");//å­˜å‚¨è·¯å¾„
 			if(fileEndName.equalsIgnoreCase("jpg")||fileEndName.equalsIgnoreCase("png")
 					||fileEndName.equalsIgnoreCase("jpeg")||fileEndName.equalsIgnoreCase("pneg")){
 				String fileName=System.currentTimeMillis()+RandomUtils.nextInt(10000000)+"_pic.jpg";
@@ -69,29 +68,29 @@ public class UserController {
 				}
 				try {
 					file.transferTo(f);
-					picPath=path+File.separator+fileName;//ÍêÕûÂ·¾¶Ãû×Ö¡£
+					picPath=path+File.separator+fileName;//å®Œæ•´è·¯å¾„åå­—ã€‚
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
-					model.addAttribute("error", "ÉÏ´«Ê§°Ü£¡£¡");
+					model.addAttribute("error", "ä¸Šä¼ å¤±è´¥ï¼ï¼");
 				}
 			}else{
-				model.addAttribute("error", "Í¼Æ¬¸ñÊ½²»¶Ô£¡");
+				model.addAttribute("error", "å›¾ç‰‡æ ¼å¼ä¸å¯¹ï¼");
 				return "index";
 			}
 		}
 		int x = 0;
 		try {
-			picPath=picPath.equals("")? "": picPath.substring(picPath.indexOf("statics"));//½ØÈ¡Â·¾¶¡¢±£´æ¡£
+			picPath=picPath.equals("")? "": picPath.substring(picPath.indexOf("statics"));//æˆªå–è·¯å¾„ã€ä¿å­˜ã€‚
 			user.setPicPath(picPath);
 			x = userService.addUser(user);
 		} catch (Exception e) {
-			System.err.println("ÓÃ»§×¢²áÊ§°Ü£¡");
+			System.err.println("ç”¨æˆ·æ³¨å†Œå¤±è´¥ï¼");
 		}
 		if (x > 0) {
-			model.addAttribute("info", "×¢²á³É¹¦£¡");
+			model.addAttribute("info", "æ³¨å†ŒæˆåŠŸï¼");
 			return "login";
 		} else {
-			model.addAttribute("error", "×¢²áÊ§°Ü£¡");
+			model.addAttribute("error", "æ³¨å†Œå¤±è´¥ï¼");
 			return "index";
 		}
 	}
@@ -105,7 +104,7 @@ public class UserController {
 		user.setPassWord(passWord);
 		user.setUserName(userName);
 		/*if(br.hasErrors()){
-			System.err.println("jsr303ÑéÖ¤Ê§°Ü");
+			System.err.println("jsr303éªŒè¯å¤±è´¥");
 			System.err.println(user.getPassWord());
 			System.err.println(user.getUserName());
 			System.err.println(br.toString());
@@ -114,22 +113,22 @@ public class UserController {
 		System.err.println(user);
 		User u = userService.QueryUser(user);
 		if (u != null || (u = (User) session.getAttribute("currentUser")) != null) {
-			session.setAttribute("currentUser", u);// ·Å½øsessionÖĞ
+			session.setAttribute("currentUser", u);// æ”¾è¿›sessionä¸­
 			List<listNo> list = listNoService.QueryListByYseNo(u.getYes());
-			String role = u.getYes() == 1 ? "ÆÕÍ¨»áÔ±" : "vip»áÔ±";
+			String role = u.getYes() == 1 ? "æ™®é€šä¼šå‘˜" : "vipä¼šå‘˜";
 			if (u.getYes() == 3) {
-				role = "¹ÜÀíÔ±";
+				role = "ç®¡ç†å‘˜";
 			}
 			session.setAttribute("list", list);
 			session.setAttribute("role", role);
 			return "main";
 		} else {
-			model.addAttribute("info", "ÕËºÅ»òÃÜÂë´íÎó");
+			model.addAttribute("info", "è´¦å·æˆ–å¯†ç é”™è¯¯");
 			return "login";
 		}
 	}
 
-	// ÍË³ö
+	// é€€å‡º
 	@RequestMapping(value = "/out.html")
 	public String out(HttpSession session) {
 		session.removeAttribute("currentUser");
@@ -145,21 +144,21 @@ public class UserController {
 		return "userlist";
 	}
 
-	// ¸üĞÂÓÃ»§ĞÅÏ¢
+	// æ›´æ–°ç”¨æˆ·ä¿¡æ¯
 	@RequestMapping(value = "/upateUser.html")
 	public String modifyUser(User user, Model model) {
 		System.err.println(user);
 		int x = userService.ModifyUser(user);
 		if (x > 0) {
-			model.addAttribute("info", "ĞÅÏ¢¸üĞÂ³É¹¦£¡");
+			model.addAttribute("info", "ä¿¡æ¯æ›´æ–°æˆåŠŸï¼");
 			return "userlist";
 		} else {
-			model.addAttribute("info", "ĞÅÏ¢¸üĞÂÊ§°Ü£¡");
+			model.addAttribute("info", "ä¿¡æ¯æ›´æ–°å¤±è´¥ï¼");
 			return "userlist";
 		}
 	}
 
-	// ÕÒ»ØÃÜÂë
+	// æ‰¾å›å¯†ç 
 	@RequestMapping(value = "/backPass.html")
 	public String backPass(Model model, @RequestParam("name") String name, @RequestParam("userName") String userName) {
 		User user = new User();
@@ -174,22 +173,22 @@ public class UserController {
 			model.addAttribute("password1", password);
 			return "login";
 		} catch (Exception e) {
-			model.addAttribute("info1", "ÄúÊäÈëµÄĞÅÏ¢²»Æ¥Åä,ÕÒ»ØÃÜÂëÊ§°Ü");
+			model.addAttribute("info1", "æ‚¨è¾“å…¥çš„ä¿¡æ¯ä¸åŒ¹é…,æ‰¾å›å¯†ç å¤±è´¥");
 			return "login";
 		}
 	}
 
-	//È«²¿ÓÃ»§ĞÅÏ¢
+	//å…¨éƒ¨ç”¨æˆ·ä¿¡æ¯
 	@RequestMapping(value = "/alluserlist.html")
 	public String allList(Model model, @RequestParam(value="name",required=false) String name, 
 			@RequestParam(value="yes",required=false) Integer yes,
 			@RequestParam(value="pageIndex",required=false) String indexPage) {
-		int countsize=userService.getUserCount(name, yes);//×ÜÊı
+		int countsize=userService.getUserCount(name, yes);//æ€»æ•°
 		Page page=new Page();
 		page.setCountSize(countsize);
-		int countPage=page.getPageCount();//×ÜÒ³Êı¡£
-		int currentPage=page.getCurrentPage();//µ±Ç°Ò³¡£
-		int pageSize=page.getPageSize();//Ò³ÃæÈİÁ¿¡£
+		int countPage=page.getPageCount();//æ€»é¡µæ•°ã€‚
+		int currentPage=page.getCurrentPage();//å½“å‰é¡µã€‚
+		int pageSize=page.getPageSize();//é¡µé¢å®¹é‡ã€‚
 		if(indexPage!=null){
 			currentPage=Integer.parseInt(indexPage);
 		}
@@ -207,7 +206,7 @@ public class UserController {
 	}
 
 	
-	//¹ÜÀíÔ±²é¿´ÓÃ»§ĞÅÏ¢¡£Rest·ç¸ñ¡£
+	//ç®¡ç†å‘˜æŸ¥çœ‹ç”¨æˆ·ä¿¡æ¯ã€‚Resté£æ ¼ã€‚
 	@RequestMapping(value = "/usershow/{id}", method = RequestMethod.GET)
 	public String showUser(Model model, @PathVariable("id") Integer id) {
 		User u = new User();
@@ -220,7 +219,7 @@ public class UserController {
 			model.addAttribute("user", User);
 			return "userlistbyadmin";
 		} else {
-			model.addAttribute("userInfo", "»ñÈ¡ĞÅÏ¢Ê§°Ü");
+			model.addAttribute("userInfo", "è·å–ä¿¡æ¯å¤±è´¥");
 			return "userlistbyadmin";
 		}
 	}
@@ -228,7 +227,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/usershowAjax.html", method = RequestMethod.GET,produces={"text/html;charset=UTF-8"})
 	@ResponseBody
-	//produces={"text/html;charset=UTF-8"}ÉèÖÃajax·µ»ØÖ®ºóÖĞÎÄÂÒÂë
+	//produces={"text/html;charset=UTF-8"}è®¾ç½®ajaxè¿”å›ä¹‹åä¸­æ–‡ä¹±ç 
 	public Object showUserAJAX(@RequestParam("id") Integer id) {
 		User u = new User();
 		u.setId(id);
@@ -247,7 +246,7 @@ public class UserController {
 	public Object deleteByIdList(@RequestParam("idList")String idlist){
 		String result="";
 		System.err.println(idlist);
-		String[] list =idlist.split(",");//ÓÃ£¬²ğ·Ö
+		String[] list =idlist.split(",");//ç”¨ï¼Œæ‹†åˆ†
 //		System.out.println(Arrays.toString(list));
 		int x=userService.deleteById(list);
 		if(x>0){

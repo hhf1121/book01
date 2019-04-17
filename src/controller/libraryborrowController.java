@@ -25,7 +25,7 @@ public class libraryborrowController {
 	// 个人历史记录
 	@RequestMapping(value = "/librarylist.html")
 	public String OneList(HttpSession session, Model model) {
-		int userID = ((User) session.getAttribute("currentUser")).getId();
+		Long userID = ((User) session.getAttribute("currentUser")).getId();
 		LibraryBorrow lb = new LibraryBorrow();
 		lb.setUserId(userID);
 		List<LibraryBorrow> list = libraryBorrowService.Query(lb);

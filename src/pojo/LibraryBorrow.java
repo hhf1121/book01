@@ -7,7 +7,7 @@ public class LibraryBorrow {
 	private int id;
 	private String userName;
 	private String bookName;
-	private int userId;
+	private Long userId;
 	private int bookId;
 	private Timestamp borrowTime;
 	private Timestamp bakeTime;
@@ -47,10 +47,10 @@ public class LibraryBorrow {
 	public void setBakeTime(Timestamp bakeTime) {
 		this.bakeTime = bakeTime;
 	}
-	public int getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 	@Override

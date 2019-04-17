@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class User {
 		
-	private int id;
+	private long id;
 	@NotEmpty(message="账号不能为空")
 	private String userName;
 	@NotEmpty(message="密码不能为空")
@@ -24,10 +24,11 @@ public class User {
 	public void setPicPath(String picPath) {
 		this.picPath = picPath;
 	}
-	public int getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {

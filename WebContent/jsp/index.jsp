@@ -10,7 +10,7 @@ String path=request.getContextPath();
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
+<body  style="width:500px; margin: 0 auto">
 <h1>注册页面</h1>
 <input type="hidden" value="<%=path%>" id="path">
 <form action="<%=path%>/user/adduser.html" method="post" id="form" enctype="multipart/form-data">

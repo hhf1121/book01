@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class upLoadfile {
 
 	private Integer id;
-	private Integer userid;
+	private Long userid;
 	private String upName;
 	private String path;
 	private Timestamp createDate;
@@ -25,10 +25,10 @@ public class upLoadfile {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getUserid() {
+	public Long getUserid() {
 		return userid;
 	}
-	public void setUserid(Integer userid) {
+	public void setUserid(Long userid) {
 		this.userid = userid;
 	}
 	public String getUpName() {

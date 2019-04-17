@@ -8,9 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -60,7 +58,7 @@ public class bookController {
 	public String getBorrow(@Param("bid") String bid, @Param("uid") String uid, HttpSession session) {
 		// String bookId=id;//ÊéµÄid
 		Integer bidx = Integer.parseInt(bid);
-		Integer uidx = Integer.parseInt(uid);
+		Long uidx = Long.parseLong(uid);
 		Borrow borrowx = new Borrow();
 		borrowx.setUserId(uidx);
 		borrowx.setBookId(bidx);

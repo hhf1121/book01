@@ -12,16 +12,16 @@ public interface borrowService {
 	int AddBorrow(Borrow borrow);
 
 	// 修改
-	int upDateCountById(Integer id);
+	int upDateCountById(Long id);
 
 	Borrow QueryBorrowBy2id(Borrow borrow);
 
 	// 总数
-	int QueryBorrowCount(Integer id);
+	int QueryBorrowCount(Long id);
 
 	// 查询单个用户借阅的列表(分页)
-	List<Borrow> QueryBorrow(Integer id, Integer currentPage, Integer pageSize);
+	List<Borrow> QueryBorrow(Long id, Integer currentPage, Integer pageSize);
 
 	// 删除
-	int deleteBorrow(Integer userId,Integer bookId);
+	int deleteBorrow(Long userId,Integer bookId);
 }

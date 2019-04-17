@@ -27,7 +27,7 @@ request.setAttribute("path", path);
                 <th width="10%">借阅者</th>
                 <th width="20%">借阅时间</th>
                 <th width="20%">归还时间</th>
-                <th width="5%">阅读时间(小时)</th>
+                <th width="5%">阅读时间(天)</th>
             </tr>
             <c:forEach var="Library" items="${Librarylist }" varStatus="status">
 				<tr>
@@ -44,7 +44,7 @@ request.setAttribute("path", path);
 					<span><fmt:formatDate value="${Library.bakeTime}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
 					</td>
 					<td>
-					<span style="color:red"><fmt:formatNumber value="${(Library.bakeTime.getTime()-Library.borrowTime.getTime())/1000/3600 }" maxFractionDigits="3" ></fmt:formatNumber></span>
+					<span style="color:red"><fmt:formatNumber value="{(Library.bakeTime.getTime()-Library.borrowTime.getTime())/3600000/24 }" maxFractionDigits="2" ></fmt:formatNumber></span>
 					</td>
 				</tr>
 			</c:forEach>

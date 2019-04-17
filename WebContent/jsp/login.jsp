@@ -19,7 +19,7 @@ color:red;
 }
 </style>
 </head>
-<body>
+<body style="width:500px; margin: 0 auto">
 <h1>登录页面</h1>
 <form action="<%=path %>/user/login.html" method="post" >
 <fm:errors path="userName" />
@@ -28,6 +28,7 @@ color:red;
 密码：<input type="password" name="passWord" id="passWord"/><span id="s2"></span><br/>
 	<input type="submit" value="登录" />
 </form>
+<span style="color: green">使用</span><a href="http://192.168.50.164:8080/common/oauth2/authorize?redirect_uri=http://192.168.50.164:8081/book/sso.html" style="color: red">壹米滴答</a><span style="color:green;">账户登录</span>
 <h3>${info }</h3>
 <a href="<%=path%>/login/doindex.html">注册</a>
 <a href="#" onclick="xxx();">忘记密码</a>

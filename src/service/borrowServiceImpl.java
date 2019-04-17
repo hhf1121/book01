@@ -23,7 +23,7 @@ public class borrowServiceImpl implements borrowService {
 	}
 
 	@Override
-	public int upDateCountById(Integer id) {
+	public int upDateCountById(Long id) {
 		// TODO Auto-generated method stub
 		return borrowMapper.upDateCountById(id);
 	}
@@ -34,19 +34,19 @@ public class borrowServiceImpl implements borrowService {
 	}
 
 	@Override
-	public int QueryBorrowCount(Integer id) {
+	public int QueryBorrowCount(Long id) {
 		// TODO Auto-generated method stub
 		return borrowMapper.QueryBorrowCount(id);
 	}
 
 	@Override
-	public List<Borrow> QueryBorrow(Integer id, Integer currentPage, Integer pageSize) {
+	public List<Borrow> QueryBorrow(Long id, Integer currentPage, Integer pageSize) {
 		// TODO Auto-generated method stub
 		return borrowMapper.QueryBorrow(id, currentPage, pageSize);
 	}
 
 	@Override
-	public int deleteBorrow(Integer userId, Integer bookId) {
+	public int deleteBorrow(Long userId, Integer bookId) {
 		// TODO Auto-generated method stub
 		return borrowMapper.deleteBorrow(userId, bookId);
 	}

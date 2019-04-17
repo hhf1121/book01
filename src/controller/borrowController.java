@@ -43,7 +43,7 @@ public class borrowController {
 	public String addBorrow(HttpSession session,@RequestParam("bookid")String bookid,
 			@RequestParam("userid")String userid){
 		Integer bid=Integer.parseInt(bookid);
-		Integer uid=Integer.parseInt(userid);
+		Long uid=Long.parseLong(userid);
 		User user=new User();
 		user.setId(uid);
 		String userName=(userService.QueryUserById(user)).getName();
@@ -97,10 +97,13 @@ public class borrowController {
 		}
 		}*/
 	
+	
+	
+	
 	//½èÔÄ±í
 	@RequestMapping(value="/borrowlist.html")
 	public String getList(Model model,HttpSession session,@RequestParam(value="pageIndex",required=false) String PageNo){
-		int id=((User)session.getAttribute("currentUser")).getId();
+		long id=((User)session.getAttribute("currentUser")).getId();
 		int count=borrowService.QueryBorrowCount(id);//×ÜÊý¡£
 		Page page=new Page();
 		page.setCountSize(count);
@@ -126,7 +129,7 @@ public class borrowController {
 	@ResponseBody
 	public String deleteBorrow(HttpSession session,@RequestParam("uid")String userid,
 			@RequestParam("bid")String bookid){
-		Integer userId=Integer.parseInt(userid);
+		Long userId=Long.parseLong(userid);
 		Integer bookId=Integer.parseInt(bookid);
 		Borrow borrow=new Borrow();
 		borrow.setBookId(bookId);

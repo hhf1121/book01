@@ -10,7 +10,7 @@
 <title>Insert title here</title>
 <link href="<%=path %>/css/pic.css" type="text/css" rel="stylesheet" />
 </head>
-<body>
+<body  style="width:500px; margin: 0 auto">
 
 <img alt="用户头像" src="<%=path %>/${currentUser.picPath }" title="头像" width="100px" height="100px"  class="pic"/>
 ${currentUser.userName }, 欢迎你！您的身份是：${role }<br/>

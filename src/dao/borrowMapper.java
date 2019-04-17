@@ -21,15 +21,15 @@ public interface borrowMapper {
 	Borrow QueryBorrowBy2id(Borrow borrow);
 	
 	//修改
-	int upDateCountById(Integer id);
+	int upDateCountById(Long id);
 
 	//总数
-	int QueryBorrowCount(Integer id);
+	int QueryBorrowCount(Long id);
 	
 	//查询单个用户借阅的列表(分页)
-	List<Borrow> QueryBorrow(@Param("id") Integer id,@Param("currentPage")Integer currentPage,@Param("pageSize")Integer pageSize);
+	List<Borrow> QueryBorrow(@Param("id") Long id,@Param("currentPage")Integer currentPage,@Param("pageSize")Integer pageSize);
 	
 	//删除
-	int deleteBorrow(@Param("userId")Integer userId,@Param("bookId")Integer bookId);
+	int deleteBorrow(@Param("userId")Long userId,@Param("bookId")Integer bookId);
 	
 }
