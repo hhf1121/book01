@@ -4,7 +4,7 @@
   <welcome-file-list>
     <welcome-file>/jsp/login.jsp</welcome-file>
   </welcome-file-list>
-   
+  
   <context-param>
   <param-name>contextConfigLocation</param-name>
   <param-value>classpath:spring.xml</param-value>
