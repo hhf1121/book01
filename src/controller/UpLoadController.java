@@ -110,7 +110,7 @@ public class UpLoadController {
 	public String getlistfile(HttpSession session, Model model) {
 		Object currentUser = session.getAttribute("currentUser");
 		if(currentUser==null){
-			return "index";
+			return "login";
 		}
 		User u = (User) session.getAttribute("currentUser");
 		upLoadfile uploadfile = new upLoadfile();

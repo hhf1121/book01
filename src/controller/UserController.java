@@ -114,7 +114,7 @@ public class UserController {
 		User u = userService.QueryUser(user);
 		Object currentUser = session.getAttribute("currentUser");
 		if(currentUser==null){
-			return "index";
+			return "login";
 		}
 		if (u != null || (u = (User) session.getAttribute("currentUser")) != null) {
 			session.setAttribute("currentUser", u);// 放进session中

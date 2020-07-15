@@ -27,7 +27,7 @@ public class libraryborrowController {
     public String OneList(HttpSession session, Model model) {
         Object currentUser = session.getAttribute("currentUser");
         if(currentUser==null){
-            return "index";
+            return "login";
         }
         Long userID = ((User) currentUser).getId();
         LibraryBorrow lb = new LibraryBorrow();

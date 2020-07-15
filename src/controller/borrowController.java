@@ -105,7 +105,7 @@ public class borrowController {
 	public String getList(Model model,HttpSession session,@RequestParam(value="pageIndex",required=false) String PageNo){
 		Object currentUser = session.getAttribute("currentUser");
 		if(currentUser==null){
-			return "index";
+			return "login";
 		}
 		long id=((User)currentUser).getId();
 		int count=borrowService.QueryBorrowCount(id);//×ÜÊý¡£
