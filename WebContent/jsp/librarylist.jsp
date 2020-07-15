@@ -44,7 +44,10 @@ request.setAttribute("path", path);
 					<span><fmt:formatDate value="${Library.bakeTime}" pattern="yyyy-MM-dd HH:mm:ss"/></span>
 					</td>
 					<td>
-					<span style="color:red"><fmt:formatNumber value="{(Library.bakeTime.getTime()-Library.borrowTime.getTime())/3600000/24 }" maxFractionDigits="2" ></fmt:formatNumber></span>
+					<span style="color:red">
+							<%--<fmt:formatNumber value="{(Library.bakeTime.getTime()-Library.borrowTime.getTime())/3600000/24 }" maxFractionDigits="2" ></fmt:formatNumber>--%>
+						${Library.timelag }
+					</span>
 					</td>
 				</tr>
 			</c:forEach>

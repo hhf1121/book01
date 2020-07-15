@@ -8,7 +8,7 @@ String path=request.getContextPath();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>注册</title>
 </head>
 <body  style="width:500px; margin: 0 auto">
 <h1>注册页面</h1>

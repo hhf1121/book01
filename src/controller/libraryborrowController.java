@@ -29,6 +29,9 @@ public class libraryborrowController {
         LibraryBorrow lb = new LibraryBorrow();
         lb.setUserId(userID);
         List<LibraryBorrow> list = libraryBorrowService.Query(lb);
+        for (LibraryBorrow library : list) {
+            library.setTimelag((library.getBakeTime().getTime()-library.getBorrowTime().getTime())/3600000/24+"");
+        }
         model.addAttribute("Librarylist", list);
         return "librarylist";
     }

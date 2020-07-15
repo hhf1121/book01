@@ -11,6 +11,16 @@ public class LibraryBorrow {
 	private int bookId;
 	private Timestamp borrowTime;
 	private Timestamp bakeTime;
+	private String timelag;
+
+	public String getTimelag() {
+		return timelag;
+	}
+
+	public void setTimelag(String timelag) {
+		this.timelag = timelag;
+	}
+
 	public int getId() {
 		return id;
 	}

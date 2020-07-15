@@ -9,7 +9,7 @@ request.setAttribute("path", path);
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>图书信息-jsp</title>
 </head>
 <body>
 <h1 style="color:orange"> ${currentUser.userName },欢迎你！</h1><a href="<%=path%>/user/login.html">返回个人首页</a>

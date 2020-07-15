@@ -9,7 +9,7 @@ request.setAttribute("path", path);
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>会员借阅历史</title>
 <link href="css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
