@@ -52,7 +52,7 @@
         <div id="show"></div>
         <input type="hidden" id="path" value="<%=path%>">
        <a href="<%=path%>/user/login.html">返回个人首页</a>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.min.js"></script>
 <script type="text/javascript">
 function deletefile(idx){
 	$.ajax({

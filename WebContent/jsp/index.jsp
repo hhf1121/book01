@@ -23,7 +23,7 @@ String path=request.getContextPath();
 </form>
 <h3>${error }</h3>
 <a href="<%=path%>/login/dologin.html">我有账号</a>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/register.js"></script>
 </body>
 </html>

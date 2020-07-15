@@ -10,12 +10,13 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
 	<context:component-scan base-package="controller"></context:component-scan>
-	<mvc:annotation-driven />
+	<mvc:annotation-driven conversion-service="conversionService" content-negotiation-manager="contentNegotiationManager"/>
 	<mvc:resources location="/calendar/" mapping="/calendar/**" />
 	<mvc:resources location="/css/" mapping="/css/**" />
 	<mvc:resources location="/images/" mapping="/images/**" />
 	<mvc:resources location="/js/" mapping="/js/**" />
 	<mvc:resources location="/statics/" mapping="/statics/**"/>
+	<mvc:resources location="/easyui/" mapping="/easyui/**"/>
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/jsp/"></property>
@@ -44,5 +45,29 @@
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- <property name="maxUploadSize" value="5000000"></property> -->
 		<property name="defaultEncoding" value="utf-8"></property>
-	</bean>	
+	</bean>
+
+
+	<!-- REST中根据URL后缀自动判定Content-Type及相应的View -->
+	<bean id="contentNegotiationManager"
+		  class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="ignoreAcceptHeader" value="true" />
+		<property name="defaultContentType" value="application/json" />
+		<property name="mediaTypes">
+			<value>
+				json=application/json
+				xml=application/xml
+			</value>
+		</property>
+	</bean>
+
+	<bean id="conversionService"
+		  class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<set>
+				<bean class="tools.myConversion" />
+			</set>
+		</property>
+	</bean>
+
 </beans>

@@ -1,17 +1,22 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.springframework.web.servlet.ModelAndView;
 import pojo.Book;
 import pojo.Borrow;
 import service.bookService;
@@ -51,6 +56,34 @@ public class bookController {
 		model.addAttribute("totalCount", countSize);
 		return "booklist";
 	}
+
+	// 打开页面。
+	@RequestMapping(value = "/booklist2.html")
+	public ModelAndView getBookList2(Model model, HttpSession session) {
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.setViewName("booklist2");
+		return modelAndView;
+	}
+
+	// 获取数据
+	@RequestMapping(value = "/getbookList.do",method= RequestMethod.GET,produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String,Object> getbookList(String name, String author,Page page) {
+		Map<String,Object> result=new HashMap<>();
+		Page page1 = new Page();
+		int countSize = bookService.CountBooks(name, author);// 总条数
+		page1.setCountSize(countSize);
+		int PageSize = Integer.parseInt(page.getRows());// 页面容量
+		int currentPage = Integer.parseInt(page.getPage());// 当前页
+		int xx = (currentPage - 1) * PageSize;
+		List<Book> booklist = bookService.getList(name, author, xx, PageSize);
+		result.put("rows",booklist);
+		result.put("total",countSize);
+		result.put("success",true);
+		return result;
+	}
+
+
 
 	// 借阅
 	@RequestMapping(value = "/borrow.html")

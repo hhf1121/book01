@@ -6,8 +6,25 @@ public class Page {
 	private Integer pageCount;//页数
 	private Integer currentPage=1;//当前页面；
 	private Integer CountSize;//总条数
-	
-	
+	private String page;//easyui
+	private String rows;//easyui
+
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
+	public String getRows() {
+		return rows;
+	}
+
+	public void setRows(String rows) {
+		this.rows = rows;
+	}
+
 	public Integer getPageSize() {
 		return pageSize;
 	}

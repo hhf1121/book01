@@ -73,6 +73,6 @@ request.setAttribute("path", path);
           	</c:import>
     	</div>
 </body>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/allbook.js"></script>
 </html>

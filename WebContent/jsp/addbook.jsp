@@ -15,7 +15,7 @@
 <input type="button" value="添加" onclick="add();"/>
 </form>
 <a href="${pageContext.request.contextPath}/book/allbooklist.html">返回书籍列表页面</a>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.min.js"></script>
 <script type="text/javascript">
 	function add(){
 		var name=document.getElementById("name").value;
