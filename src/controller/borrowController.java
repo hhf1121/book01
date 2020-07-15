@@ -103,7 +103,11 @@ public class borrowController {
 	//½èÔÄ±í
 	@RequestMapping(value="/borrowlist.html")
 	public String getList(Model model,HttpSession session,@RequestParam(value="pageIndex",required=false) String PageNo){
-		long id=((User)session.getAttribute("currentUser")).getId();
+		Object currentUser = session.getAttribute("currentUser");
+		if(currentUser==null){
+			return "index";
+		}
+		long id=((User)currentUser).getId();
 		int count=borrowService.QueryBorrowCount(id);//×ÜÊý¡£
 		Page page=new Page();
 		page.setCountSize(count);

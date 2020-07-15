@@ -46,6 +46,7 @@ public class UpLoadController {
 	public String addUploadfile(@RequestParam("path") MultipartFile uploadfile, Model model,
 			HttpServletRequest request) {
 		String idpath = null;
+
 		// 判断文件是否为空
 		if (!uploadfile.isEmpty()) {
 			String path = request.getSession().getServletContext()
@@ -107,6 +108,10 @@ public class UpLoadController {
 	//读取列表。
 	@RequestMapping(value = "/Filelist.html")
 	public String getlistfile(HttpSession session, Model model) {
+		Object currentUser = session.getAttribute("currentUser");
+		if(currentUser==null){
+			return "index";
+		}
 		User u = (User) session.getAttribute("currentUser");
 		upLoadfile uploadfile = new upLoadfile();
 		System.err.println(u.getId()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
