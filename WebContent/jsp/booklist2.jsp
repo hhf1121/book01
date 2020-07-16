@@ -88,7 +88,7 @@ request.setAttribute("path", path);
             },
             columns: [[
                 { field: 'ck', checkbox: true },
-                { field: 'id', title: '图书编码', width: '200', align: 'left', sortable: true },
+                { field: 'id', title: '图书编码', width: '80', align: 'center', sortable: true },
                 { field: 'name', title: '图书名称', width: '200', align: 'left', sortable: true },
                 { field: 'author', title: '作者', width: '200', align: 'left', sortable: true },
                 { field: 'count', title: '库存', width: '200', align: 'left', sortable: true },
