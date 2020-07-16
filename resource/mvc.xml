@@ -70,4 +70,21 @@
 		</property>
 	</bean>
 
+
+    <!-- Session失效拦截 -->
+    <mvc:interceptors>
+        <!-- 定义拦截器 -->
+        <mvc:interceptor>
+            <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->
+            <mvc:mapping path="/**" />
+            <!-- 不需要拦截的地址 -->
+            <mvc:exclude-mapping path="/user/login.html" />
+            <mvc:exclude-mapping path="/login/doindex.html" />
+            <mvc:exclude-mapping path="/user/ifExist" />
+            <mvc:exclude-mapping path="/user/adduser.html" />
+            <mvc:exclude-mapping path="/user/backPass.html" />
+            <bean class="tools.SystemSessionInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>

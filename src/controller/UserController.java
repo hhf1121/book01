@@ -112,10 +112,7 @@ public class UserController {
 		}*/
 		System.err.println(user);
 		User u = userService.QueryUser(user);
-		Object currentUser = session.getAttribute("currentUser");
-		if(currentUser==null){
-			return "login";
-		}
+
 		if (u != null || (u = (User) session.getAttribute("currentUser")) != null) {
 			session.setAttribute("currentUser", u);// 放进session中
 			List<listNo> list = listNoService.QueryListByYseNo(u.getYes());

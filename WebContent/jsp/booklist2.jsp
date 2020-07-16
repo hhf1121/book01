@@ -48,7 +48,6 @@ request.setAttribute("path", path);
 	</div>
 </div>
 <table id="dataGridInbound" title="数据列表" class="easyui-datagrid" style="height:600px "></table>
-<div id="dd" class="easyui-dialog" style="display: none"></div>
 </body>
 <script>
 	$(function () {
