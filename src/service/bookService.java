@@ -5,28 +5,28 @@ import java.util.List;
 import pojo.Book;
 
 public interface bookService {
-	// »ñÈ¡ÁĞ±í
+	// è·å–åˆ—è¡¨
 	List<Book> getList(String name, String author, Integer indexPage, Integer PageSize);
 
-	// Êé¼®×ÜÊı
+	// ä¹¦ç±æ€»æ•°
 	int CountBooks(String name, String author);
 
-	// ĞŞ¸Ä
+	// ä¿®æ”¹
 	int upDateCountById(Integer id);
 
 	int downDateCountById(Integer id);
 
-	// ¸ù¾İid²é
+	// æ ¹æ®idæŸ¥
 	Book QueryUserById(Book book);
 
 	Book QueryCountById(Book book);
 
-	// Ôö¼ÓÊé¼®
+	// å¢åŠ ä¹¦ç±
 	int addBook(Book book);
 
-	// É¾³ıÊé¼®¡£
+	// åˆ é™¤ä¹¦ç±ã€‚
 	int deleteBook(Book book);
 
-	// ²éÑ¯¿â´æ¡£
+	// æŸ¥è¯¢åº“å­˜ã€‚
 	Book QueryCC(Book book);
 }

@@ -7,24 +7,24 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class User {
-		
+
 	private long id;
-	@NotEmpty(message="ÕËºÅ²»ÄÜÎª¿Õ")
+	@NotEmpty(message="è´¦å·ä¸èƒ½ä¸ºç©º")
 	private String userName;
-	@NotEmpty(message="ÃÜÂë²»ÄÜÎª¿Õ")
+	@NotEmpty(message="å¯†ç ä¸èƒ½ä¸ºç©º")
 	private String passWord;
 	private String name;
 	private String address;
-	private int yes;//È¨ÏŞ¡¢Ä¬ÈÏ0¡£
+	private int yes;//æƒé™ã€é»˜è®¤0ã€‚
 	private Timestamp createDate;
-	private String picPath;//Í·ÏñÂ·¾¶¡£
+	private String picPath;//å¤´åƒè·¯å¾„ã€‚
 	public String getPicPath() {
 		return picPath;
 	}
 	public void setPicPath(String picPath) {
 		this.picPath = picPath;
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -72,7 +72,7 @@ public class User {
 		return "User [id=" + id + ", userName=" + userName + ", passWord=" + passWord + ", name=" + name + ", address="
 				+ address + ", yes=" + yes + ", createDate=" + createDate + ", picPath=" + picPath + "]";
 	}
-	
-	
+
+
 
 }

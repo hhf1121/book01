@@ -110,7 +110,7 @@ public class UserController {
 			System.err.println(br.toString());
 			return "login";
 		}*/
-		System.err.println(user);
+		System.out.println("打印信息："+user);
 		User u = userService.QueryUser(user);
 
 		if (u != null || (u = (User) session.getAttribute("currentUser")) != null) {

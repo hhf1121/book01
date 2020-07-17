@@ -7,27 +7,27 @@ import org.apache.ibatis.annotations.Param;
 import pojo.User;
 
 public interface userService {
-	// ×¢²á
+	// æ³¨å†Œ
 	int addUser(User user);
 
 	User QueryUser(User user);
 
-	// ĞŞ¸ÄĞÅÏ¢
+	// ä¿®æ”¹ä¿¡æ¯
 	int ModifyUser(User user);
 
-	// ¸ù¾İid
+	// æ ¹æ®id
 	User QueryUserById(User user);
 
-	// ÕÒ»ØÃÜÂë
+	// æ‰¾å›å¯†ç 
 	User BakePass(User user);
 
-	// ÕËºÅÊÇ·ñ´æÔÚ
+	// è´¦å·æ˜¯å¦å­˜åœ¨
 	int ifExist(String userName);
 
-	// ×ÜÊı¡£
+	// æ€»æ•°ã€‚
 	int getUserCount(String name, Integer yes);
 
-	// ·ÖÒ³¡¢ÁĞ±í¡£
+	// åˆ†é¡µã€åˆ—è¡¨ã€‚
 	List<User> getUserList(String name, Integer yes, Integer indexPage, Integer pagesize);
 
 	int deleteById(String[] IdList);

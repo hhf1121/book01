@@ -36,12 +36,12 @@ public class borrowController {
 	private userService userService;
 	@Resource
 	private LibraryBorrowService libraryBorrowService;
-	
-	
+
+
 	@RequestMapping(value="/addBorrow.html",method=RequestMethod.GET)
 	@ResponseBody
 	public String addBorrow(HttpSession session,@RequestParam("bookid")String bookid,
-			@RequestParam("userid")String userid){
+							@RequestParam("userid")String userid){
 		Integer bid=Integer.parseInt(bookid);
 		Long uid=Long.parseLong(userid);
 		User user=new User();
@@ -58,17 +58,17 @@ public class borrowController {
 		borrow.setUserName(userName);
 		int x=borrowService.AddBorrow(borrow);
 		if(x>0){
-			//³É¹¦
+			//æˆåŠŸ
 			return "true";
 		}else{
-			//Ê§°Ü
+			//å¤±è´¥
 			return "false";
 		}
-		}
-	
-	
-	/*±¸·İ¡£¡£¡£
-	 * 
+	}
+
+
+	/*å¤‡ä»½ã€‚ã€‚ã€‚
+	 *
 	 * @RequestMapping(value="/addBorrow.html",method=RequestMethod.GET)
 	public String addBorrow(HttpSession session,@RequestParam("bookid")String bookid,
 			@RequestParam("userid")String userid){
@@ -88,19 +88,19 @@ public class borrowController {
 		borrow.setUserName(userName);
 		int x=borrowService.AddBorrow(borrow);
 		if(x>0){
-			session.setAttribute("info",bookName+"½èÔÄ³É¹¦£¡");
+			session.setAttribute("info",bookName+"å€Ÿé˜…æˆåŠŸï¼");
 			session.removeAttribute("infox");
 			return "redirect:/book/booklist.html";
 		}else{
-			session.setAttribute("info","½èÔÄÊ§°Ü£¡");
+			session.setAttribute("info","å€Ÿé˜…å¤±è´¥ï¼");
 			return "redirect:/book/booklist.html";
 		}
 		}*/
-	
-	
-	
-	
-	//½èÔÄ±í
+
+
+
+
+	//å€Ÿé˜…è¡¨
 	@RequestMapping(value="/borrowlist.html")
 	public String getList(Model model,HttpSession session,@RequestParam(value="pageIndex",required=false) String PageNo){
 		Object currentUser = session.getAttribute("currentUser");
@@ -108,12 +108,12 @@ public class borrowController {
 			return "login";
 		}
 		long id=((User)currentUser).getId();
-		int count=borrowService.QueryBorrowCount(id);//×ÜÊı¡£
+		int count=borrowService.QueryBorrowCount(id);//æ€»æ•°ã€‚
 		Page page=new Page();
 		page.setCountSize(count);
 		int currentPage=page.getCurrentPage();
-		int pageCount=page.getPageCount();//×ÜÒ³Êı¡£
-		int PageSize=page.getPageSize();//ÈİÁ¿
+		int pageCount=page.getPageCount();//æ€»é¡µæ•°ã€‚
+		int PageSize=page.getPageSize();//å®¹é‡
 		if(PageNo!=null){
 			currentPage=Integer.parseInt(PageNo);
 		}
@@ -126,13 +126,13 @@ public class borrowController {
 		model.addAttribute("pageNo",currentPage);
 		return "borrowlist";
 	}
-	
-	
-	//É¾³ı
+
+
+	//åˆ é™¤
 	@RequestMapping(value="/delete.html")
 	@ResponseBody
 	public String deleteBorrow(HttpSession session,@RequestParam("uid")String userid,
-			@RequestParam("bid")String bookid){
+							   @RequestParam("bid")String bookid){
 		Long userId=Long.parseLong(userid);
 		Integer bookId=Integer.parseInt(bookid);
 		Borrow borrow=new Borrow();
@@ -146,20 +146,20 @@ public class borrowController {
 		lb.setUserName(b.getUserName());
 		lb.setBakeTime(new Timestamp(new Date().getTime()));
 		lb.setBorrowTime(b.getBorrowTime());
-		int y=libraryBorrowService.Add(lb);//Ìí¼Óµ½ÀúÊ·±íÖĞ
+		int y=libraryBorrowService.Add(lb);//æ·»åŠ åˆ°å†å²è¡¨ä¸­
 		if(y>0){
-			int z=bookService.downDateCountById(bookId);//¸üĞÂÍ¼ÊéÊıÁ¿¡£
-//			int xxx=1/0;//Å×Òì³£¡¢²âÊÔÊÂÎñ¡£
-			int x=borrowService.deleteBorrow(userId, bookId);//É¾³ı½èÔÄ±íÖĞµÄÊı¾İ¡£
+			int z=bookService.downDateCountById(bookId);//æ›´æ–°å›¾ä¹¦æ•°é‡ã€‚
+//			int xxx=1/0;//æŠ›å¼‚å¸¸ã€æµ‹è¯•äº‹åŠ¡ã€‚
+			int x=borrowService.deleteBorrow(userId, bookId);//åˆ é™¤å€Ÿé˜…è¡¨ä¸­çš„æ•°æ®ã€‚
 			if(x>0&&z>0){
-//				session.setAttribute("infob", "¹é»¹"+b.getBookName()+"³É¹¦");
+//				session.setAttribute("infob", "å½’è¿˜"+b.getBookName()+"æˆåŠŸ");
 				return "true";
 			}else{
-//				session.setAttribute("infob", "¹é»¹Êé¼®Ê§°Ü/¼ÇÂ¼ÒÑ·ÅÈëÀúÊ·ÖĞ...");
+//				session.setAttribute("infob", "å½’è¿˜ä¹¦ç±å¤±è´¥/è®°å½•å·²æ”¾å…¥å†å²ä¸­...");
 				return "false";
 			}
 		}else{
-//			session.setAttribute("infob", "¹é»¹Êé¼®Ê§°Ü/ÇëÖØÊÔ...");
+//			session.setAttribute("infob", "å½’è¿˜ä¹¦ç±å¤±è´¥/è¯·é‡è¯•...");
 			return "noData";
 		}
 	}

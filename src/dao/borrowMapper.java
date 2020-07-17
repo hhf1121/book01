@@ -3,7 +3,7 @@ package dao;
 import java.util.List;
 
 /***
- * ½èÔÄ±í
+ * å€Ÿé˜…è¡¨
  */
 
 import org.apache.ibatis.annotations.Param;
@@ -14,22 +14,22 @@ import pojo.Borrow;
 
 public interface borrowMapper {
 
-	// Ôö¼Ó
+	// å¢åŠ 
 	int AddBorrow(Borrow borrow);
 
-	// ²éÑ¯
+	// æŸ¥è¯¢
 	Borrow QueryBorrowBy2id(Borrow borrow);
-	
-	//ĞŞ¸Ä
+
+	//ä¿®æ”¹
 	int upDateCountById(Long id);
 
-	//×ÜÊı
+	//æ€»æ•°
 	int QueryBorrowCount(Long id);
-	
-	//²éÑ¯µ¥¸öÓÃ»§½èÔÄµÄÁĞ±í(·ÖÒ³)
+
+	//æŸ¥è¯¢å•ä¸ªç”¨æˆ·å€Ÿé˜…çš„åˆ—è¡¨(åˆ†é¡µ)
 	List<Borrow> QueryBorrow(@Param("id") Long id,@Param("currentPage")Integer currentPage,@Param("pageSize")Integer pageSize);
-	
-	//É¾³ı
+
+	//åˆ é™¤
 	int deleteBorrow(@Param("userId")Long userId,@Param("bookId")Integer bookId);
-	
+
 }

@@ -5,6 +5,6 @@ import java.util.List;
 import pojo.Role;
 
 public interface RoleService {
-	// ²éÑ¯
+	// æŸ¥è¯¢
 	List<Role> Querylist(Role role);
 }

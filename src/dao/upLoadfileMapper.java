@@ -6,15 +6,15 @@ import pojo.upLoadfile;
 
 public interface upLoadfileMapper {
 
-	//Ôö¼Ó
+	//å¢åŠ 
 	int AddFile(upLoadfile uploadfile);
-	
-	//É¾³ı
+
+	//åˆ é™¤
 	int DeleteFile(upLoadfile uploadfile);
-	
-	//²é¿´
+
+	//æŸ¥çœ‹
 	List<upLoadfile> getList(upLoadfile uploadfile);
-	
-	//¸ù¾İid²éĞÅÏ¢
+
+	//æ ¹æ®idæŸ¥ä¿¡æ¯
 	upLoadfile upLoadfileById(Integer id);
 }

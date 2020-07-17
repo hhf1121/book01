@@ -41,29 +41,29 @@ public class UpLoadController {
 	@Resource
 	private  userService userService;
 
-	// ÎÄ¼şÉÏ´«
+	// æ–‡ä»¶ä¸Šä¼ 
 	@RequestMapping(value = "/uploadFile.html", method = RequestMethod.POST)
 	public String addUploadfile(@RequestParam("path") MultipartFile uploadfile, Model model,
-			HttpServletRequest request) {
+								HttpServletRequest request) {
 		String idpath = null;
 
-		// ÅĞ¶ÏÎÄ¼şÊÇ·ñÎª¿Õ
+		// åˆ¤æ–­æ–‡ä»¶æ˜¯å¦ä¸ºç©º
 		if (!uploadfile.isEmpty()) {
 			String path = request.getSession().getServletContext()
-					.getRealPath("statics" + File.separator + "uploadfiles");//ÎÄ¼ş´æ·ÅÂ·¾¶
-			//File.separator   £º×Ô¶¯Ê¶±ğÏµÍ³¡£´Ë¾äº¬Òå£º´´½¨ÁËÒ»¸ö/statics/uploadfilesÎÄ¼ş¼Ğ
-			String oldFileName = uploadfile.getOriginalFilename();// Ô­ÎÄ¼şÃû
-			String prefix = FilenameUtils.getExtension(oldFileName);// Ô­ÎÄ¼şºó×º
-			int filesize = 5000000;//ÉèÖÃÎÄ¼ş´óĞ¡¡£
+					.getRealPath("statics" + File.separator + "uploadfiles");//æ–‡ä»¶å­˜æ”¾è·¯å¾„
+			//File.separator   ï¼šè‡ªåŠ¨è¯†åˆ«ç³»ç»Ÿã€‚æ­¤å¥å«ä¹‰ï¼šåˆ›å»ºäº†ä¸€ä¸ª/statics/uploadfilesæ–‡ä»¶å¤¹
+			String oldFileName = uploadfile.getOriginalFilename();// åŸæ–‡ä»¶å
+			String prefix = FilenameUtils.getExtension(oldFileName);// åŸæ–‡ä»¶åç¼€
+			int filesize = 5000000;//è®¾ç½®æ–‡ä»¶å¤§å°ã€‚
 			System.err.println("uploadFile path ============== > " + path);
 			System.err.println("uploadFile oldFileName ============== > " + oldFileName);
 			System.err.println("uploadFile prefix============> " + prefix);
 			System.err.println("uploadFile size============> " + uploadfile.getSize());
-			if (uploadfile.getSize() > filesize) {// ÉÏ´«´óĞ¡²»µÃ³¬¹ı 500k
+			if (uploadfile.getSize() > filesize) {// ä¸Šä¼ å¤§å°ä¸å¾—è¶…è¿‡ 500k
 				System.err.println("------------------------------------guoda!");
-				request.setAttribute("infoxx", " * ÉÏ´«´óĞ¡²»µÃ³¬¹ı 500k");
+				request.setAttribute("infoxx", " * ä¸Šä¼ å¤§å°ä¸å¾—è¶…è¿‡ 500k");
 				return "Filelist";
-			} else if (prefix.equalsIgnoreCase("txt")) {// ÉÏ´«Í¼Æ¬¸ñÊ½
+			} else if (prefix.equalsIgnoreCase("txt")) {// ä¸Šä¼ å›¾ç‰‡æ ¼å¼
 				String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000) + "_Personal.txt";
 				System.err.println("new fileName======== " + uploadfile.getName());
 				File targetFile = new File(path, fileName);
@@ -71,14 +71,14 @@ public class UpLoadController {
 					targetFile.mkdirs();
 				}
 				try {
-					// ±£´æÎÄ¼ş
+					// ä¿å­˜æ–‡ä»¶
 					uploadfile.transferTo(targetFile);
 				} catch (Exception e) {
 					e.printStackTrace();
-					request.setAttribute("infoxx", " * ÉÏ´«Ê§°Ü£¡");
+					request.setAttribute("infoxx", " * ä¸Šä¼ å¤±è´¥ï¼");
 					return "Filelist";
 				}
-				idpath = path + File.separator + fileName;//ÉÏ´«ÎÄ¼şÈ«Â·¾¶+ÎÄ¼şÃû¡£
+				idpath = path + File.separator + fileName;//ä¸Šä¼ æ–‡ä»¶å…¨è·¯å¾„+æ–‡ä»¶åã€‚
 				upLoadfile upload=new upLoadfile();
 				upload.setUserid(((User) request.getSession().getAttribute("currentUser")).getId());
 				upload.setCreateDate(new Timestamp(new Date().getTime()));
@@ -86,26 +86,26 @@ public class UpLoadController {
 				upload.setUpName(oldFileName);
 				int x = uploadfileService.AddFile(upload);
 				if (x > 0) {
-//					model.addAttribute("infoxx", "ÉÏ´«³É¹¦");
+//					model.addAttribute("infoxx", "ä¸Šä¼ æˆåŠŸ");
 					return "redirect:/upLoad/Filelist.html";
 				} else {
-					model.addAttribute("infoxx", "ÉÏ´«Ê§°Ü");
+					model.addAttribute("infoxx", "ä¸Šä¼ å¤±è´¥");
 					return "Filelist";
 				}
 			} else {
-				System.err.println("---------------------------¸ñÊ½²»¶Ô£¡¡·¡·");
-				model.addAttribute("infoxx", " * ÉÏ´«Í¼Æ¬¸ñÊ½²»ÕıÈ·");
+				System.err.println("---------------------------æ ¼å¼ä¸å¯¹ï¼ã€‹ã€‹");
+				model.addAttribute("infoxx", " * ä¸Šä¼ å›¾ç‰‡æ ¼å¼ä¸æ­£ç¡®");
 				return "Filelist";
 			}
 		} else {
-			System.err.println("---------------------------ÎÄ¼şÎª¿Õ£¡¡·¡·");
-			model.addAttribute("infoxx", "±ØĞëÑ¡ÔñºÏ·¨µÄÉÏ´«ÎÄ¼ş");
+			System.err.println("---------------------------æ–‡ä»¶ä¸ºç©ºï¼ã€‹ã€‹");
+			model.addAttribute("infoxx", "å¿…é¡»é€‰æ‹©åˆæ³•çš„ä¸Šä¼ æ–‡ä»¶");
 			return "Filelist";
 		}
 	}
 
-	
-	//¶ÁÈ¡ÁĞ±í¡£
+
+	//è¯»å–åˆ—è¡¨ã€‚
 	@RequestMapping(value = "/Filelist.html")
 	public String getlistfile(HttpSession session, Model model) {
 		Object currentUser = session.getAttribute("currentUser");
@@ -117,7 +117,7 @@ public class UpLoadController {
 		System.err.println(u.getId()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		User ux=userService.QueryUserById(u);
 		if(ux.getYes()==3){
-			System.err.println("¹ÜÀíÔ±......................");
+			System.err.println("ç®¡ç†å‘˜......................");
 			uploadfile.setUserid(null);
 		}else{
 			uploadfile.setUserid(u.getId());
@@ -129,30 +129,30 @@ public class UpLoadController {
 			model.addAttribute("user", ux);
 			return "Filelist";
 		} else {
-			model.addAttribute("infoup", "»ñÈ¡¹²ÏíÁĞ±íÊ§°Ü");
+			model.addAttribute("infoup", "è·å–å…±äº«åˆ—è¡¨å¤±è´¥");
 			return "main";
 		}
 	}
-	
-	
-	//ÏÂÔØ£º
+
+
+	//ä¸‹è½½ï¼š
 	@RequestMapping("/download.html")
 	public ResponseEntity<byte[]> download(HttpServletRequest request,@RequestParam("file")String filex) throws IOException {
-	  System.err.println("......................................................");
+		System.err.println("......................................................");
 		File file = new File(filex);
-	    byte[] body = null;
-	    InputStream is = new FileInputStream(file);
-	    body = new byte[is.available()];
-	    is.read(body);
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.add("Content-Disposition", "attchement;filename=" + file.getName());
-	    HttpStatus statusCode = HttpStatus.OK;
-	    ResponseEntity<byte[]> entity = new ResponseEntity<byte[]>(body, headers, statusCode);
-	    return entity;
+		byte[] body = null;
+		InputStream is = new FileInputStream(file);
+		body = new byte[is.available()];
+		is.read(body);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attchement;filename=" + file.getName());
+		HttpStatus statusCode = HttpStatus.OK;
+		ResponseEntity<byte[]> entity = new ResponseEntity<byte[]>(body, headers, statusCode);
+		return entity;
 	}
-	
-	
-	//É¾³ıÎÄ¼ş¡£
+
+
+	//åˆ é™¤æ–‡ä»¶ã€‚
 	@RequestMapping(value="/deleteFile.html")
 	@ResponseBody
 	public Object deleteFile(@RequestParam(value="id")Integer id){
@@ -169,27 +169,27 @@ public class UpLoadController {
 			}
 		}
 		return result;
-	} 
+	}
 
-	//²é¿´ÎÄ¼şÄÚÈİ
+	//æŸ¥çœ‹æ–‡ä»¶å†…å®¹
 	@RequestMapping(value="fileshow.html",produces={"text/html;charset=utf-8"})
 	@ResponseBody
 	public Object getShow(@RequestParam("id") String id) throws Exception{
-		System.err.println("²é¿´ÎÄ¼ş¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£");
+		System.err.println("æŸ¥çœ‹æ–‡ä»¶ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚ã€‚");
 		upLoadfile load=uploadfileService.upLoadfileById(Integer.parseInt(id));
 		String show=load.getPath();
 		StringBuffer info=new StringBuffer();
 		File file = new File(show);
-	    InputStream is = new FileInputStream(file);
-	    BufferedReader br=new BufferedReader(new InputStreamReader(is));
-	    String str=null;
-	    while(((str=br.readLine())!=null)){
-	    	info.append(str);
-	    }
-	    br.close();
-	    is.close();
+		InputStream is = new FileInputStream(file);
+		BufferedReader br=new BufferedReader(new InputStreamReader(is));
+		String str=null;
+		while(((str=br.readLine())!=null)){
+			info.append(str);
+		}
+		br.close();
+		is.close();
 		return info.toString();
 	}
-	
-	 
+
+
 }

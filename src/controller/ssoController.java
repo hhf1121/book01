@@ -22,57 +22,57 @@ import service.userService;
 
 @Controller
 public class ssoController {
-	
+
 	@Resource
 	private userService userService;
-	
-//http://192.168.50.247:8080/book/borrow/borrowlist.html
+
+	//http://192.168.50.247:8080/book/borrow/borrowlist.html
 	@RequestMapping("/sso.html")
 	public String getSuccess(HttpServletRequest requests,HttpServletRequest response,String token){
 		User user=new User();
 		CloseableHttpClient httpCilent = HttpClients.createDefault();//Creates CloseableHttpClient instance with default configuration.
 		HttpGet httpGet = new HttpGet("http://192.168.50.189/galaxy-user-business/sys/user/ssoValidate?token="+token);
 		try {
-		    HttpResponse execute = httpCilent.execute(httpGet);
-		    System.out.println(execute.getStatusLine().getStatusCode());//×´Ì¬
-		    String stringJson = EntityUtils.toString(execute.getEntity());//·µ»ØÊµÌå
-		    System.out.println(stringJson);
-		    //½âÎöÊµÌå
-		    JSONObject fromObject = JSONObject.fromObject(stringJson.toString());
-		    Object objectJson = fromObject.get("data");
-		    JSONObject objectStr = JSONObject.fromObject(objectJson);
-		    String password = (String) objectStr.get("password");
-		    String username = (String) objectStr.get("username");
-		    String shortName = (String) objectStr.get("shortName");
-		    String address = (String) objectStr.get("address");
-		    user.setPassWord(password);
-		    user.setUserName(username);
-		    user.setName(shortName);
-		    user.setAddress(address);
-		    //²éÑ¯ÓÃ»§
-		    user =userService.QueryUser(user)==null?user:userService.QueryUser(user);
-		    if(user==null){
-		    	//×¢²á
-		    	int addUser = userService.addUser(user);
-		    	if(addUser>0){
-		    		System.err.println("×Ô¶¯×¢²á³É¹¦");
-		    	}
-		    }
+			HttpResponse execute = httpCilent.execute(httpGet);
+			System.out.println(execute.getStatusLine().getStatusCode());//çŠ¶æ€
+			String stringJson = EntityUtils.toString(execute.getEntity());//è¿”å›å®ä½“
+			System.out.println(stringJson);
+			//è§£æå®ä½“
+			JSONObject fromObject = JSONObject.fromObject(stringJson.toString());
+			Object objectJson = fromObject.get("data");
+			JSONObject objectStr = JSONObject.fromObject(objectJson);
+			String password = (String) objectStr.get("password");
+			String username = (String) objectStr.get("username");
+			String shortName = (String) objectStr.get("shortName");
+			String address = (String) objectStr.get("address");
+			user.setPassWord(password);
+			user.setUserName(username);
+			user.setName(shortName);
+			user.setAddress(address);
+			//æŸ¥è¯¢ç”¨æˆ·
+			user =userService.QueryUser(user)==null?user:userService.QueryUser(user);
+			if(user==null){
+				//æ³¨å†Œ
+				int addUser = userService.addUser(user);
+				if(addUser>0){
+					System.err.println("è‡ªåŠ¨æ³¨å†ŒæˆåŠŸ");
+				}
+			}
 //		    User user= (User)JSONObject.toBean(object,User.class);
 		} catch (IOException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}finally {
-		    try {
-		        ((Closeable) httpCilent).close();//ÊÍ·Å×ÊÔ´
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		    }
+			try {
+				((Closeable) httpCilent).close();//é‡Šæ”¾èµ„æº
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		String url="/borrow/borrowlist.html";
-		
+
 		HttpSession session = requests.getSession();
 		session.setAttribute("currentUser", user);
 		return "redirect:"+url;
 	}
-	
+
 }

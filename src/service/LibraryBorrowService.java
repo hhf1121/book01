@@ -6,16 +6,16 @@ import java.util.List;
 import pojo.LibraryBorrow;
 
 public interface LibraryBorrowService {
-	// 增加
+	// 澧炲姞
 	int Add(LibraryBorrow lb);
 
-	// 查询
+	// 鏌ヨ
 	List<LibraryBorrow> Query(LibraryBorrow lb);
 
-	// 查总数
+	// 鏌ユ�绘暟
 	int QueryCountByName2(String userName,String bookName);
 
-	// 查总数
+	// 鏌ユ�绘暟
 	List<LibraryBorrow> QueryByAllList(String userName,String bookName,
-			Integer indexpage,Integer pageSize);
+									   Integer indexpage,Integer pageSize);
 }

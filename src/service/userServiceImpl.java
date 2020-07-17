@@ -25,7 +25,7 @@ public class userServiceImpl implements userService {
 		return userMapper.QueryUser(user);
 	}
 
-	// ĞŞ¸ÄĞÅÏ¢
+	// ä¿®æ”¹ä¿¡æ¯
 	public int ModifyUser(User user) {
 		return userMapper.ModifyUser(user);
 	}

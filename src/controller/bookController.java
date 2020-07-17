@@ -32,24 +32,24 @@ public class bookController {
 	@Resource
 	private borrowService borrowService;
 
-	// »ñÈ¡ÁĞ±í¡£
+	// è·å–åˆ—è¡¨ã€‚
 	@RequestMapping(value = "/booklist.html")
 	public String getBookList(Model model, HttpSession session,
-			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "author", required = false) String author,
-			@RequestParam(value = "pageIndex", required = false) String indexPage) {
+							  @RequestParam(value = "name", required = false) String name,
+							  @RequestParam(value = "author", required = false) String author,
+							  @RequestParam(value = "pageIndex", required = false) String indexPage) {
 		Page page = new Page();
-		int countSize = bookService.CountBooks(name, author);// ×ÜÌõÊı
+		int countSize = bookService.CountBooks(name, author);// æ€»æ¡æ•°
 		page.setCountSize(countSize);
-		int PageSize = page.getPageSize();// Ò³ÃæÈİÁ¿
-		int currentPage = page.getCurrentPage();// µ±Ç°Ò³
+		int PageSize = page.getPageSize();// é¡µé¢å®¹é‡
+		int currentPage = page.getCurrentPage();// å½“å‰é¡µ
 		if (indexPage != null) {
 			currentPage = Integer.parseInt(indexPage);
 		}
 		int xx = (currentPage - 1) * PageSize;
 		List<Book> booklist = bookService.getList(name, author, xx, PageSize);
 		model.addAttribute("booklist", booklist);
-		model.addAttribute("name", name);// »ØÏÔ
+		model.addAttribute("name", name);// å›æ˜¾
 		model.addAttribute("author", author);
 		model.addAttribute("pageNo", currentPage);
 		model.addAttribute("totalPageCount", page.getPageCount());
@@ -57,7 +57,7 @@ public class bookController {
 		return "booklist";
 	}
 
-	// ´ò¿ªÒ³Ãæ¡£
+	// æ‰“å¼€é¡µé¢ã€‚
 	@RequestMapping(value = "/booklist2.html")
 	public ModelAndView getBookList2(Model model, HttpSession session) {
 		ModelAndView modelAndView=new ModelAndView();
@@ -65,16 +65,16 @@ public class bookController {
 		return modelAndView;
 	}
 
-	// »ñÈ¡Êı¾İ
-	@RequestMapping(value = "/getbookList.do",method= RequestMethod.GET,produces= MediaType.APPLICATION_JSON_VALUE)
+	// è·å–æ•°æ®
+	@RequestMapping(value = "/getbookList.do",method= RequestMethod.GET/*,produces= MediaType.APPLICATION_JSON_VALUE*/)
 	@ResponseBody
 	public Map<String,Object> getbookList(String name, String author,Page page) {
 		Map<String,Object> result=new HashMap<>();
 		Page page1 = new Page();
-		int countSize = bookService.CountBooks(name, author);// ×ÜÌõÊı
+		int countSize = bookService.CountBooks(name, author);// æ€»æ¡æ•°
 		page1.setCountSize(countSize);
-		int PageSize = Integer.parseInt(page.getRows());// Ò³ÃæÈİÁ¿
-		int currentPage = Integer.parseInt(page.getPage());// µ±Ç°Ò³
+		int PageSize = Integer.parseInt(page.getRows());// é¡µé¢å®¹é‡
+		int currentPage = Integer.parseInt(page.getPage());// å½“å‰é¡µ
 		int xx = (currentPage - 1) * PageSize;
 		List<Book> booklist = bookService.getList(name, author, xx, PageSize);
 		result.put("rows",booklist);
@@ -85,11 +85,11 @@ public class bookController {
 
 
 
-	// ½èÔÄ
+	// å€Ÿé˜…
 	@RequestMapping(value = "/borrow.html")
 	@ResponseBody
 	public String getBorrow(@Param("bid") String bid, @Param("uid") String uid, HttpSession session) {
-		// String bookId=id;//ÊéµÄid
+		// String bookId=id;//ä¹¦çš„id
 		Integer bidx = Integer.parseInt(bid);
 		Long uidx = Long.parseLong(uid);
 		Borrow borrowx = new Borrow();
@@ -100,7 +100,7 @@ public class bookController {
 		String bookName = (bookService.QueryUserById(book)).getName();
 		Borrow b = borrowService.QueryBorrowBy2id(borrowx);
 		if (null != b) {
-			// session.setAttribute("infox", "ÄúÒÑ¾­½èÔÄÁË"+bookName+"£¬²»ÄÜÖØ¸´½èÔÄ");
+			// session.setAttribute("infox", "æ‚¨å·²ç»å€Ÿé˜…äº†"+bookName+"ï¼Œä¸èƒ½é‡å¤å€Ÿé˜…");
 			// session.removeAttribute("info");
 			return "false";
 		} else {
@@ -128,21 +128,21 @@ public class bookController {
 
 	@RequestMapping(value = "/allbooklist.html")
 	public String getAllBookList(Model model, HttpSession session,
-			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "author", required = false) String author,
-			@RequestParam(value = "pageIndex", required = false) String indexPage) {
+								 @RequestParam(value = "name", required = false) String name,
+								 @RequestParam(value = "author", required = false) String author,
+								 @RequestParam(value = "pageIndex", required = false) String indexPage) {
 		Page page = new Page();
-		int countSize = bookService.CountBooks(name, author);// ×ÜÌõÊı
+		int countSize = bookService.CountBooks(name, author);// æ€»æ¡æ•°
 		page.setCountSize(countSize);
-		int PageSize = page.getPageSize();// Ò³ÃæÈİÁ¿
-		int currentPage = page.getCurrentPage();// µ±Ç°Ò³
+		int PageSize = page.getPageSize();// é¡µé¢å®¹é‡
+		int currentPage = page.getCurrentPage();// å½“å‰é¡µ
 		if (indexPage != null) {
 			currentPage = Integer.parseInt(indexPage);
 		}
 		int xx = (currentPage - 1) * PageSize;
 		List<Book> booklist = bookService.getList(name, author, xx, PageSize);
 		model.addAttribute("booklist", booklist);
-		model.addAttribute("name", name);// »ØÏÔ
+		model.addAttribute("name", name);// å›æ˜¾
 		model.addAttribute("author", author);
 		model.addAttribute("pageNo", currentPage);
 		model.addAttribute("totalPageCount", page.getPageCount());
@@ -150,8 +150,8 @@ public class bookController {
 		return "allbooklist";
 	}
 
-	
-	// Ôö¼ÓÊé¼®
+
+	// å¢åŠ ä¹¦ç±
 	@RequestMapping(value = "/addBook.html")
 	public String addBook() {
 		return "addbook";
@@ -160,14 +160,14 @@ public class bookController {
 	public String SaveaddBook(Model model,Book book) {
 		int x=bookService.addBook(book);
 		if(x>0){
-			return "redirect:/book/allbooklist.html";	
+			return "redirect:/book/allbooklist.html";
 		}else{
-			model.addAttribute("addbookInfo","Ìí¼ÓÊ§°Ü,²»ºÏ·¨");
-			return "addbook";	
+			model.addAttribute("addbookInfo","æ·»åŠ å¤±è´¥,ä¸åˆæ³•");
+			return "addbook";
 		}
 	}
-	
-	//É¾³ıÍ¼Êé¡£
+
+	//åˆ é™¤å›¾ä¹¦ã€‚
 	@RequestMapping(value="/deleteBook.html")
 	@ResponseBody
 	public String deleteBook(@RequestParam("bid")Integer id){
@@ -175,13 +175,13 @@ public class bookController {
 		book.setId(id);
 		Book bb=bookService.QueryCC(book);
 		if(bb.getCount()==bb.getCountSize()){
-		int x=bookService.deleteBook(book);
-		if(x>0)return "true";
-		else return "xxx";
+			int x=bookService.deleteBook(book);
+			if(x>0)return "true";
+			else return "xxx";
 		}else{
 			return "false";
 		}
 	}
-	
+
 
 }

@@ -8,29 +8,29 @@ import pojo.User;
 
 public interface UserMapper {
 
-	//×¢²á
+	//æ³¨å†Œ
 	int addUser(User user);
-	
-	//µÇÂ¼¡¢ÑéÖ¤ÕËºÅÃÜÂë¡£
+
+	//ç™»å½•ã€éªŒè¯è´¦å·å¯†ç ã€‚
 	User QueryUser(User user);
-	
-	//ĞŞ¸ÄĞÅÏ¢
+
+	//ä¿®æ”¹ä¿¡æ¯
 	int ModifyUser(User user);
-	
-	//¸ù¾İid
+
+	//æ ¹æ®id
 	User QueryUserById(User user);
-	
-	//ÕÒ»ØÃÜÂë
+
+	//æ‰¾å›å¯†ç 
 	User BakePass(User user);
-	
-	//ÕËºÅÊÇ·ñ´æÔÚ
+
+	//è´¦å·æ˜¯å¦å­˜åœ¨
 	int ifExist(String userName);
-	
-	//×ÜÊı¡£
+
+	//æ€»æ•°ã€‚
 	int getUserCount(@Param("name")String name,@Param("yes")Integer yes);
-	
-	//·ÖÒ³¡¢ÁĞ±í¡£
+
+	//åˆ†é¡µã€åˆ—è¡¨ã€‚
 	List<User> getUserList(@Param("name")String name,@Param("yes")Integer yes,@Param("indexPage")Integer indexPage,@Param("pagesize")Integer pagesize);
-	//¸ù¾İidÉ¾³ı¶à¸ö¡£
+	//æ ¹æ®idåˆ é™¤å¤šä¸ªã€‚
 	int deleteById(@Param("StringList")String [] IdList);
 }

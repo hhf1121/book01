@@ -6,13 +6,13 @@ import pojo.upLoadfile;
 
 public interface upLoadfileService {
 
-	// 增加
+	// 澧炲姞
 	int AddFile(upLoadfile uploadfile);
 
-	// 删除
+	// 鍒犻櫎
 	int DeleteFile(upLoadfile uploadfile);
 
-	// 查看
+	// 鏌ョ湅
 	List<upLoadfile> getList(upLoadfile uploadfile);
 
 	upLoadfile upLoadfileById(Integer id);

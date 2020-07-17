@@ -28,16 +28,16 @@ public class SystemSessionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
         HttpSession session=request.getSession(true);
-        //sessionÖĞ»ñÈ¡ÓÃ»§ÃûĞÅÏ¢
+        //sessionä¸­è·å–ç”¨æˆ·åä¿¡æ¯
         Object obj = session.getAttribute("currentUser");
         if (obj==null||"".equals(obj.toString())) {
-            System.out.println("Î´µÇÂ¼");
+            System.out.println("æœªç™»å½•");
             response.sendRedirect(request.getSession().getServletContext().getContextPath()+LOGIN_URL);
             return false;
         }else {
-            System.out.println("µ±Ç°ÓÃ»§session¹ıÆÚÊ±¼ä£º"+session.getMaxInactiveInterval());
-            System.out.println("ÒÑµÇÂ¼");
-            session.setMaxInactiveInterval(30*60);//sessionĞøÆÚ£º30·ÖÖÓ
+            System.out.println("å½“å‰ç”¨æˆ·sessionè¿‡æœŸæ—¶é—´ï¼š"+session.getMaxInactiveInterval());
+            System.out.println("å·²ç™»å½•");
+            session.setMaxInactiveInterval(30*60);//sessionç»­æœŸï¼š30åˆ†é’Ÿ
         }
         return true;
     }

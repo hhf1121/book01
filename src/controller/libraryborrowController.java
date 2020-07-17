@@ -22,7 +22,7 @@ public class libraryborrowController {
     @Resource
     private LibraryBorrowService libraryBorrowService;
 
-    // ¸öÈËÀúÊ·¼ÇÂ¼
+    // ä¸ªäººå†å²è®°å½•
     @RequestMapping(value = "/librarylist.html")
     public String OneList(HttpSession session, Model model) {
         Object currentUser = session.getAttribute("currentUser");
@@ -40,17 +40,17 @@ public class libraryborrowController {
         return "librarylist";
     }
 
-    // ¹ÜÀíÔ±²é¿´ËùÓĞµÄ¼ÇÂ¼
+    // ç®¡ç†å‘˜æŸ¥çœ‹æ‰€æœ‰çš„è®°å½•
     @RequestMapping(value = "/alllibrarylist.html")
     public String OneList(Model model, @RequestParam(value = "bookName", required = false) String bookName,
                           @RequestParam(value = "userName", required = false) String userName,
                           @RequestParam(value = "pageIndex", required = false) String indexPage) {
         Page page = new Page();
-        int PageSize = page.getPageSize();//Ò³ÃæÈİÁ¿¡£
-        int currentPage = page.getCurrentPage();//µ±Ç°Ò³Ãæ¡£
-        int CountSize = libraryBorrowService.QueryCountByName2(userName, bookName);//×ÜÌõÊı
+        int PageSize = page.getPageSize();//é¡µé¢å®¹é‡ã€‚
+        int currentPage = page.getCurrentPage();//å½“å‰é¡µé¢ã€‚
+        int CountSize = libraryBorrowService.QueryCountByName2(userName, bookName);//æ€»æ¡æ•°
         page.setCountSize(CountSize);
-        int pageCount = page.getPageCount();//Ò³Êı¡£
+        int pageCount = page.getPageCount();//é¡µæ•°ã€‚
         if (null != indexPage) {
             currentPage = Integer.parseInt(indexPage);
         }

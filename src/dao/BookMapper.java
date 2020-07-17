@@ -8,29 +8,29 @@ import pojo.Book;
 
 public interface BookMapper {
 
-	// »ñÈ¡ÁĞ±í
+	// è·å–åˆ—è¡¨
 	List<Book> getList(@Param("name") String name, @Param("author") String author,
-			@Param("indexPage") Integer indexPage, @Param("PageSize") Integer PageSize);
+					   @Param("indexPage") Integer indexPage, @Param("PageSize") Integer PageSize);
 
-	// Êé¼®×ÜÊı
+	// ä¹¦ç±æ€»æ•°
 	int CountBooks(@Param("name") String name, @Param("author") String author);
 
-	//¸Ä±äÊé¼®ÊıÁ¿
+	//æ”¹å˜ä¹¦ç±æ•°é‡
 	int upDateCountById(Integer id);
 
 	int downDateCountById(Integer id);
 
-	//¸ù¾İid²é
+	//æ ¹æ®idæŸ¥
 	Book QueryUserById(Book book);
-	
+
 	Book QueryCountById(Book book);
-	
-	//Ôö¼ÓÊé¼®
+
+	//å¢åŠ ä¹¦ç±
 	int addBook(Book book);
-	//É¾³ıÊé¼®¡£
+	//åˆ é™¤ä¹¦ç±ã€‚
 	int deleteBook(Book book);
-	
-	//²éÑ¯¿â´æ¡£
+
+	//æŸ¥è¯¢åº“å­˜ã€‚
 	Book QueryCC(Book book);
-	
+
 }

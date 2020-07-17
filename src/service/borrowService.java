@@ -8,20 +8,20 @@ import pojo.Borrow;
 
 public interface borrowService {
 
-	// Ôö¼Ó
+	// å¢åŠ 
 	int AddBorrow(Borrow borrow);
 
-	// ĞŞ¸Ä
+	// ä¿®æ”¹
 	int upDateCountById(Long id);
 
 	Borrow QueryBorrowBy2id(Borrow borrow);
 
-	// ×ÜÊı
+	// æ€»æ•°
 	int QueryBorrowCount(Long id);
 
-	// ²éÑ¯µ¥¸öÓÃ»§½èÔÄµÄÁĞ±í(·ÖÒ³)
+	// æŸ¥è¯¢å•ä¸ªç”¨æˆ·å€Ÿé˜…çš„åˆ—è¡¨(åˆ†é¡µ)
 	List<Borrow> QueryBorrow(Long id, Integer currentPage, Integer pageSize);
 
-	// É¾³ı
+	// åˆ é™¤
 	int deleteBorrow(Long userId,Integer bookId);
 }

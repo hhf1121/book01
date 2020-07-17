@@ -8,16 +8,16 @@ import pojo.LibraryBorrow;
 
 public interface LibraryBorrowMapper {
 
-	// 增加
+	// 澧炲姞
 	int Add(LibraryBorrow lb);
 
-	// 查询
+	// 鏌ヨ
 	List<LibraryBorrow> Query(LibraryBorrow lb);
 
-	// 查总数
+	// 鏌ユ�绘暟
 	int QueryCountByName2(@Param("userName") String userName, @Param("bookName") String bookName);
 
-	// 分页
+	// 鍒嗛〉
 	List<LibraryBorrow> QueryByAllList(@Param("userName") String userName, @Param("bookName") String bookName,
-			@Param("IndexPage") Integer indexpage, @Param("pageSize") Integer pageSize);
+									   @Param("IndexPage") Integer indexpage, @Param("pageSize") Integer pageSize);
 }
