@@ -47,8 +47,8 @@
 				<span style="color: green">使用</span><a href="http://192.168.50.164:8080/common/oauth2/authorize?redirect_uri=http://192.168.50.164:8081/book/sso.html" style="color: red">壹米滴答</a><span style="color:green;">账户登录</span>
 			</div>
 			<div style="text-align:center;padding:5px">
-					<a href="<%=path%>/login/doindex.html" class="easyui-linkbutton">注册</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="loginUser()">登录</a>
+				<a href="<%=path%>/login/doindex.html" class="easyui-linkbutton">注册</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="xxx()">忘记密码</a>
 			</div>
 			<span style="color: red">${info }</span>

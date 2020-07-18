@@ -2,7 +2,9 @@ package controller;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.springframework.web.servlet.ModelAndView;
 import pojo.Book;
 import pojo.Borrow;
 import pojo.LibraryBorrow;
@@ -97,34 +100,32 @@ public class borrowController {
 		}
 		}*/
 
-
+	// 打开页面。
+	@RequestMapping(value = "/borrowlist.html")
+	public ModelAndView borrowlist(Model model, HttpSession session) {
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.setViewName("borrowlist");
+		return modelAndView;
+	}
 
 
 	//借阅表
-	@RequestMapping(value="/borrowlist.html")
-	public String getList(Model model,HttpSession session,@RequestParam(value="pageIndex",required=false) String PageNo){
+	@RequestMapping(value="/getBorrowlist",method= RequestMethod.GET)
+	@ResponseBody
+	public Map<String,Object> getList(HttpSession session, Page page){
+		Map<String,Object> result=new HashMap<>();
 		Object currentUser = session.getAttribute("currentUser");
-		if(currentUser==null){
-			return "login";
-		}
 		long id=((User)currentUser).getId();
 		int count=borrowService.QueryBorrowCount(id);//总数。
-		Page page=new Page();
-		page.setCountSize(count);
-		int currentPage=page.getCurrentPage();
-		int pageCount=page.getPageCount();//总页数。
-		int PageSize=page.getPageSize();//容量
-		if(PageNo!=null){
-			currentPage=Integer.parseInt(PageNo);
-		}
-		int xyz=(currentPage-1)*PageSize;
-		List<Borrow>borrowlist=borrowService.QueryBorrow(id, xyz, PageSize);
+		int PageSize = Integer.parseInt(page.getRows());// 页面容量
+		int currentPage = Integer.parseInt(page.getPage());// 当前页
+		int xx = (currentPage - 1) * PageSize;
+		List<Borrow>borrowlist=borrowService.QueryBorrow(id, xx, PageSize);
 		System.err.println(borrowlist);
-		model.addAttribute("borrowlist", borrowlist);
-		model.addAttribute("totalPageCount",pageCount);
-		model.addAttribute("totalCount", count);
-		model.addAttribute("pageNo",currentPage);
-		return "borrowlist";
+		result.put("rows",borrowlist);
+		result.put("total",count);
+		result.put("success",true);
+		return result;
 	}
 
 

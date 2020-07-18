@@ -115,14 +115,14 @@ public class bookController {
 
 	@RequestMapping(value = "/ajax")
 	@ResponseBody
-	public String ajax(@RequestParam("bid") String id) {
+	public Boolean ajax(@RequestParam("bid") String id) {
 		Book book = new Book();
 		book.setId(Integer.parseInt(id));
 		int count = (bookService.QueryCountById(book)).getCount();
 		if (count > 0) {
-			return "true";
+			return true;
 		} else {
-			return "false";
+			return false;
 		}
 	}
 
