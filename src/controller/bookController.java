@@ -66,7 +66,7 @@ public class bookController {
 	}
 
 	// 获取数据
-	@RequestMapping(value = "/getbookList.do",method= RequestMethod.GET/*,produces= MediaType.APPLICATION_JSON_VALUE*/)
+	@RequestMapping(value = "/getbookList",method= RequestMethod.GET)
 	@ResponseBody
 	public Map<String,Object> getbookList(String name, String author,Page page) {
 		Map<String,Object> result=new HashMap<>();

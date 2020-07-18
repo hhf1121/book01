@@ -12,6 +12,7 @@
 	<style type="text/css">
 		#px{
 			color:red;
+			text-align: center;
 		}
 		.mycss{
 			padding-top: 150px;
@@ -34,15 +35,15 @@
 				<table cellpadding="5">
 					<tr>
 						<td>账号:</td>
-						<td><input class="easyui-textbox" type="text" name="userName" data-options="required:true"></input></td>
+						<td><input class="easyui-textbox" id="userName" type="text" name="userName" data-options="required:true,missingMessage:'账号不能为空'"></input></td>
 					</tr>
 					<tr>
 						<td>密码:</td>
-						<td><input class="easyui-textbox" type="password" name="passWord" data-options="required:true"></input></td>
+						<td><input class="easyui-passwordbox" id="passWord" type="text" name="passWord" data-options="required:true,missingMessage:'密码不能为空'"></input></td>
 					</tr>
 				</table>
 			</form>
-			<div>
+			<div id="isSSO">
 				<span style="color: green">使用</span><a href="http://192.168.50.164:8080/common/oauth2/authorize?redirect_uri=http://192.168.50.164:8081/book/sso.html" style="color: red">壹米滴答</a><span style="color:green;">账户登录</span>
 			</div>
 			<div style="text-align:center;padding:5px">
@@ -50,31 +51,37 @@
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="loginUser()">登录</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" onclick="xxx()">忘记密码</a>
 			</div>
+			<span style="color: red">${info }</span>
 		</div>
 	</div>
 </div>
-<div id="dlg" class="easyui-dialog" title="找回密码" data-options="iconCls:'icon-save'" style="width:600px;height:300px;padding:10px">
-	<form  method="post" style="width: 400px;text-align: center" id="retrunPass">
+<div id="dlg" class="easyui-dialog" title="找回密码" data-options="iconCls:'icon-save'"
+	 closable="false"
+	 style="width:600px;height:300px;padding:10px;margin: 0 auto">
+	<form  method="post" action="<%=path %>/user/backPass.do" style="width: 400px;text-align: center" id="retrunPass">
+		<br>
+		<br>
 		<tr>
 			<td>账号:</td>
-			<td><input class="easyui-textbox" type="text" name="userName" value="${userName1 }" data-options="required:true"></input></td>
+			<td><input class="easyui-textbox" type="text" name="userName" data-options="required:true,missingMessage:'请输入账号'"></input></td>
 		</tr>
 		<br>
 		<tr>
 			<td>姓名:</td>
-			<td><input class="easyui-textbox" type="text" name="name" value="${name1 }" data-options="required:true"></input></td>
+			<td><input class="easyui-textbox" type="text" name="name" data-options="required:true,missingMessage:'请输入名字'"></input></td>
 		</tr>
 		<br>
-		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="returnPass()">确定</a>
+		<br>
+		<br>
+		<a href="javascript:void(0)" class="easyui-linkbutton" id="zhaohui" onclick="returnPass()">找回</a>
+		<a href="#" class="easyui-linkbutton" onclick="$('#retrunPass').form('clear'),$('#dlg').dialog('close'),isClosed()">关闭</a>
 		<%--<input class="easyui-linkbutton" type="submit" value="确定"/>--%>
 	</form>
-	<p id="px"><c:if test="${password1!=null }">您的密码为：${password1 }</c:if>${info1}</p>
+	<p id="px" style="display:none"></p>
 </div>
 <script type="text/javascript">
 	$(function () {
 		$('#dlg').dialog('close');//默认对话框是关闭的
-		// $.fn.userName.defaults.missingMessage="请输入账号";
-		// $.fn.passWord.defaults.missingMessage="请输入密码";
 	})
 	function xxx(){
 		$('#dlg').dialog('open');
@@ -86,24 +93,33 @@
 		}
 	}
 	function returnPass() {
-		var isRight=$('#retrunPass').form('validate');
-		$('#retrunPass').form({
-			url:'${pageContext.request.contextPath}/user/backPass.do',
-			onSubmit: function(){
-				debugger
-
+		$('#retrunPass').form('submit',{
+			url:'${pageContext.request.contextPath}/user/backPass',
+			dataType : 'json',
+			onSubmit: function(param){
+				return $('#retrunPass').form('validate');
 			},
 			success:function(data){
-				debugger
-				alert(data)
+				let result=JSON.parse(data);//字符串转换成json对象
+				if(result.success){
+					$('#px').css("display",'block');
+					$('#px').html("您的密码是："+result.data.password1)
+				}else{
+					$('#px').css("display",'block');
+					$('#px').html(result.error.info1)
+				}
+				$('#zhaohui').linkbutton('disable');
+				setTimeout(function () {
+					$('#zhaohui').linkbutton('enable');
+				},2000)
 			}
 		});
-		if(isRight){
-			$('#retrunPass').submit();
-		}
-
 	}
 
+	function isClosed() {
+		$('#px').html("");
+		$('#px').css("display","none");
+	}
 </script>
 </body>
 </html>

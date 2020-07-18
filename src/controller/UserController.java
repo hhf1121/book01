@@ -163,7 +163,7 @@ public class UserController {
 	}
 
 	// 找回密码
-	@RequestMapping(value = "/backPass.do")
+	@RequestMapping(value = "/backPass")
 	@ResponseBody
 	public Map<String,Object> backPass(String name, String userName) {
 		Map<String,Object> map=new HashMap<>();

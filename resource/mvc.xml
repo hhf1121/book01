@@ -10,13 +10,42 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
 	<context:component-scan base-package="controller"></context:component-scan>
-	<mvc:annotation-driven conversion-service="conversionService" content-negotiation-manager="contentNegotiationManager"/>
-	<!--<mvc:resources location="/calendar/" mapping="/calendar/**" />-->
+	<mvc:annotation-driven conversion-service="conversionService" content-negotiation-manager="contentNegotiationManager" ignoreDefaultModelOnRedirect="true">
+		<!-- 设置不使用默认的消息转换器 -->
+		<mvc:message-converters register-defaults="false">
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+			<bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
+			<!-- 消息转换器，添加对文字编码的全局处理，解决中文返回问号的毛病 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<!-- 加入支持的媒体类型：返回contentType -->
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/javascript;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<!-- 加入支持的媒体类型：返回contentType -->
+				<property name="supportedMediaTypes" >
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 	<mvc:resources location="/css/" mapping="/css/**" />
-	<!--<mvc:resources location="/images/" mapping="/images/**" />-->
-	<mvc:resources location="/js/" mapping="/js/**" />
-	<!--<mvc:resources location="/statics/" mapping="/statics/**"/>-->
 	<mvc:resources location="/easyui/" mapping="/easyui/**"/>
+	<mvc:resources location="/js/" mapping="/js/**" />
+	<!--<mvc:resources location="/images/" mapping="/images/**" />-->
+	<!--<mvc:resources location="/statics/" mapping="/statics/**"/>-->
+	<!--<mvc:resources location="/calendar/" mapping="/calendar/**" />-->
+
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/jsp/"></property>
@@ -71,7 +100,7 @@
 	</bean>
 
 
-    <!-- Session失效拦截 -->
+	<!-- Session失效拦截 -->
     <mvc:interceptors>
         <!-- 定义拦截器 -->
         <mvc:interceptor>
@@ -83,7 +112,12 @@
             <mvc:exclude-mapping path="/jsp/login.html" />
             <mvc:exclude-mapping path="/user/ifExist" />
             <mvc:exclude-mapping path="/user/adduser.html" />
-            <mvc:exclude-mapping path="/user/backPass.do" />
+            <mvc:exclude-mapping path="/user/backPass" />
+            <mvc:exclude-mapping path="/**/*.js" />
+            <mvc:exclude-mapping path="/**/*.css" />
+            <mvc:exclude-mapping path="/**/*.png" />
+            <mvc:exclude-mapping path="/**/*.jpg" />
+            <mvc:exclude-mapping path="/**/*.gif" />
             <bean class="tools.SystemSessionInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
