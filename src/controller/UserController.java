@@ -45,12 +45,12 @@ public class UserController {
 	// 验证账号是否存在
 	@RequestMapping(value = "/ifExist")
 	@ResponseBody
-	public String ifExist(@RequestParam("userName") String userName) {
+	public Boolean ifExist(@RequestParam("userName") String userName) {
 		System.err.println("..................ajax验证.....");
 		if (userService.ifExist(userName) > 0) {
-			return "false";
+			return false;
 		}
-		return "true";
+		return true;
 	}
 
 	@RequestMapping(value = "/adduser.html",method=RequestMethod.POST)
