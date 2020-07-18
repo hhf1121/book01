@@ -2,7 +2,9 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ import service.RoleService;
 import service.listNoService;
 import service.userService;
 import tools.Page;
+import tools.ResultUtils;
 
 @Controller
 @RequestMapping("/user")
@@ -160,22 +163,23 @@ public class UserController {
 	}
 
 	// 找回密码
-	@RequestMapping(value = "/backPass.html")
-	public String backPass(Model model, @RequestParam("name") String name, @RequestParam("userName") String userName) {
+	@RequestMapping(value = "/backPass.do")
+	@ResponseBody
+	public Map<String,Object> backPass(String name, String userName) {
+		Map<String,Object> map=new HashMap<>();
 		User user = new User();
 		user.setUserName(userName);
 		user.setName(name);
 		String password = null;
 		try {
 			password = (userService.BakePass(user)).getPassWord();
-			System.err.println(".................................." + password);
-			model.addAttribute("name1", name);
-			model.addAttribute("userName1", userName);
-			model.addAttribute("password1", password);
-			return "login";
+			map.put("name1", name);
+			map.put("userName1", userName);
+			map.put("password1", password);
+			return ResultUtils.getSuccessResult(map);
 		} catch (Exception e) {
-			model.addAttribute("info1", "您输入的信息不匹配,找回密码失败");
-			return "login";
+			map.put("info1", "您输入的信息不匹配,找回密码失败");
+			return ResultUtils.getFailResult(map);
 		}
 	}
 

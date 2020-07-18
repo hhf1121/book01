@@ -59,6 +59,6 @@ request.setAttribute("path", path);
           	</c:import>
     	</div>
 </body>
-<script type="text/javascript" src="<%=path %>/js/jquery.min.js"></script>
+<script type="text/javascript" src="<%=path %>/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="<%=path %>/js/borrow.js"></script>
 </html>

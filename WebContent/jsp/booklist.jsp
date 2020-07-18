@@ -69,6 +69,6 @@ request.setAttribute("path", path);
     	</div>
     	
 </body>
-<script type="text/javascript" src="${pageContext.request.contextPath }/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/book.js"></script>
 </html>
