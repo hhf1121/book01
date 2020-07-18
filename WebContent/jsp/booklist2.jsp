@@ -24,7 +24,7 @@ request.setAttribute("path", path);
 			<div  class="easyui-accordion">
 				<div title="" data-options="selected:true">
 					<ul class="search-form" style="list-style-type:none">
-						<li><input name="name" class="easyui-textbox" label="图书名称：" labelWidth="100px;"  data-options="prompt:'请输入'" style="width:20%"> </li>
+						<li><input name="name" class="easyui-textbox" label="图书名称：" labelWidth="100px;"  data-options="prompt:'支持模糊查询'" style="width:20%"> </li>
 						<li ><input name="author" class="easyui-textbox" label="作者名字：" labelWidth="100px;"  style="width:20%"> </li>
 					<%--	<li style="width: 252px;text-align: right;">
 							流程类型：<input id="q_flowGroup" name="flowGroupId" class="easyui-combobox" style="height: 30px;width:100px;vertical-align: middle;" data-options="
@@ -80,7 +80,7 @@ request.setAttribute("path", path);
             onLoadSuccess: function (data) {
                 if (data.total == 0) {
                     var body = $(this).data().datagrid.dc.body2;
-                    body.find('table tbody').append('<tr><td width="' + body.width() + '" style="height: 35px; text-align: center;"><h1>未查到数据</h1></td></tr>');
+                    body.find('table tbody').append('<tr><td style="height: 35px;width: 150px; text-align: center;display: inline-block;float: right;color: grey"><h1>未查到数据</h1></td></tr>');
                     $(this).closest('div.datagrid-wrap').find('div.datagrid-pager').hide();
                 }
                 //如果通过调用reload方法重新加载数据有数据时显示出分页导航容器
