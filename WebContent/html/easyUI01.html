@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>easyUI组件展示</title>
+    <link rel="stylesheet" href="../easyui/themes/icon.css" type="text/css"></link>
+    <link rel="stylesheet" href="../easyui/themes/default/easyui.css" type="text/css"></link>
+    <script type="text/javascript" src="../easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
+</head>
+<body>
+<!--菜单 1.标签的方式：class="easyui-tree"   2.js的方式-->
+<div style="height: 200px">
+    <ul id="mytree" data-options="checkbox:'true',animate:'true',lines:'true'">
+        <li><span>菜单1</span></li>
+        <li><span>菜单2</span></li>
+        <li>
+            <span>菜单3</span>
+            <ul>
+                <li><span>菜单3-1</span></li>
+                <li><span>菜单3-2</span></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!--搜索框-->
+<div>
+    <input class="easyui-searchbox" style="width: 20%"  data-options="prompt:'多选搜索',menu:'#mm',searcher:doSearch"/>
+    <div id="mm">
+        <div data-options="name:'data1',iconCls:'icon-ok'">选项1</div>
+        <div data-options="name:'data2',iconCls:'icon-ok'">选项2</div>
+    </div>
+</div>
+<!--拖拽-->
+<div class="easyui-draggable" data-options="handle:'#title1'" style="height: 50px;width: 150px;border: 1px solid #ff9900">
+    <div id="title1" style="background:#ccc;">html拖拽</div>
+    内容
+</div>
+
+<div id="mydraggable" style="height: 50px;width: 150px ;border: 1px solid #ff2dc9">
+    <div id="title2" style="background:#ccc;">js拖拽</div>
+    内容
+</div>
+
+<!--进度条-->
+<div id="p" class="easyui-progressbar" data-options="value:60" style="width:400px;"></div>
+<input  id="xx" type="button" onclick="isOnclick()" value="进度条按钮"></input>
+<input  id="xxy" type="button" onclick="isOnclick()" value="进度条按钮"></input>
+<!--分页-->
+<div  id="pagination" class="easyui-pagination" data-options="buttons:$('#xx')"></div><!--$('#xx'),引用按钮-->
+
+
+<!--控制面板的按钮-->
+<input type="button" value="打开面板" onclick="$('#panel').panel('open')" />
+<input type="button" value="关闭面板" onclick="$('#panel').panel('close')"/>
+<input type="button" value="展开面板" onclick="$('#panel').panel('expand')" />
+<input type="button" value="收起面板" onclick="$('#panel').panel('collapse')" />
+<!--面板-->
+<div id="panel" class="easyui-panel" style="width: 50%;height: 20%" data-options="title:'panel面板',iconCls:'icon-save',tools:'#anniu'">
+    <p>我是面板的内容</p>
+</div>
+<div id="anniu">
+    <button onclick="javascript:alert('点击按钮')"><span style="height: 0.5em">X</span></button>
+</div>
+
+<!--手风琴-->
+<div id="accordion" class="easyui-accordion" data-options="halign:'left'" style="width: 800px;height: 200px">
+    <div title="NO1" data-options="titleDirection:'up'">我是面板1</div>
+    <div title="NO2">我是面板2</div>
+    <div title="NO3">我是面板3</div>
+</div>
+<!--easyui布局-->
+<div id="layoutanniu">
+    <button onclick="layout()"><span style="height: 0.5em">layout追加按钮</span></button>
+    <button onclick="removelayout()"><span style="height: 0.5em">layout删除按钮</span></button>
+</div>
+<div id="cc" class="easyui-layout" style="width:600px;height:400px;">
+    <div data-options="region:'north',title:'North Title',split:true" style="height:100px;"></div>
+    <div data-options="region:'south',title:'South Title',split:true" style="height:100px;"></div>
+    <div data-options="region:'east',title:'East',split:true" style="width:100px;"></div>
+    <div data-options="region:'west',title:'West',split:true" style="width:100px;"></div>
+    <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;"></div>
+</div>
+<!--easyui选项卡-->
+<div>
+    <input id="inppp" value="选项2" />
+    <button onclick="selectTab()">确定</button>
+    <!--linkbutton按钮-->
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-add',iconAlign:'right'" href="jingtaiyemian.html">跳转</a>
+</div>
+<div id="tables" class="easyui-tabs" style="width: 500px;height:500px;border: 1px solid" data-options="tabHeight:50,tabPosition:'left'">
+    <div title="选项1" data-options="tools:[{iconCls: 'icon-add',handler:function(){alert('选项卡1的add')}}]"></div>
+    <div title="选项2" data-options="href:'jingtaiyemian.html'"></div>
+    <div title="<img src='../easyui/themes/icons/large_chart.png' />">选项3</div>
+</div>
+
+<!--菜单-->
+<div id="menu" class="easyui-menu" data-options="onClick:menuHandler" style="width: 100px">
+    <div data-options="iconCls:'icon-add',name:'add'">new1</div>
+    <div data-options="iconCls:'icon-edit',name:'edit'">new2</div>
+    <div data-options="name:'new3'">new3</div>
+</div>
+
+<!--菜单按钮-->
+<div id="mmtree" class="easyui-menu" style="width: 100px">
+    <div onclick="myappendNode()" data-options="iconCls:'icon-add'">追加子节点</div>
+    <div onclick="myinsertNode()" data-options="iconCls:'icon-back'">插入节点</div>
+    <div onclick="myremoveNode()" data-options="iconCls:'icon-remove'">删除节点</div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#mytree').tree({//菜单，js的方式初始化
+            checkbox:true,  //等同于：data-options="checkbox:'true'"
+            data:[
+                {text:'菜单1'},
+                {text:'菜单2'},
+                {text:'菜单3',state:'closed',children:[{text:'菜单3-1'},{text:'菜单3-2'},{text:'菜单3-3'}]},
+                ],
+            dnd:true,//可拖拽
+            formatter:function (node) {
+                return "["+node.text+"]"
+            },
+            loadFilter:function (data) {//过滤器
+                for (var i = 0; i < data.length; i++) {
+                    if(data[i].text=='菜单3-3'){
+                        data[i].text='<span style="color: mediumvioletred">菜单3-3</span>';
+                    }
+                }
+                return data;
+            },
+            onClick:function (node) {//点击事件，点击可编辑
+                $(this).tree("beginEdit",node.target);
+            },
+            onAfterEdit:function (node) {
+                alert("编辑之后的值："+node.text)
+            },
+            onContextMenu:function (e,node) {//菜单上绑定自定义右键菜单按钮
+                e.preventDefault();
+                $(this).tree("select",node.target);
+                $("#mmtree").menu("show",{
+                    left:e.pageX,
+                    top:e.pageY
+                })
+            },
+
+        });
+        $('#mydraggable').draggable({
+            handle:'#title2',
+            proxy:'clone'//拖拽：代理的模式
+        });
+        $('#p').progressbar({
+            value:20,//优先于html的data-options
+            onChange: function(value){//值改变时
+                $.messager.show({
+                    title:'进度条',
+                    msg:'当前：'+value,
+                    showType:'show',
+                    style:{
+                        right:'',
+                        top:document.body.scrollTop+document.documentElement.scrollTop,
+                        bottom:''
+                    }
+                });
+            },
+            onClick: function () {
+                isOnclick();
+            }
+        });
+        $('#pagination').pagination({
+            total:100,
+            pageSize: 10,//每页显示的记录条数，默认为10
+            pageList: [5,10,20,50],//可以设置每页记录条数的列表
+            beforePageText: '第',//页数文本框前显示的汉字
+            afterPageText: '页    共 {pages} 页',
+            displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+            layout:['list','first','links','last'],
+            buttons:[{  //会覆盖掉html定义的属性。
+                iconCls: 'icon-add',
+                handler: function () {
+                    $.messager.show({
+                        title: '分页add按钮',
+                        msg: 'add按钮被点击',
+                        timeout: 500,
+                        showType: 'slide'
+                    });
+                }
+                },
+                {
+                iconCls:'icon-edit',
+                handler:function () {
+                    $.messager.show({
+                        title:'分页edit按钮',
+                        msg:'edit按钮被点击',
+                        timeout:500,
+                        showType:'top'
+                    });
+                }
+            }]
+        });
+        $('#panel').panel({//面板js初始化
+            collapsible:true,//可折叠
+            minimizable:true,//最小化
+            maximizable:true,//最大化
+            closable:true,//可关闭
+            // halign:'left',//标题左侧
+            // titleDirection:'up',//标题字的方向
+            href:'jingtaiyemian.html',//远程加载页面，
+            onLoad:function () {//远程加载事件
+                alert("远程加载")
+            },
+            onClose:function () {//点击关闭按钮，彻底把面板组件消除了。
+                // $('#panel').panel("destroy");
+            }
+        });
+        $('#tables').tabs({
+           tools:[
+               {
+                   iconCls: 'icon-add',//新增选项卡
+                   handler: function () {
+                       var tables=$('#tables').tabs();
+                       var title=$('#tables').tabs('getTab',tables.length-1).panel('options').title;
+                       var index=title.substr(title.length-1,1)
+                       index++;
+                       $('#tables').tabs('add',{
+                           title:title+""+index,
+                           selected:true,
+                           closable:true
+                       })
+                   }
+               },
+               {
+                   iconCls: 'icon-edit',
+                   handler: function () {
+                       $.messager.show({
+                           title: '选项卡edit按钮',
+                           msg: 'edit按钮被点击',
+                           timeout: 500,
+                           showType: 'slide'
+                       });
+                   }
+               }
+               ]
+        });
+        $(document).bind("contextmenu",function (e) {//绑定到当前document
+            e.preventDefault();//禁用默认的右键
+            $('#menu').menu('show',{
+                left:e.pageX,
+                top:e.pageY
+            })
+        });
+    })
+
+    function doSearch(value,name) {
+        alert("vaule:"+value+";name:"+name)
+    }
+
+    function isOnclick() {//设置进度条的值
+        var value=$('#p').progressbar('getValue');
+        $('#p').progressbar('setValue',value+1);
+    }
+
+    function layout() {
+       $('#cc').layout('panel','center').append("<span style='color: rebeccapurple'>追加内容<br></span>");
+    }
+    function removelayout() {
+       $('#cc').layout('panel','center').find("span:last").remove();
+    }
+
+    function selectTab() {
+        var name=$('#inppp').val();//jquery获取值
+        var flag=$('#tables').tabs('exists',name);//这个name的选项卡存在
+        if(flag){
+            $('#tables').tabs('select',name);//选中这个name卡
+        }
+    }
+
+    function menuHandler(item) {
+        alert(item.name)
+    }
+
+    var id=0;
+    function myappendNode() {
+        var select=$("#mytree").tree("getSelected");
+        var node={
+            parent:select.target,
+            data:[{
+                id:++id,
+                text:''
+            }]
+        }
+        $("#mytree").tree("append",node);
+        node=$("#mytree").tree("find",id);
+        $("#mytree").tree("beginEdit",node.target);
+    }
+    
+    function myinsertNode() {
+        var select=$("#mytree").tree("getSelected");
+        var node={
+            id:++id,
+            text:''
+        }
+        $("#mytree").tree("insert",{
+            after:select.target,
+            data:node
+        });
+        node=$("#mytree").tree("find",id);
+        $("#mytree").tree("beginEdit",node.target);
+    }
+    
+    function myremoveNode() {
+        var select=$("#mytree").tree("getSelected");
+        $("#mytree").tree("remove",select.target);
+    }
+
+</script>
+</body>
+</html>
