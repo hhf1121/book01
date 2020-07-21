@@ -23,12 +23,17 @@
         </li>
     </ul>
 </div>
-
+<div>
+    <input type="button" value="已选" onclick="getInfo($('#mytree').tree('getChecked'))" />
+    <input type="button" value="未选" onclick="getInfo($('#mytree').tree('getChecked','unchecked'))"/>
+    <input type="button" value="全选" onclick="getInfo($('#mytree').tree('getChecked',['checked','indeterminate']))" />
+    <input type="button" value="半选" onclick="getInfo($('#mytree').tree('getChecked','indeterminate'))" /><!--indeterminate 半选-->
+</div>
 <!--搜索框-->
 <div>
     <input class="easyui-searchbox" style="width: 20%"  data-options="prompt:'多选搜索',menu:'#mm',searcher:doSearch"/>
     <div id="mm">
-        <div data-options="name:'data1',iconCls:'icon-ok'">选项1</div>
+        <div data-options="name:'data1',iconCls:'icon-add'">选项1</div>
         <div data-options="name:'data2',iconCls:'icon-ok'">选项2</div>
     </div>
 </div>
@@ -44,7 +49,7 @@
 </div>
 
 <!--进度条-->
-<div id="p" class="easyui-progressbar" data-options="value:60" style="width:400px;"></div>
+<div id="myprogressbar" class="easyui-progressbar" data-options="value:60" style="width:400px;"></div>
 <input  id="xx" type="button" onclick="isOnclick()" value="进度条按钮"></input>
 <input  id="xxy" type="button" onclick="isOnclick()" value="进度条按钮"></input>
 <!--分页-->
@@ -61,26 +66,26 @@
     <p>我是面板的内容</p>
 </div>
 <div id="anniu">
-    <button onclick="javascript:alert('点击按钮')"><span style="height: 0.5em">X</span></button>
+    <button onclick="javascript:alert('点击面板自定义按钮')"><span style="color: red">X</span></button>
 </div>
 
 <!--手风琴-->
 <div id="accordion" class="easyui-accordion" data-options="halign:'left'" style="width: 800px;height: 200px">
-    <div title="NO1" data-options="titleDirection:'up'">我是面板1</div>
+    <div title="NO1" data-options="titleDirection:'up'">我是面板1</div><!-- halign：左对齐  titleDirection:标题字的方向 -->
     <div title="NO2">我是面板2</div>
     <div title="NO3">我是面板3</div>
 </div>
 <!--easyui布局-->
-<div id="layoutanniu">
+<div>
     <button onclick="layout()"><span style="height: 0.5em">layout追加按钮</span></button>
     <button onclick="removelayout()"><span style="height: 0.5em">layout删除按钮</span></button>
 </div>
-<div id="cc" class="easyui-layout" style="width:600px;height:400px;">
-    <div data-options="region:'north',title:'North Title',split:true" style="height:100px;"></div>
-    <div data-options="region:'south',title:'South Title',split:true" style="height:100px;"></div>
-    <div data-options="region:'east',title:'East',split:true" style="width:100px;"></div>
-    <div data-options="region:'west',title:'West',split:true" style="width:100px;"></div>
-    <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;"></div>
+<div id="cc" class="easyui-layout" style="width:600px;height:400px;"><!-- split：是否带>>按钮操作面板 -->
+    <div data-options="region:'north',title:'北面',split:true" style="height:100px;"></div>
+    <div data-options="region:'south',title:'南面',split:true" style="height:100px;"></div>
+    <div data-options="region:'east',title:'东面',split:true" style="width:100px;"></div>
+    <div data-options="region:'west',title:'西面',split:true" style="width:100px;"></div>
+    <div data-options="region:'center',title:'中心'" style="padding:5px;background:#eee;"></div>
 </div>
 <!--easyui选项卡-->
 <div>
@@ -90,9 +95,9 @@
     <a class="easyui-linkbutton" data-options="iconCls:'icon-add',iconAlign:'right'" href="jingtaiyemian.html">跳转</a>
 </div>
 <div id="tables" class="easyui-tabs" style="width: 500px;height:500px;border: 1px solid" data-options="tabHeight:50,tabPosition:'left'">
-    <div title="选项1" data-options="tools:[{iconCls: 'icon-add',handler:function(){alert('选项卡1的add')}}]"></div>
-    <div title="选项2" data-options="href:'jingtaiyemian.html'"></div>
-    <div title="<img src='../easyui/themes/icons/large_chart.png' />">选项3</div>
+    <div title="选项1" data-options="tools:[{iconCls: 'icon-add',handler:function(){alert('选项卡1的add')}}]"></div><!--选项1上有个自定义按钮-->
+    <div title="选项2" data-options="href:'jingtaiyemian.html'"></div><!--选项2连接了别的页面-->
+    <div title="<img src='../easyui/themes/icons/large_chart.png' />">选项3</div><!--选项3的标题是个图标-->
 </div>
 
 <!--菜单-->
@@ -102,7 +107,7 @@
     <div data-options="name:'new3'">new3</div>
 </div>
 
-<!--菜单按钮-->
+<!--右键菜单按钮-->
 <div id="mmtree" class="easyui-menu" style="width: 100px">
     <div onclick="myappendNode()" data-options="iconCls:'icon-add'">追加子节点</div>
     <div onclick="myinsertNode()" data-options="iconCls:'icon-back'">插入节点</div>
@@ -112,49 +117,60 @@
 <script type="text/javascript">
     $(function () {
         $('#mytree').tree({//菜单，js的方式初始化
-            checkbox:true,  //等同于：data-options="checkbox:'true'"
-            data:[
-                {text:'菜单1'},
-                {text:'菜单2'},
-                {text:'菜单3',state:'closed',children:[{text:'菜单3-1'},{text:'菜单3-2'},{text:'菜单3-3'}]},
+                checkbox:true,  //等同于：data-options="checkbox:'true'"
+                data:[
+                    {text:'菜单1'},
+                    {text:'菜单2'},
+                    {text:'菜单3',state:'closed',children:[{text:'菜单3-1'},{text:'菜单3-2'},{text:'菜单3-3'}]},
                 ],
-            dnd:true,//可拖拽
-            formatter:function (node) {
-                return "["+node.text+"]"
-            },
-            loadFilter:function (data) {//过滤器
-                for (var i = 0; i < data.length; i++) {
-                    if(data[i].text=='菜单3-3'){
-                        data[i].text='<span style="color: mediumvioletred">菜单3-3</span>';
+                url:'http://localhost:8083/book/base/getSelectDistrictByLevel.json?level=1,2&name=河南',
+                dnd:true,//可拖拽
+                formatter:function (node) {
+                    return "["+node.text+"]"
+                },
+                loadFilter:function (data) {//过滤器
+                    for (var i = 0; i < data.length; i++) {
+                        if(data[i].text=='菜单3-3'){
+                            data[i].text='菜单3-3123';
+                        }
                     }
+                    return data;
+                },
+                onClick:function (node) {//点击事件，点击可编辑
+                    $(this).tree("beginEdit",node.target);
+                },
+                onAfterEdit:function (node) {
+                    $.messager.show({
+                        // title:'树控件的操作',
+                        msg:"树控件的操作->编辑之后的值："+node.text,
+                        timeout:1000,
+                        style:{
+                            right:'',
+                            height:'50px',
+                            top:document.body.scrollTop+document.documentElement.scrollTop,
+                            bottom:''
+                        }
+                    });
+                    // alert("编辑之后的值："+node.text)
+                },
+                onContextMenu:function (e,node) {//菜单上绑定自定义右键菜单按钮
+                    e.preventDefault();
+                    $(this).tree("select",node.target);
+                    $("#mmtree").menu("show",{
+                        left:e.pageX,
+                        top:e.pageY
+                    })
                 }
-                return data;
-            },
-            onClick:function (node) {//点击事件，点击可编辑
-                $(this).tree("beginEdit",node.target);
-            },
-            onAfterEdit:function (node) {
-                alert("编辑之后的值："+node.text)
-            },
-            onContextMenu:function (e,node) {//菜单上绑定自定义右键菜单按钮
-                e.preventDefault();
-                $(this).tree("select",node.target);
-                $("#mmtree").menu("show",{
-                    left:e.pageX,
-                    top:e.pageY
-                })
-            },
-
-        });
+            });
         $('#mydraggable').draggable({
             handle:'#title2',
             proxy:'clone'//拖拽：代理的模式
         });
-        $('#p').progressbar({
+        $('#myprogressbar').progressbar({
             value:20,//优先于html的data-options
             onChange: function(value){//值改变时
                 $.messager.show({
-                    title:'进度条',
+                    title:'进度条的操作',
                     msg:'当前：'+value,
                     showType:'show',
                     style:{
@@ -208,7 +224,17 @@
             // titleDirection:'up',//标题字的方向
             href:'jingtaiyemian.html',//远程加载页面，
             onLoad:function () {//远程加载事件
-                alert("远程加载")
+                $.messager.show({
+                    title:'panel的远程加载事件',
+                    msg:"panel的远程加载事件",
+                    timeout:1000,
+                    style:{
+                        right:'',
+                        height:'80px',
+                        top:document.body.scrollTop+document.documentElement.scrollTop,
+                        bottom:''
+                    }
+                });
             },
             onClose:function () {//点击关闭按钮，彻底把面板组件消除了。
                 // $('#panel').panel("destroy");
@@ -253,18 +279,28 @@
     })
 
     function doSearch(value,name) {
-        alert("vaule:"+value+";name:"+name)
+        $.messager.show({
+            title:'搜索框的操作',
+            msg:"vaule:"+value+";name:"+name,
+            timeout:1000,
+            style:{
+                right:'',
+                height:'70px',
+                top:document.body.scrollTop+document.documentElement.scrollTop,
+                bottom:''
+            }
+        });
     }
 
     function isOnclick() {//设置进度条的值
-        var value=$('#p').progressbar('getValue');
-        $('#p').progressbar('setValue',value+1);
+        var value=$('#myprogressbar').progressbar('getValue');
+        $('#myprogressbar').progressbar('setValue',value+1);
     }
 
-    function layout() {
+    function layout() {//在layout控件的center里追加内容
        $('#cc').layout('panel','center').append("<span style='color: rebeccapurple'>追加内容<br></span>");
     }
-    function removelayout() {
+    function removelayout() {//移出最后一个span标签
        $('#cc').layout('panel','center').find("span:last").remove();
     }
 
@@ -312,6 +348,35 @@
     function myremoveNode() {
         var select=$("#mytree").tree("getSelected");
         $("#mytree").tree("remove",select.target);
+    }
+
+    function getInfo(data) {
+        var msg=new Array();
+        $(data).each(function (e, node) {
+            msg[e]=node["text"];
+        })
+        $.messager.show({
+            title:'树的选择',
+            msg:'当前：'+msg,
+            showType:'show',
+            style:{
+                right:'',
+                top:document.body.scrollTop+document.documentElement.scrollTop,
+                bottom:''
+            }
+        });
+    }
+
+    function ajaxTree(url, fn) {
+        $.ajax({
+            url: url,
+            dataType: 'jsonp',
+            type: 'get',
+            success: function (data) {
+                debugger
+                fn(data);
+            }
+        });
     }
 
 </script>

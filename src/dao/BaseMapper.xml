@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BaseMapper">
+
+	<resultMap id="nodemap" type="pojo.MyTreeNode">
+		<id property="id" column="id" />
+		<result property="code" column="code"></result>
+		<result property="text" column="name"></result>
+		<result property="parentCode" column="parent_code"></result>
+		<result property="levelType" column="level_type"></result>
+	</resultMap>
+
+	<select id="getListByLevel"  resultMap="nodemap" parameterType="java.util.ArrayList">
+		select * from base_district where level_type in
+			<foreach collection="lists" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+	</select>
+
+</mapper>
