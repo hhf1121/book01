@@ -116,11 +116,15 @@ public class borrowController {
 		Map<String,Object> result=new HashMap<>();
 		Object currentUser = session.getAttribute("currentUser");
 		long id=((User)currentUser).getId();
+		String name = ((User) currentUser).getName();
 		int count=borrowService.QueryBorrowCount(id);//总数。
 		int PageSize = Integer.parseInt(page.getRows());// 页面容量
 		int currentPage = Integer.parseInt(page.getPage());// 当前页
 		int xx = (currentPage - 1) * PageSize;
 		List<Borrow>borrowlist=borrowService.QueryBorrow(id, xx, PageSize);
+		for (Borrow borrow : borrowlist) {
+			borrow.setName(name);
+		}
 		System.err.println(borrowlist);
 		result.put("rows",borrowlist);
 		result.put("total",count);

@@ -9,10 +9,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,10 +45,11 @@ public class UpLoadController {
 
 	// 文件上传
 	@RequestMapping(value = "/uploadFile.html", method = RequestMethod.POST)
-	public String addUploadfile(@RequestParam("path") MultipartFile uploadfile, Model model,
+	@ResponseBody
+	public Map<String,Object> addUploadfile(@RequestParam("path") MultipartFile uploadfile, Model model,
 								HttpServletRequest request) {
+		Map<String,Object> result=new HashMap<>();
 		String idpath = null;
-
 		// 判断文件是否为空
 		if (!uploadfile.isEmpty()) {
 			String path = request.getSession().getServletContext()
@@ -65,9 +63,9 @@ public class UpLoadController {
 			System.err.println("uploadFile prefix============> " + prefix);
 			System.err.println("uploadFile size============> " + uploadfile.getSize());
 			if (uploadfile.getSize() > filesize) {// 上传大小不得超过 500k
-				System.err.println("------------------------------------guoda!");
-				request.setAttribute("infoxx", " * 上传大小不得超过 500k");
-				return "Filelist";
+				result.put("data", " * 上传大小不得超过 500k");
+				result.put("success",false);
+				return result;
 			} else if (prefix.equalsIgnoreCase("txt")) {// 上传图片格式
 				String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000) + "_Personal.txt";
 				System.err.println("new fileName======== " + uploadfile.getName());
@@ -80,8 +78,9 @@ public class UpLoadController {
 					uploadfile.transferTo(targetFile);
 				} catch (Exception e) {
 					e.printStackTrace();
-					request.setAttribute("infoxx", " * 上传失败！");
-					return "Filelist";
+					result.put("data", " * 上传失败");
+					result.put("success",false);
+					return result;
 				}
 				idpath = path + File.separator + fileName;//上传文件全路径+文件名。
 				upLoadfile upload=new upLoadfile();
@@ -92,20 +91,25 @@ public class UpLoadController {
 				int x = uploadfileService.AddFile(upload);
 				if (x > 0) {
 //					model.addAttribute("infoxx", "上传成功");
-					return "redirect:/upLoad/Filelist.html";
+					result.put("data", " * 上传成功");
+					result.put("success",true);
+					return result;
 				} else {
-					model.addAttribute("infoxx", "上传失败");
-					return "Filelist";
+					result.put("data", " * 上传失败");
+					result.put("success",false);
+					return result;
 				}
 			} else {
 				System.err.println("---------------------------格式不对！》》");
-				model.addAttribute("infoxx", " * 上传图片格式不正确");
-				return "Filelist";
+				result.put("data", " * 上传文件格式不正确：txt");
+				result.put("success",false);
+				return result;
 			}
 		} else {
 			System.err.println("---------------------------文件为空！》》");
-			model.addAttribute("infoxx", "必须选择合法的上传文件");
-			return "Filelist";
+			result.put("data", " * 必须选择合法的上传文件");
+			result.put("success",false);
+			return result;
 		}
 	}
 
@@ -139,6 +143,26 @@ public class UpLoadController {
 		}
 	}
 
+
+    //读取列表。easyui
+    @RequestMapping(value = "/getFilelist")
+    @ResponseBody
+    public Map<String,Object> getFilelist(HttpSession session) {
+		Map<String,Object> result=new HashMap<>();
+        User u = (User) session.getAttribute("currentUser");
+        upLoadfile uploadfile = new upLoadfile();
+        User ux=userService.QueryUserById(u);
+        if(ux.getYes()==3){
+            System.err.println("管理员......................");
+            uploadfile.setUserid(null);
+        }else{
+            uploadfile.setUserid(u.getId());
+        }
+        List<upLoadfile> list = uploadfileService.getList(uploadfile);
+		result.put("rows",list);
+		result.put("success",true);
+		return result;
+    }
 
 	//下载：
 	@RequestMapping("/download.html")

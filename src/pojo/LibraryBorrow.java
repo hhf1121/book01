@@ -12,6 +12,8 @@ public class LibraryBorrow {
 	private Timestamp borrowTime;
 	private Timestamp bakeTime;
 	private String timelag;
+	private String readDays;//借阅几天
+
 
 	public String getTimelag() {
 		return timelag;
@@ -19,6 +21,14 @@ public class LibraryBorrow {
 
 	public void setTimelag(String timelag) {
 		this.timelag = timelag;
+	}
+
+	public String getReadDays() {
+		return readDays;
+	}
+
+	public void setReadDays(String readDays) {
+		this.readDays = readDays;
 	}
 
 	public int getId() {

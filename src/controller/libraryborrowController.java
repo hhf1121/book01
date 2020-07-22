@@ -1,6 +1,8 @@
 package controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -10,9 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.LibraryBorrow;
 import pojo.User;
 import service.LibraryBorrowService;
+import service.bookService;
 import tools.Page;
 
 @Controller
@@ -39,6 +43,30 @@ public class libraryborrowController {
         model.addAttribute("Librarylist", list);
         return "librarylist";
     }
+
+    // 个人历史记录list-easyui分页
+    @RequestMapping(value = "/getlibrarylist")
+    @ResponseBody
+    public  Map<String,Object> getlibrarylist(HttpSession session,Page page) {
+        Map<String,Object> result=new HashMap<>();
+        Object currentUser = session.getAttribute("currentUser");
+        Long userID = ((User) currentUser).getId();
+        Long countSize = libraryBorrowService.Countlibrarys(userID);// 总条数
+        Page page1 = new Page();
+        page1.setCountSize(countSize.intValue());
+        int PageSize = Integer.parseInt(page.getRows());// 页面容量
+        int currentPage = Integer.parseInt(page.getPage());// 当前页
+        int xx = (currentPage - 1) * PageSize;
+        List<LibraryBorrow> booklist = libraryBorrowService.getLibraryList(userID, xx, PageSize);
+        for (LibraryBorrow library : booklist) {
+            library.setReadDays((library.getBakeTime().getTime()-library.getBorrowTime().getTime())/3600000/24+"");
+        }
+        result.put("rows",booklist);
+        result.put("total",countSize);
+        result.put("success",true);
+        return result;
+    }
+
 
     // 管理员查看所有的记录
     @RequestMapping(value = "/alllibrarylist.html")

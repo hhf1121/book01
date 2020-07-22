@@ -11,6 +11,14 @@ public class Borrow {
 	private int bookId;
 	private Timestamp borrowTime;
 	private Timestamp bakeTime;
+	private String name;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	public int getId() {
 		return id;
 	}

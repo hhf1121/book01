@@ -10,14 +10,18 @@ function borrowx(bookid,userid){
 			if(result=="true"){
                 $.messager.confirm('提示',"归还书籍成功！", function(r){
                     if (r){
-                        window.location.href=path+"/borrow/borrowlist.html";                    }}
-                    );
+                        // window.location.href=path+"/borrow/borrowlist.html";
+						initborrowlistDate();
+                    }
+                });
 			}else if(result=="false"){
                 $.messager.alert('提示',"归还书籍失败/记录已放入历史中...");
-				window.location.href=path+"/borrow/borrowlist.html";
+				initborrowlistDate();
+				// window.location.href=path+"/borrow/borrowlist.html";
 			}else{
                 $.messager.alert('提示',"归还书籍失败/请重试...");
-				window.location.href=path+"/borrow/borrowlist.html";
+				initborrowlistDate();
+				// window.location.href=path+"/borrow/borrowlist.html";
 			}
 		},
 		error:function(){

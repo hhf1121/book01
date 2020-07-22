@@ -39,4 +39,15 @@ public class LibraryBorrowServiceImpl implements LibraryBorrowService {
 		return libraryBorrowMapper.QueryByAllList(userName, bookName, indexpage, pageSize);
 	}
 
+	@Override
+	public Long Countlibrarys(Long userID) {
+		return libraryBorrowMapper.CountlibrarysByID(userID);
+	}
+
+    @Override
+    public List<LibraryBorrow> getLibraryList(Long userID, int xx, int pageSize) {
+        return libraryBorrowMapper.getLibraryList(userID,xx,pageSize);
+    }
+
+
 }

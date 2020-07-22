@@ -20,4 +20,8 @@ public interface LibraryBorrowMapper {
 	// 分页
 	List<LibraryBorrow> QueryByAllList(@Param("userName") String userName, @Param("bookName") String bookName,
 									   @Param("IndexPage") Integer indexpage, @Param("pageSize") Integer pageSize);
+
+	Long CountlibrarysByID(@Param("userId") Long userId);
+
+	List<LibraryBorrow> getLibraryList(@Param("userId") Long userId,@Param("indexPage") Integer indexPage, @Param("pageSize") Integer PageSize);
 }

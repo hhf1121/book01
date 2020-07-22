@@ -34,4 +34,17 @@ insert into libraryborrow(userName,bookName,userId,bookId,borrowTime,bakeTime) v
 </select>
 
 
+	<select id="CountlibrarysByID" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select count(1) from libraryborrow where userId=#{userId}
+	</select>
+
+    <select id="getLibraryList" resultType="LibraryBorrow">
+        select * from libraryborrow
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="userId!=null and userId!=0">userId=#{userId}</if>
+        </trim>
+        limit #{indexPage},#{pageSize}
+    </select>
+
+
 </mapper>

@@ -18,4 +18,8 @@ public interface LibraryBorrowService {
 	// 查总数
 	List<LibraryBorrow> QueryByAllList(String userName,String bookName,
 									   Integer indexpage,Integer pageSize);
+
+	Long Countlibrarys(Long userID);
+
+    List<LibraryBorrow> getLibraryList(Long userID, int xx, int pageSize);
 }
