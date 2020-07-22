@@ -9,6 +9,14 @@
     <script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
 </head>
 <body>
+
+<!--远程调用：组合框-->
+<div style="display: block;position:relative;top: 10px;right: 10px">
+    <h3>远程请求:组合框(联想)</h3><!--值：value，展示：text-->
+    <input id="mylo" class="easyui-combobox" data-options="loader:myloader,mode:'remote',valueField:'code',textField:'text',
+        formatter:formatItem,panelWidth:350,panelHeight:'auto'"/>
+</div>
+
 <!--窗口-->  <!-- modal 	定义窗口是不是模态（modal）窗口。-->
 <div>
     <a class="easyui-linkbutton" onclick="$('#windows').window('open')">打开窗口</a>
@@ -125,7 +133,6 @@ handler:function(e){
         <option value="5">redis</option>
     </select>
 </div>
-
 <script type="text/javascript">
     $(function () {
         $("#dialog").dialog({
@@ -256,7 +263,6 @@ handler:function(e){
                 message:'两次密码不一致'
             }
         });
-
     })
 
     function getComBox() {
@@ -270,6 +276,26 @@ handler:function(e){
                 bottom:''
             }
         })
+    }
+    
+    function myloader(param, success, error) {
+        $.ajax({
+            url:'http://localhost:8083/book/base/getComboboxData.json?level=1&name='+$("#mylo").val(),
+            dataType:'json',
+            success:function (data) {
+                success(data);
+            },
+            error:function () {
+                error.apply(this,arguments)
+            }
+        })
+    }
+    function formatItem(row) {
+        var inputValue= $("#mylo").val();
+        var showText='<span>'+row.text+'</span>';
+        //替换文本
+        const newText=showText.replace(inputValue, "<span style='color: red'>"+inputValue+"</span>");
+        return newText;
     }
 </script>
 </body>
