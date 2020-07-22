@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>easyUI组件展示(2)</title>
+    <link rel="stylesheet" href="../easyui/themes/icon.css" type="text/css"></link>
+    <link rel="stylesheet" href="../easyui/themes/default/easyui.css" type="text/css"></link>
+    <script type="text/javascript" src="../easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
+</head>
+<body>
+<!--窗口-->  <!-- modal 	定义窗口是不是模态（modal）窗口。-->
+<div>
+    <a class="easyui-linkbutton" onclick="$('#windows').window('open')">打开窗口</a>
+    <a class="easyui-linkbutton" onclick="$('#windows').window('close')">关闭窗口</a>
+</div>
+<div id="windows" class="easyui-window" title="我的窗口"  style="width: 300px;height: 300px" data-options="closed:true,modal:true,href:'easyUI01.html'">
+我是窗口的内容，我可以用href引用外部的页面
+</div>
+
+<!--对话框-->
+<div>
+    <button onclick="$('#dialog').dialog('open')">打开对话框</button>
+</div>
+<div id="dialog" class="easyui-dialog" title="对话框"
+     style="width: 400px;height: 400px"
+     data-options="closed:true"
+>
+我是对话框
+</div>
+<div id="dibubuton">
+    <input type="button" value="确定" onclick="alert('确定')" />
+    <input type="button" value="取消" onclick="alert('取消')"/>
+</div>
+
+<!--tooltip提示框-->
+<a class="easyui-tooltip" title="提示信息" href="#">tooltip提示框</a>
+<a id="mytooltip" href="#">自定义tooltip提示框</a>
+
+<!--验证框-->
+<div>
+    必填<input class="easyui-validatebox" data-options="required:true,validateOnCreate:false" /><br><!--必填，加载的时候，不校验-->
+    网址<input class="easyui-validatebox" data-options="validType:['url','length[6,12]']" /><br><!--验证是网站、长度在6-12-->
+    邮箱<input class="easyui-validatebox" data-options="validType:'email'" /><br>
+</div>
+<div>
+    密码：<input id="pwd" class="easyui-validatebox" data-options="required:true">
+    确认密码：<input class="easyui-validatebox" data-options="required:true" validType="equals['#pwd']">
+</div>
+
+<!--文本框-->
+<div>
+    <a class="easyui-linkbutton"  onclick="alert($('#msg').textbox('getValue'))">文本框取值</a>
+    <a class="easyui-linkbutton"  onclick="$('#msg').textbox('setValue','$(\'#pwd\').val()')">文本框取值</a>
+</div>
+<div>
+    <input class="easyui-textbox" data-options="validType:'email',prompt:'请输入邮箱'" />
+    <input id="msg" class="easyui-textbox" data-options="multiline:true,prompt:'多行文本框',iconCls:'icon-man',iconWidth:30" style="height: 100px" />
+</div>
+
+<!--数字框-->
+<div>
+    <h2>数字框</h2>
+    <input class="easyui-numberbox" data-options="precision:2,min:-10,max:100,prompt:'只能是-10到100'"/><!--2位小数，负十到一百-->
+    <input class="easyui-numberbox" data-options="precision:2,groupSeparator:',',prompt:'分隔整数组合的字符'"/><!--2位小数，分隔整数组合的字符-->
+    <input class="easyui-numberbox" data-options="precision:2,decimalSeparator:'#',prompt:'分隔整数组合的字符'"/><!--2位小数，分隔整数组合的字符-->
+</div>
+
+<!--Combobox 组合框-->
+<div>
+    <h2>Combobox 组合框</h2>
+    <select id="combox"  style="width: 100px" ></select><a class="easyui-linkbutton" onclick="getComBox()">确定</a>
+    <div id="ra">
+        <input type="radio" name="one" value="1"  /><span>java</span><br>
+        <input type="radio" name="one" value="2"  /><span>spring</span><br>
+        <input type="radio" name="one" value="3"  /><span>mysql</span><br>
+        <input type="radio" name="one" value="4"  /><span>mybatis</span><br>
+    </div>
+</div>
+
+
+<!--文件框-->
+<div>
+    <form action="http://localhost:8083/book/upLoad/loadingFile" enctype="multipart/form-data" method="post">
+        <input class="easyui-filebox" name="file" data-options="buttonAlign:'left',prompt:'选择文件',buttonText:'选择'" />
+        <input type="submit" value="上传" />
+    </form>
+</div>
+
+<!--日期框-->
+<input type="button" value="跳到某一天" onclick="$('#calendar').calendar('moveTo',new Date(1989,10,21))" />
+<div>
+    <div id="calendar" class="easyui-calendar" style="width: 200px;height: 200px"></div>
+</div>
+
+<!--dateBox-->
+<div style="display: block">
+    <input id="datebox" class="easyui-datebox" data-options="prompt:'选择今天之后的日期'" />
+</div>
+
+<!--datatimebox-->
+<div>
+    <input id="timebox" style="width: 200px" data-options="iconCls: 'icon-man'" /><!--不展示秒:showSeconds:false-->
+</div>
+
+
+<!--数字调整器-->
+<input class="easyui-numberspinner" data-options="min:-99,max:99,editable:false,
+icons:[{
+iconCls:'icon-clear',
+handler:function(e){
+  $(e.data.target).numberspinner('clear')
+}
+}]"
+       style="width: 100px"/><!--[-99-99,不可输入]-->
+
+
+<!--组合框-->
+<div>
+    <select class="easyui-combobox" data-options="multiple:true,multiline:true" style="width: 200px;">
+        <option value="1">java</option>
+        <option value="2">mysql</option>
+        <option value="3">mybatis</option>
+        <option value="4">spring</option>
+        <option value="5">redis</option>
+    </select>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#dialog").dialog({
+            toolbar:[//顶部工具栏
+                {iconCls:'icon-add',text:'新增',handler:function () {
+                        $.messager.show({
+                            title:'对话框的操作',
+                            msg:'点击新增按钮',
+                            showType: 'show',
+                            style:{//右上
+                                right:0,
+                                left:'',
+                                top:document.body.scrollTop+document.documentElement.scrollTop,
+                                bottom:""
+                            }
+                        })
+                    }
+                },'-',
+                {iconCls:'icon-edit',text:'编辑',handler:function () {
+                        $.messager.show({
+                            title:'对话框的操作',
+                            msg:'点击编辑按钮',
+                            showType: 'fade'//淡入
+                        })
+                    }
+                },
+            ],
+            buttons:'#dibubuton'//底部按钮：引用id的模式
+        });
+        $("#mytooltip").tooltip({
+            position:'right',
+            content:'我是提示信息',
+            onShow:function () {//自定义样式
+                $(this).tooltip('tip').css({
+                    backgroundColor:'#e678e3',
+                    borderColor:'#6289ff'
+                })
+            }
+        });
+        $("#datebox").datebox({
+            required:true,
+            validateOnCreate:false,
+            formatter:function (date) {
+                return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+            },
+            parser:function (e) {
+              if(!e) return new Date();
+              var  ss=(e.split("-"));
+              var y=parseInt(ss[0],10);
+              var m=parseInt(ss[1],10);
+              var d=parseInt(ss[2],10);
+              if(!isNaN(y)&&!isNaN(m)&&!isNaN(d)){
+                  return new Date(y,m-1,d);
+              }else {
+                  return new Date();
+              }
+            }
+        });
+        //设置datebox控件只能选择比今天大的日期
+        $("#datebox").datebox("calendar").calendar({
+           validator:function (date) {
+               var now=new Date();
+               return date>new Date(now.getFullYear(),now.getMonth(),now.getDate());
+           }
+        });
+        $("#timebox").datetimebox({
+            value:'2020-7-22 15:15:59',
+            formatter:function (date) {
+                return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+
+                    " "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            },
+            parser:function (e) {
+                if(!e) return new Date();
+                var all=(e.split(" "));
+                var ss=(all[0].split("-"));
+                var y=parseInt(ss[0],10);
+                var M=parseInt(ss[1],10);
+                var d=parseInt(ss[2],10);
+                var ss2=(all[1].split(":"));
+                var h=parseInt(ss2[0],10);
+                var m=parseInt(ss2[1],10);
+                var s=parseInt(ss2[2],10);
+                if(!isNaN(y)&&!isNaN(M)&&!isNaN(d)&&!isNaN(h)&&!isNaN(m)&&!isNaN(s)){
+                    return new Date(y,M-1,d,h,m,s);
+                }else {
+                    return new Date();
+                }
+            }
+        })
+        $("#calendar").calendar({
+            // firstDay:1,//指定第一天是哪一天
+            onSelect:function (date) {
+                $.messager.show({
+                    title:'日期控件的操作',
+                    msg:date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate(),
+                    showType: 'show',
+                    style:{//右上
+                        right:0,
+                        left:'',
+                        top:document.body.scrollTop+document.documentElement.scrollTop,
+                        bottom:""
+                    }
+                })
+            }
+        });
+        $("#combox").combo({
+            required:true,
+            editable:false,//不可编辑
+        });
+        //把#ra和combox绑定在一起
+        $("#ra").appendTo($("#combox").combo("panel"));
+        $("#ra input").click(function () {
+            var value=$(this).val();
+            var text=$(this).next("span").text();
+            // alert("选中："+text+"值是："+value)
+            //把key和value赋值
+            $("#combox").combo("setValue",value).combo("setText",text).combo("hidePanel");
+        });
+        //修改默认的提示语：
+        $.fn.validatebox.defaults.rules.email.message="请正确的输入邮箱";
+        $.extend($.fn.validatebox.defaults.rules, {//修改默认的规则
+            equals:{//自定义校验、校验字段
+                validator: function(value, param){
+                    console.log(value)
+                    console.log($(param[0]).val())
+                    return value==$(param[0]).val();
+                },
+                message:'两次密码不一致'
+            }
+        });
+
+    })
+
+    function getComBox() {
+        $.messager.show({
+            title:'ComBox信息',
+            msg:$("#combox").combo("getValue")+"-"+$("#combox").combo("getText"),
+            showType:'show',
+            style: {
+                right:'',
+                top:document.body.scrollTop+document.documentElement.scrollTop,
+                bottom:''
+            }
+        })
+    }
+</script>
+</body>
+</html>

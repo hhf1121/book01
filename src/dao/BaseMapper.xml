@@ -18,5 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				#{id}
 			</foreach>
 	</select>
+	<select id="getComboboxData"  resultMap="nodemap" parameterType="java.lang.String">
+		select * from base_district where `level_type` = #{level}
+		<if test="name !=null and name != '' ">
+		AND name like  CONCAT(#{name},'%');
+		</if>
+	</select>
 
 </mapper>

@@ -6,9 +6,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +35,7 @@ import pojo.User;
 import pojo.upLoadfile;
 import service.upLoadfileService;
 import service.userService;
+import tools.ResultUtils;
 
 @Controller
 @RequestMapping("/upLoad")
@@ -190,6 +195,48 @@ public class UpLoadController {
 		is.close();
 		return info.toString();
 	}
+
+
+
+	//easyui单独文件上传接口
+	@RequestMapping(value = "/loadingFile", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> loadingUserImg(@RequestParam("file") MultipartFile file,HttpServletRequest request) {
+		String result="";
+		try{
+			// 构建上传文件的存放 “文件夹” 路径
+			String fileDirPath = new String("book01/resources/static/file");
+			File fileDir = new File(fileDirPath);
+			if(!fileDir.exists()){
+				// 递归生成文件夹
+				fileDir.mkdirs();
+			}
+			// 拿到文件名
+			String filename = file.getOriginalFilename();
+			int i = new Random().nextInt(100);
+			String name=(System.currentTimeMillis()+i)+"@"+filename;
+			// 输出文件夹绝对路径 – 这里的绝对路径是相当于当前项目的路径而不是“容器”路径
+			System.out.println(fileDir.getAbsolutePath());
+			File newFile = new File(fileDir.getAbsolutePath() + File.separator + name);
+			System.out.println(newFile.getAbsolutePath());
+			// 上传到 -》 “绝对路径”
+			file.transferTo(newFile);
+			return ResultUtils.getSuccessResult("http://"+getHostAddress()+":"+request.getServerPort()+"/resources/static/file"+File.separator+newFile.getName());
+		}catch (Exception e ){
+			return ResultUtils.getFailResult("上传文件异常！");
+		}
+	}
+
+	private String getHostAddress(){
+		String hostAddress = null;
+		try {
+			hostAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			hostAddress="localhost";
+		}
+		return hostAddress;
+	}
+
 
 
 }

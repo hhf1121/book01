@@ -49,4 +49,8 @@ public class IBaseService {
         }
         return parents;
     }
+
+    public List<MyTreeNode> getComboboxData(String level, String name) {
+        return baseMapper.getComboboxData(level,name);
+    }
 }

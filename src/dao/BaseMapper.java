@@ -11,4 +11,6 @@ public interface BaseMapper {
 //    @Select("select * from base_district where level_type != #{levels} ")
     public List<MyTreeNode> getListByLevel(@Param("lists") List<String> lists);
 
+    public List<MyTreeNode> getComboboxData(@Param("level")String level,@Param("name") String name);
+
 }
