@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>easyUI组件展示(3)</title>
+    <link rel="stylesheet" href="../easyui/themes/icon.css" type="text/css"></link>
+    <link rel="stylesheet" href="../easyui/themes/default/easyui.css" type="text/css"></link>
+    <script type="text/javascript" src="../easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+
+<!--表单-->
+<div>
+    <h1>表单</h1>
+    <form id="myform" action="http://localhost:8083/book/base/submitForm" method="post">
+        名字：<input class="easyui-textbox" name="name" data-options="required:true" /><br>
+        生日：<input class="easyui-datebox" name="birthday" /><br>
+        语言：<select class="easyui-combobox" name="lang">
+                <option value="java">java</option>
+                <option value="spring">spring</option>
+                <option value="mybatis">mybatis</option>
+            </select>
+    </form>
+    <a href="#" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+    <a href="#" class="easyui-linkbutton" onclick="$('#myform').form('clear')">清空</a>
+    <a href="#" class="easyui-linkbutton" onclick="$('#myform').form('reset')">重置</a>
+</div>
+
+<!--表格-->
+<div>
+    <!--html构建的表格-->
+  <!--  <table class="easyui-datagrid" data-options="url:'http://localhost:8083/book/base/getEasyUIData',method:'post'" style="width:60%;height: auto">
+        <thead>
+            <tr>
+                <th field="name">书名</th>
+                <th field="author">作者</th>
+            </tr>
+        </thead>
+    </table>-->
+    <!--js构建的表格-->
+    <table id="myTable" style="width: 550px"></table>
+    <div id="queryId">
+        书名:<input  class="easyui-textbox" name="name" data-options="prompt:'支持模糊查询'" id="queryName" />
+        作者:<input  class="easyui-textbox" name="author" data-options="prompt:'作者名字'" id="queryAuthor" />
+        <a class="easyui-linkbutton" onclick="searchParam()">查询</a>
+        <a class="easyui-linkbutton" onclick="$('#queryName').textbox('clear');$('#queryAuthor').textbox('clear')">重置</a>
+    </div>
+</div>
+
+
+<!--combogrid-->
+<div>
+    <h3>分页联想框</h3>
+    <input id="pageSearch" style="width: 200px" />
+</div>
+<script type="text/javascript">
+    $(function () {
+        //初始化表单
+        $("#myform").form('load',{
+            name:'我是名字',
+            birthday:'11/21/1989',
+            lang:'java'
+        });
+        $("#pageSearch").combogrid({
+            panelHeight:'auto',
+            panelWidth:'260px',
+            url:'http://localhost:8083/book/base/getEasyUIData',
+            method:'post',
+            pagination: true,//显示分页工具栏
+            singleSelect:false,
+            idField:'author',//入参列
+            textField:'name',//展示列
+            loadMsg:'正在加载,请稍后...',
+            columns:[[
+                {field:'ck',checkbox:true},
+                {field:'name',title:'书名',width:'45%', sortable:true},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+                {field:'author',title:'作者',width:'40%',
+                    formatter:function (value,row,index) {
+                        return value+'<span style="color: rebeccapurple">['+row.id+']</span>';
+                    }
+                },
+            ]],
+            /*keyHandler: {//【动态搜索】处理
+                query: function (keyword) {
+                var comgrid = $('#pageSearch').combogrid("grid");
+                var queryParams = comgrid.datagrid('options').queryParams;  //设置查询参数
+                queryParams.keyword = keyword;
+                comgrid.datagrid('options').queryParams = queryParams;
+                comgrid.datagrid("reload");    //重新加载
+                $('#pageSearch').combogrid("setValue", keyword);
+                //将查询条件存入隐藏域
+                $('#pageSearch').val(keyword);
+            }
+            }*/
+        });
+        //js方式绑定表格
+        $('#myTable').datagrid({
+            title:'数据列表',
+            url:'http://localhost:8083/book/base/getEasyUIData',
+            method:'post',
+            // height: '500px',
+            // striped:true,
+            pagination: true,//显示分页工具栏
+            rownumbers:true,
+            singleSelect:false,
+            toolbar:'#queryId',//绑定工具栏
+            // fitColumns: true,
+            frozenColumns:[[{field:'id',title:'主键',width:'100'}]],//冻结
+            loadMsg:'正在加载,请稍后...',
+            columns:[[
+                {field:'ck',checkbox:true},
+                {field:'name',title:'书名',width:'200', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+                {field:'author',title:'作者',width:'200',formatter:function (value,row,index) {
+                        return value+'<span style="color: rebeccapurple">['+row.id+']</span>';
+                    }},
+            ]],
+            onLoadSuccess:function (data) {//请求成功，返回的数据
+                
+            },
+            onClickRow:function (index) {
+                $("#myTable").datagrid("beginEdit",index);
+            }
+        });
+
+    })
+    
+    
+    //提交表单
+    function submitForm() {
+        // if($('#myform').form('enableValidation').form('validate')){
+        //     $('#myform').submit();
+        // }
+        //不会跳转页面
+        $('#myform').form('submit',{
+            onSubmit:function () {
+                alert("提交成功！")
+                return true;
+            }
+        })
+    }
+
+    //搜索
+    function searchParam() {
+        //获取表格的查询参数
+        var queryParams=$("#myTable").datagrid('options').queryParams;
+        queryParams.name=$("#queryName").val();
+        queryParams.author=$("#queryAuthor").val();
+        //重新加载表格数据
+        $("#myTable").datagrid('load');
+    }
+
+</script>
+</body>
+</html>

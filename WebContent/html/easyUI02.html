@@ -16,7 +16,15 @@
     <input id="mylo" class="easyui-combobox" data-options="loader:myloader,mode:'remote',valueField:'code',textField:'text',
         formatter:formatItem,panelWidth:350,panelHeight:'auto'"/>
 </div>
-
+<!--组合树-->
+<div>
+    <h2>组合树</h2>
+    <a class="easyui-linkbutton" onclick="alert($('#boxtree').combotree('getValues'))">取值</a>
+    <a class="easyui-linkbutton" onclick="$('#boxtree').combotree('setValues',[1617])" >赋值</a>
+    <a class="easyui-linkbutton" onclick="$('#boxtree').combotree('enable')">启用</a>
+    <a class="easyui-linkbutton" onclick="$('#boxtree').combotree('disable')">禁用</a>
+    <input id="boxtree" class="easyui-combotree" data-options="url:'http://localhost:8083/book/base/getSelectDistrictByLevel.json?level=1,2&name=河南省',method:'get',multiple:'true'"/>
+</div>
 <!--窗口-->  <!-- modal 	定义窗口是不是模态（modal）窗口。-->
 <div>
     <a class="easyui-linkbutton" onclick="$('#windows').window('open')">打开窗口</a>
