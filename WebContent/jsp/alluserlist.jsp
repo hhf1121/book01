@@ -14,118 +14,129 @@
 <link href="css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-	<img alt="用户头像" src="<%=path %>/${currentUser.picPath }" title="头像"
-		width="100px" height="100px" class="pic" />
-	<h1 style="color: orange">${currentUser.userName },欢迎你！</h1>
-	<a href="<%=path%>/user/login.html">返回个人首页</a>
-	<div class="right">
-		<div class="location">
-			<strong>你现在所在的位置是:</strong> <span>读者信息页面</span>
-		</div>
-		<div class="search">
-			<form method="post" id="form"
-				action="${pageContext.request.contextPath }/user/alluserlist.html">
-				<span>读者名字：</span> <input name="name" type="text" value="${name }">
-				<span>读者身份：</span> <select name="yes">
-					<option value="0">--请选择--</option>
-					<c:if test="${rolelist!=null }">
-						<c:forEach items="${rolelist }" var="rl">
-							<option <c:if test="${yes==rl.id }">selected="selected"</c:if>
-								value="${rl.id }">${rl.roleName }</option>
-						</c:forEach>
-					</c:if>
-				</select> <input type="hidden" name="pageIndex" value="1" /> <input
-					value="查 询" type="submit" id="searchbutton">
-			</form>
-		</div>
-		<!--供应商操作表格-->
-		<table class="bookTable" cellpadding="0" cellspacing="0">
-			<tr class="firstTr">
-				<th width="5%">读者id</th>
-				<th width="15%">读者账号</th>
-				<th width="15%">读者密码</th>
-				<th width="10%">读者名字</th>
-				<th width="10%">读者住址</th>
-				<th width="10%">读者角色</th>
-				<th width="25%">注册时间</th>
-				<th width="25%">全选<input type="checkbox" name="all" id="all"><input
-					type="button" value="删除" name="delete" class="delete" /></th>
-			</tr>
-			<c:forEach var="user" items="${userlist }" varStatus="status">
-				<tr>
-					<td><span>${user.id }</span></td>
-					<td><span>${user.userName }</span></td>
-					<td><span>${user.passWord}</span></td>
-					<td><span>${user.name}</span></td>
-					<td><span>${user.address}</span></td>
-					<td><span> <c:if test="${user.yes==1 }">普通会员</c:if> <c:if
-								test="${user.yes==2 }">vip会员</c:if> <c:if test="${user.yes==3 }">系统管理员</c:if>
-					</span></td>
-					<td><span><fmt:formatDate value="${user.createDate}"
-								pattern="yyyy-MM-dd HH:mm:ss" /></span></td>
-					<td><span><a
-							href="<%=path %>/user/usershow/${user.id }">查看</a></span> 
-							<span>
-							<c:if test="${user.yes!=3 }"><input
-							type="checkbox" name="userlist" value="${user.id }" /></c:if>
-							</span></td>
-				</tr>
-			</c:forEach>
-		</table>
-		<input type="hidden" value="${path }" id="path"> <input
-			type="hidden" id="totalPageCount" value="${totalPageCount}" />
-		<c:import url="rollpage.jsp">
-			<c:param name="totalCount" value="${totalCount}" />
-			<c:param name="pageNo" value="${pageNo}" />
-			<c:param name="totalPageCount" value="${totalPageCount}" />
-		</c:import>
-	</div>
+<table id="userTable" style="width: 100%;height: 650px"></table>
+<div id="queryId">
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="deleteUsers()">删除</a><br><br>
+	      读者名字:<input  class="easyui-textbox" name="name"  id="name" />
+	读者身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="loader:userType,mode:'remote',valueField:'id',textField:'roleName',
+        panelWidth:150"></select>
+	<a class="easyui-linkbutton" onclick="searchParamUser()">查询</a>
+	<a class="easyui-linkbutton" onclick="$('#name').textbox('clear');$('#yes').textbox('clear')">重置</a>
+	<br>
+</div>
+<div id="dialog" class="easyui-dialog" title="编辑用户信息"
+	 style="width: 400px;height: 400px"
+	 data-options="closed:true,modal:true">
+
+</div>
+<input type="hidden" value="${path }" id="path">
 </body>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
 <script type="text/javascript">
-	$(".delete").click(function() {
-		var list="";
-		$("[name='userlist']:checked").each(function(){
-			list +=$(this).val()+","; 
-		})
-		if(list==null||list==''){
-			alert("请选择要删除的对象");
-		}else{
-			if(confirm("是否删除？")){
-				$.ajax({
-					url:$("#path").val()+"/user/deleteByIdList",
-					data:{"idList":list},
-					dataType:"text",
-					type:"post",
-					success:function(result){
-						if(result=="success"){
-							alert("删除成功！");
-							window.location.href=$("#path").val()+"/user/alluserlist.html";
-						}else{
-							alert("删除失败！")
-						}
-					},
-					error:function(){
-						alert("请求失败.");
-						window.location.href=$("#path").val()+"/user/alluserlist.html";
-					}
-					
+	
+	$(function () {
+		$('#userTable').datagrid({
+			title:'用户列表',
+			url:'/book/user/getAlluserlist',
+			method:'get',
+			pagination: true,//显示分页工具栏
+			rownumbers:true,
+			singleSelect:false,
+			toolbar:'#queryId',//绑定工具栏
+			// fitColumns: true,
+			// frozenColumns:[[{field:'id',title:'主键',width:'100'}]],//冻结
+			loadMsg:'正在加载,请稍后...',
+			columns:[[
+				{field:'ck',checkbox:true},
+				{field:'id',title:'读者id',width:'5%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'userName',title:'读者账号',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'passWord',title:'读者密码',width:'10%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'name',title:'读者名字',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'address',title:'读者住址',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'yes',title:'读者角色',width:'10%', sortable:true,editor:'combox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'createDate',title:'注册时间',width:'26%',formatter: function (value, row, index) {
+						return formatDateBoxFull(value);
+					}},
+			]],
+			onLoadSuccess:function (data) {//请求成功，返回的数据
+
+			},
+			onClickRow:function (index) {
+				// $("#myTable").datagrid("beginEdit",index);
+			},
+			onDblClickRow: function (rowIndex, rowData) {//双击
+				$("#dialog").dialog({
+					href:'/book/jsp/userlistbyadmin.jsp?id='+rowData.id,
 				})
+				$('#dialog').dialog('open');
 			}
-			
-		}
-		
+		});
 	})
 
-	
-	//全选、反选
-	$("#all").click(function() {
-	if($(this).attr("checked")){
-		$("[name='userlist']").attr("checked","true");
-	}else{
-		$("[name='userlist']").removeAttr("checked");
+	function searchParamUser() {
+		debugger
+		//获取表格的查询参数
+		var queryParams=$("#userTable").datagrid('options').queryParams;
+		queryParams.name=$("#name").val();
+		queryParams.yes=$("#yes").combobox("getValue");
+		//重新加载表格数据
+		$("#userTable").datagrid('load');
 	}
-	})
+
+	//删除
+	function deleteUsers() {
+		var ids = [];
+		var rows=$("#userTable").datagrid('getSelections');//获取选中的项
+		ids=rows.map(o=>{
+			return o.id;
+		})
+		if(ids.length==0){
+			$.messager.alert("请至少选择一条数据");
+		}else{
+			var list="";
+			for (let i = 0; i < ids.length; i++) {
+				list +=ids[i]+",";
+			}
+			$.messager.confirm('提示', '确定删除吗?', function(r){
+				if (r){
+					$.ajax({
+						url:$("#path").val()+"/user/deleteByIdList",
+						data:{"idList":list},
+						dataType:"json",
+						success:function(result){
+							if(result=="success"){
+								$.messager.alert("提示","删除成功！");
+								$("#userTable").datagrid('load');
+							}else{
+								$.messager.alert("提示","删除失败！")
+							}
+						},
+						error:function(){
+							$.messager.alert("提示","后端请求失败.");
+							$("#userTable").datagrid('load');
+						}
+
+					})
+				}
+			});
+		}
+
+	}
+
+
+	//请求用户类型
+	function userType(param, success, error) {
+		$.ajax({
+			url:$("#path").val()+'/base/getUserLevel',
+			dataType:'json',
+			method:'post',
+			success:function (data) {
+				success(data);
+			},
+			error:function () {
+				error.apply(this,arguments)
+			}
+		})
+	}
+
 </script>
 </html>

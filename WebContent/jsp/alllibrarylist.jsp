@@ -13,13 +13,7 @@ request.setAttribute("path", path);
 <link href="css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-<img alt="用户头像" src="<%=path %>/${currentUser.picPath }" title="头像" width="100px" height="100px"  class="pic"/>
-<h1 style="color:orange"> ${currentUser.userName },欢迎你！</h1><a href="<%=path%>/user/login.html">返回个人首页</a>
 <div class="right">
-        <div class="location">
-            <strong>你现在所在的位置是:</strong>
-            <span>会员借阅历史页面</span> 
-        </div>
         <div class="search">
         	<form method="post" id="form" action="${pageContext.request.contextPath }/libraryborrow/alllibrarylist.html">
 				<span>图书名称：</span>
@@ -67,6 +61,5 @@ request.setAttribute("path", path);
           	</c:import>
     	</div>
 </body>
-<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/lookuser.js"></script>
 </html>

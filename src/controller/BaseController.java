@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.Book;
 import pojo.MyTreeNode;
+import pojo.Role;
 import service.IBaseService;
+import service.RoleService;
 import service.bookService;
 import tools.Page;
 
@@ -28,6 +30,10 @@ public class BaseController {
 
     @Resource
     private service.bookService bookService;
+
+    @Resource
+    private RoleService roleService;
+
 
     /**
      * 联动选择器、根据等级、一次性拉取数据
@@ -86,6 +92,21 @@ public class BaseController {
         return result;
 //        return booklist;
     }
+
+
+    /**
+     *  模拟easyui表单数据
+     * @return
+     */
+    @RequestMapping(value = "/getUserLevel",method = RequestMethod.POST)
+    @ResponseBody
+    public List<Role> getUserLevel(){
+        List<Role> roleList=roleService.Querylist(new Role());
+        return roleList;
+    }
+
+
+
 
 
 }

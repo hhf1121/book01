@@ -8,46 +8,27 @@ request.setAttribute("path", path);
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<link rel="stylesheet" href="${pageContext.request.contextPath }/easyui/themes/icon.css" type="text/css"></link>
-	<link rel="stylesheet" href="${pageContext.request.contextPath }/easyui/themes/default/easyui.css" type="text/css"></link>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.easyui.min.js"></script>
 <title>图书信息-easyUI</title>
 </head>
 <body>
-<h1 style="color:orange"> ${currentUser.userName },欢迎你！</h1><a href="<%=path%>/user/login.html">返回个人首页</a>
 <input type="hidden" value="${path }" id="path">
-<div data-options="region:'center'">
-	<div id="toolbarList">
-		<form action="#" id="formFindList">
-			<div  class="easyui-accordion">
-				<div title="" data-options="selected:true">
-					<ul class="search-form" style="list-style-type:none">
-						<li><input name="name" class="easyui-textbox" label="图书名称：" labelWidth="100px;"  data-options="prompt:'支持模糊查询'" style="width:20%"> </li>
-						<li ><input name="author" class="easyui-textbox" label="作者名字：" labelWidth="100px;"  style="width:20%"> </li>
-					<%--	<li style="width: 252px;text-align: right;">
-							流程类型：<input id="q_flowGroup" name="flowGroupId" class="easyui-combobox" style="height: 30px;width:100px;vertical-align: middle;" data-options="
-			       		editable:false,
-			       		loadFilter:function(data){
-			       			var row = {id:'',name:'-- 请选择 --'};
-				            data.splice(0,0,row);
-				            return data;
-				     	}">
-						</li>--%>
-						<li ><input name="startTime"  class="easyui-datetimebox"  label="发起时间：" labelWidth="100px;" id="q_startTime" style="width:20%"></li>
-						<li ><input name="endTime"  class="easyui-datetimebox"  label="至：" labelWidth="100px;" id="q_endTime" data-options="validType:['endTimeDate[\'#q_startTime\',\'结束时间必须大于或等于发起时间\']']" style="width:20%"></li>
-						<li >
-							<a href="#" class="easyui-linkbutton search" onclick="findFlowData()">查询</a>
-							<a href="#" class="easyui-linkbutton" onclick="formReset()">重置</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</form>
+<form id="formFindList">
+	<div  class="easyui-accordion">
+		<div title="查询条件" data-options="selected:true">
+			<ul class="search-form" style="list-style-type:none;">
+				<li><input name="name" class="easyui-textbox" label="图书名称：" labelWidth="100px;"  data-options="prompt:'支持模糊查询'" style="width:20%"> </li>
+				<li ><input name="author" class="easyui-textbox" label="作者名字：" labelWidth="100px;"  style="width:20%"> </li>
+				<li ><input name="startTime"  class="easyui-datetimebox"  label="发起时间：" labelWidth="100px;" id="q_startTime" style="width:20%"></li>
+				<li ><input name="endTime"  class="easyui-datetimebox"  label="至：" labelWidth="100px;" id="q_endTime" data-options="validType:['endTimeDate[\'#q_startTime\',\'结束时间必须大于或等于发起时间\']']" style="width:20%"></li>
+				<li >
+					<a href="#" class="easyui-linkbutton search" onclick="findFlowData()">查询</a>
+					<a href="#" class="easyui-linkbutton" onclick="formReset()">重置</a>
+				</li>
+			</ul>
+		</div>
 	</div>
-</div>
-<table id="dataGridInbound" title="数据列表" class="easyui-datagrid" style="height:600px "></table>
+</form>
+<table id="dataGridInbound" title="图书列表" class="easyui-datagrid" style="width: 100%;height: 650px"></table>
 </body>
 <script>
 	$(function () {
@@ -65,20 +46,10 @@ request.setAttribute("path", path);
 
     function initDate(){
         $("#dataGridInbound").datagrid({
-            title: '数据详情',
-            url: '/book/book/getbookList.do',
-            pagination: true,//表示在datagrid设置分页
-            rownumbers: true,
-            toolbar : '#toolbarList',
-            singleSelect: false,
-            striped: true,
-            nowrap: true,
-            collapsible: true,
-            fitColumns: true,
-            remoteSort: false,
-            method:'get',
+            url: '/book/book/getbookList',
+			method:'get',
+			pagination: true,//显示分页工具栏
             loadMsg: "正在努力加载数据，请稍后...",
-            // queryParams: { name: "", author: "" ,page:$('#dataGridInbound').datagrid('options').pageNumber==null?"1":$('#dataGridInbound').datagrid('options').pageNumber},
             onBeforeLoad : function(param) {
             },
             onLoadError : function() {
@@ -128,7 +99,7 @@ request.setAttribute("path", path);
 				if (result == "true") {
 					abc();
 				}else{
-					window.location.href=path+"/book/booklist2.html?page="+page;
+					// window.location.href=path+"/book/booklist2.html?page="+page;
 					alert("书籍库存不足！");
 				}
 			}
@@ -159,7 +130,7 @@ request.setAttribute("path", path);
                         });
 
 					} else {
-						window.location.href=path+"/book/booklist2.html?page="+page;
+						// window.location.href=path+"/book/booklist2.html?page="+page;
 						alert("noData！");
 					}
 				},
@@ -180,7 +151,6 @@ request.setAttribute("path", path);
 						// window.location.href=path+"/book/booklist2.html?page="+page;
                         $.messager.alert('提示','借阅成功');
                         initDate();
-
                     }else{
 						// window.location.href=path+"/book/booklist2.html?page="+page;
 						alert("借阅失败！");
@@ -193,7 +163,6 @@ request.setAttribute("path", path);
 	}
 
 	function look(name, count) {
-		debugger
 		// $('#dd').dialog('refresh', 'new_content.php');
         // $('#dd').css("display","block");
 		// $('#dd').dialog({

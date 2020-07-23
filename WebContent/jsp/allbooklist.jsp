@@ -13,12 +13,9 @@ request.setAttribute("path", path);
 <link href="<%=path %>/css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-<img alt="用户头像" src="<%=path %>/${currentUser.picPath }" title="头像" width="100px" height="100px"  class="pic"/>
-<h1 style="color:orange"> ${currentUser.userName },欢迎你！</h1><a href="<%=path%>/user/login.html">返回个人首页</a>
 <div class="right">
         <div class="location">
-            <strong>你现在所在的位置是:</strong>
-            <span>图书信息页面</span>  <a href="<%=path%>/book/addBook.html">增加图书</a>
+             <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" href="<%=path%>/book/addBook.html">增加图书</a>
              <span style="color:red">${sessionScope.infox }</span>
         </div>
         <div class="search">
@@ -73,6 +70,5 @@ request.setAttribute("path", path);
           	</c:import>
     	</div>
 </body>
-<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/allbook.js"></script>
 </html>

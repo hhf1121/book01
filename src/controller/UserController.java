@@ -210,6 +210,25 @@ public class UserController {
 		return "alluserlist";
 	}
 
+
+	//全部用户信息
+	@RequestMapping(value = "/getAlluserlist")
+	@ResponseBody
+	public Map<String,Object> allList(String name,Integer yes,Page page) {
+		Map<String,Object> result=new HashMap<>();
+		int countsize=userService.getUserCount(name, yes);//总数
+		Page page1 = new Page();
+		page1.setCountSize(countsize);
+		int PageSize = Integer.parseInt(page.getRows());// 页面容量
+		int currentPage = Integer.parseInt(page.getPage());// 当前页
+		int xx = (currentPage - 1) * PageSize;
+		List<User> userlist=userService.getUserList(name, yes,xx, PageSize);
+		result.put("rows",userlist);
+		result.put("total",countsize);
+		result.put("success",true);
+		return result;
+	}
+
 	
 	//管理员查看用户信息。Rest风格。
 	@RequestMapping(value = "/usershow/{id}", method = RequestMethod.GET)

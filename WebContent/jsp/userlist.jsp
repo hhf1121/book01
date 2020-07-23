@@ -14,8 +14,6 @@
 </style>
 </head>
 <body>
-	${currentUser.userName }, 欢迎你！
-	<br>
 	<form action="${pageContext.request.contextPath }/user/upateUser.html"
 		method="post">
 		用户id：<input type="text" readonly="readonly" value="${user.id }"

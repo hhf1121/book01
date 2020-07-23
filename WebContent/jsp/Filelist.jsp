@@ -12,68 +12,96 @@
 	color: red;
 	font-size: 12px;
 }
-
 </style>
 </head>
 <body>
- ${currentUser.userName }, 欢迎你！  <br>
- <h1>当前页面：共享资源页面</h1>
- <form action="<%=path%>/upLoad/uploadFile.html" method="post" enctype="multipart/form-data">
- <input type="hidden" name="userid" value="${currentUser.id }">
- <input type="file" name="path" >
- <input type="submit" value="上传">${infoxx }
- </form>
-  <table class="bookTable" cellpadding="0" cellspacing="0">
-            <tr class="firstTr">
-                <th width="25%">图书名称</th>
-                <th width="25%">上传者</th>
-                <th width="25%">上传时间</th>
-            </tr>
-            <c:forEach var="x" items="${listss }" varStatus="status">
-				<tr>
-					<td>
-					<span>${x.upName }</span>
-					</td>
-					<td>
-					<span>${x.userName}</span>
-					</td>
-					<td>
-					<span>${x.createDate }</span>
-					</td>
-					<td>
-					<span><a  href="javascript:deletefile(${x.id });">删除</a></span>
-					<span><a  href="<%=path %>/upLoad/download.html?file=${x.path }">下载 </a></span>
-					<span><a  href="javascript:show('${x.id }')">查看</a></span>
-					</td>
-				</tr>
-			</c:forEach>
-        </table>
-        
-        <div id="show"></div>
+<form action="<%=path%>/upLoad/uploadFile.html" enctype="multipart/form-data" method="post">
+	<input class="easyui-filebox" name="path" data-options="buttonAlign:'left',prompt:'选择文件',buttonText:'选择'" />
+	<input type="submit" value="上传" />
+</form>
+
+<table id="fileList" title="文件列表" class="easyui-datagrid" style="width: 100%;height: 650px"></table>
+
+<div id="show"></div>
         <input type="hidden" id="path" value="<%=path%>">
-       <a href="<%=path%>/user/login.html">返回个人首页</a>
-<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
 <script type="text/javascript">
-function deletefile(idx){
-	$.ajax({
-		url:$("#path").val()+"/upLoad/deleteFile.html",
-		data:{id:idx},
-		dataType:"text",
-		type:"get",
-		success:function(result){
-			if(result=="success"){
-				alert("删除文件成功");
-				window.location.href=$("#path").val()+"/upLoad/Filelist.html";
-			}else{
-				alert("删除文件失败");
-			}
-		},
-		error:function(){
-			alert("请求失败！");
-		}
+
+	$(function () {
+		initDateFile();
 	})
-}
-function show(info){
+
+	function initDateFile(){
+		$("#fileList").datagrid({
+			url: '/book/upLoad/getFilelist',
+			// pagination: true,//表示在datagrid设置分页
+			// rownumbers: true,
+			singleSelect: false,
+			striped: true,
+			nowrap: true,
+			collapsible: true,
+			fitColumns: true,
+			remoteSort: false,
+			method:'get',
+			loadMsg: "正在努力加载数据，请稍后...",
+			onBeforeLoad : function(param) {
+			},
+			onLoadError : function() {
+				//在载入远程数据产生错误的时候触发。
+			},
+			onLoadSuccess: function (data) {
+				if (data.total == 0) {
+					var body = $(this).data().datagrid.dc.body2;
+					body.find('table tbody').append('<tr><td style="height: 35px;width: 150px; text-align: center;display: inline-block;float: right;color: grey"><h1>未查到数据</h1></td></tr>');
+					$(this).closest('div.datagrid-wrap').find('div.datagrid-pager').hide();
+				}
+				//如果通过调用reload方法重新加载数据有数据时显示出分页导航容器
+				else $(this).closest('div.datagrid-wrap').find('div.datagrid-pager').show();
+			},
+			columns: [[
+				{ field: 'ck', checkbox: true },
+				{ field: 'upName', title: '图书名称', width: '25%', align: 'left', sortable: true },
+				{ field: 'userName', title: '上传者', width: '25%', align: 'left', sortable: true },
+				{ field: 'createDate', title: '上传时间', width: '25%', align: 'left', sortable: true,formatter: function (value, row, index) {
+						return formatDateBoxFull(value);
+					}
+				},
+				{
+					field: 'deal',
+					title: '操作',
+					align: 'center',
+					width: '200',
+					formatter: function(value, rec, index) {
+						var result = '<a  title="删除" class="easyui-linkbutton"  onclick="deletefile(\''+rec.id+'\')" href="javascript:void(0)">删除</a> '
+								+'<a  href="<%=path %>/upLoad/download.html?file=${x.path }">下载 </a>'
+								+ '<a  style="margin-left:10px" title="查看"  onclick="showFile(\'' + rec.id + '\')" href="javascript:void(0)">查看</a>';
+						return result;
+					}
+				},
+			]],
+		});
+	}
+
+	function deletefile(idx){
+		$.ajax({
+			url:$("#path").val()+"/upLoad/deleteFile.html",
+			data:{id:idx},
+			dataType:"text",
+			type:"get",
+			success:function(result){
+				if(result=="success"){
+					alert("删除文件成功");
+					// window.location.href=$("#path").val()+"/upLoad/Filelist.html";
+					initDateFile();
+				}else{
+					alert("删除文件失败");
+				}
+			},
+			error:function(){
+				alert("请求失败！");
+			}
+		})
+	}
+	function showFile(info){
 	$.ajax({
 		url:$("#path").val()+"/upLoad/fileshow.html",
 		data:{id:info},

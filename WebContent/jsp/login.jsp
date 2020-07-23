@@ -82,6 +82,12 @@
 <script type="text/javascript">
 	$(function () {
 		$('#dlg').dialog('close');//默认对话框是关闭的
+		//绑定回车键
+		$('#ff').find('input').on('keyup',function(event){
+			if(event.keyCode == '13'){
+				loginUser();
+			}
+		});
 	})
 	function xxx(){
 		$('#dlg').dialog('open');
