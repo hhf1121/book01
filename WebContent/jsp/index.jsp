@@ -42,7 +42,8 @@ String path=request.getContextPath();
 				</tr>
 				<tr>
 					<td class="mytd">住址:</td>
-					<td><input class="easyui-validatebox easyui-textbox" name="address" id="address" data-options="required:true,missingMessage:'住址不能为空'" style="height: 30px" ></input></td>
+					<td><input  class="easyui-validatebox easyui-combobox" name="address" id="address" data-options="required:true,loader:registerloader,mode:'remote',valueField:'text',textField:'text',
+        			formatter:registerformatItem,missingMessage:'住址不能为空'" style="height: 30px" ></input></td>
 				</tr>
 				<tr>
 					<td class="mytd">上传头像:</td>
@@ -131,6 +132,28 @@ String path=request.getContextPath();
 				}
 			});
 		}
+	}
+
+
+	function registerloader(param, success, error) {
+		$.ajax({
+			url:'http://localhost:8083/book/base/getComboboxData.json?level=1&name='+$("#address").val(),
+			dataType:'json',
+			success:function (data) {
+				success(data);
+			},
+			error:function () {
+				error.apply(this,arguments)
+			}
+		})
+	}
+
+	function registerformatItem(row) {
+		var inputValue= $("#address").val();
+		var showText='<span>'+row.text+'</span>';
+		//替换文本
+		const newText=showText.replace(inputValue, "<span style='color: red'>"+inputValue+"</span>");
+		return newText;
 	}
 </script>
 </body>

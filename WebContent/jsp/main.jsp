@@ -19,12 +19,14 @@
 		<div style="margin: 0 auto;font-size: 20px">
 			<img  src="<%=path %>/${currentUser.picPath }"  width="100px" height="100px"  class="pic"/>
 			<div style="float: right;margin-right: 300px;margin-top: 10px"><span style="color: #b447ff">${currentUser.userName }</span>, 欢迎你！您的身份是：<span style="color:red;">${role }</span></div>
+			<c:if test="${currentUser.yes==1 }"><span style="color:red; font-size: 12px">升级为vip会员将开启图书借阅功能！请联系管理员..</span></c:if>
+			${infoup }
 		</div>
 		<div class="easyui-draggable" data-options="handle:'#title1'"
 			 style="height: 80px;width: 150px;margin-top: -70px;margin-left:1020px;border: 1px solid #95B8E7;border-radius: 5px">
 			<div id="title1" style="background:#E6F0FF;border-radius: 5px">用户操作</div>
 			<div class="easyui-tree"data-options="animate:'true',lines:'true'">
-				<li><a  href="${pageContext.request.contextPath }/user/userlist.html">个人信息管理</a></li>
+				<li><a  href="${pageContext.request.contextPath }/user/userlist.html?id=${currentUser.id }">个人信息管理</a></li>
 				<li><a  href="<%=path %>/user/out.html">退出系统</a></li>
 			</div>
 		</div>
@@ -39,8 +41,7 @@
 		</div>
 	<%--</div>--%>
 </div>
- <c:if test="${currentUser.yes==1 }"><span style="color:red; font-size: 12px">升级为vip会员将开启图书借阅功能！请联系管理员..</span></c:if>
-	${infoup }
+
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/common.js"></script>
 <script type="text/javascript">
 	$(function () {

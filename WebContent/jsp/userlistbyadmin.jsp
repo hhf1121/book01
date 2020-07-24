@@ -25,12 +25,17 @@ String path = request.getContextPath();
 <input type="hidden" value="${userId }" id="userId">
 <div style="width: 300px;height: auto;text-align:center">
 	<form id="myform" method="post">
-		用户id：<input class="easyui-textbox" name="id" data-options="required:true" /><br>
-		用户账号：<input class="easyui-textbox" name="userName" data-options="required:true" /><br>
-		用户密码：<input class="easyui-textbox" name="passWord" data-options="required:true" /><br>
-		用户姓名：<input class="easyui-textbox" name="name" data-options="required:true" /><br>
-		用户地址：<input class="easyui-textbox" name="address" data-options="required:true" /><br>
-		用户身份：<select class="easyui-combobox" style="width: 150px;" name="yes" data-options="loader:myUserloader,mode:'remote',valueField:'id',textField:'roleName',
+		<br>
+		<br>
+		<br>
+		用户id：<input class="easyui-textbox" name="id" id="id" data-options="required:true,readonly:true" /><br>
+		用户账号：<input class="easyui-textbox" name="userName" id="userName" data-options="required:true,readonly:true" /><br>
+		用户密码：<input  class="easyui-passwordbox"  name="passWord" id="passWord"data-options="required:true,readonly:true" /><br>
+		用户姓名：<input class="easyui-textbox" name="name" id="name" data-options="required:true,readonly:true" /><br>
+		<%--用户地址：<input class="easyui-textbox" name="address" data-options="required:true" /><br>--%>
+		用户地址：<input id="address" class="easyui-combobox" name="address" data-options="required:true,loader:addressloader,mode:'remote',valueField:'text',textField:'text',
+        formatter:addressformatItem,panelWidth:'125px',panelHeight:'300px',readonly:true"/><br>
+		用户身份：<select class="easyui-combobox" id="yes" style="width: 150px;" name="yes" data-options="loader:myUserloader,mode:'remote',valueField:'id',textField:'roleName',
         panelWidth:150,panelHeight:'auto'">
 	</select>
 	</form>
@@ -83,16 +88,15 @@ String path = request.getContextPath();
 	}
 
 	function submitForm(){
-		$.messager.confirm('提示',"确定修改？",function (r) {
-			if(r){
-				if($("#myform").form('validate')){
+		if($("#myform").form('validate')){
+			$.messager.confirm('提示',"确定修改？",function (r) {
+				if(r){
 					$("#myform").submit();
+				}else{
+					initUser($("#userId").val());
 				}
-			}else{
-				initUser($("#userId").val());
-			}
-		})
-
+			})
+		}
 	}
 
 	function initUser(id) {
@@ -129,6 +133,26 @@ String path = request.getContextPath();
 	// 	return "未获取"
 	// }
 
+	function addressloader(param, success, error) {
+		$.ajax({
+			url:'http://localhost:8083/book/base/getComboboxData.json?level=1&name='+$("#address").val(),
+			dataType:'json',
+			success:function (data) {
+				success(data);
+			},
+			error:function () {
+				error.apply(this,arguments)
+			}
+		})
+	}
+
+	function addressformatItem(row) {
+		var inputValue= $("#address").val();
+		var showText='<span>'+row.text+'</span>';
+		//替换文本
+		const newText=showText.replace(inputValue, "<span style='color: red'>"+inputValue+"</span>");
+		return newText;
+	}
 
 </script>
 </body>

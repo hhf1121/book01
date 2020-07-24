@@ -142,10 +142,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/userlist.html")
-	public String userlist(HttpSession session, Model model) {
-		User u = (User) session.getAttribute("currentUser");
-		System.err.println(u);
-		model.addAttribute("user", u);
+	public String userlist(HttpSession session, Model model,String id) {
+		model.addAttribute("userID",id);
 		return "userlist";
 	}
 
@@ -160,7 +158,58 @@ public class UserController {
 			result.put("success",true);
 			return result;
 		} else {
+			result.put("data","信息更新失败");
+			result.put("success",false);
+			return result;
+		}
+	}
+
+
+	// 更新用户信息
+	@RequestMapping(value = "/upateUserByUser")
+	@ResponseBody
+	public Map<String,Object> upateUserByUser(User user,HttpServletRequest request,@RequestParam(value="pic",required=false) MultipartFile file) {
+		Map<String,Object> result=new HashMap<>();
+		String picPath="";
+		if(!file.isEmpty()){
+			String Name=file.getOriginalFilename();//文件名
+			String fileEndName=FilenameUtils.getExtension(Name);//后缀
+			String path=request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadPath");//存储路径
+			if(fileEndName.equalsIgnoreCase("jpg")||fileEndName.equalsIgnoreCase("png")
+					||fileEndName.equalsIgnoreCase("jpeg")||fileEndName.equalsIgnoreCase("pneg")){
+				String fileName=System.currentTimeMillis()+RandomUtils.nextInt(10000000)+"_pic.jpg";
+				File f=new File(path,fileName);
+				if(!f.exists()){
+					f.mkdirs();
+				}
+				try {
+					file.transferTo(f);
+					picPath=path+File.separator+fileName;//完整路径名字。
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+					result.put("data","文件上传失败");
+					result.put("success",false);
+				}
+			}else{
+				result.put("data","图片格式不对");
+				result.put("success",false);
+			}
+		}
+		int x = 0;
+		try {
+			picPath=picPath.equals("")? "": picPath.substring(picPath.indexOf("statics"));//截取路径、保存。
+			user.setPicPath(picPath);
+			x = userService.ModifyUser(user);
+		} catch (Exception e) {
+			result.put("data","系统出错");
+			result.put("success",false);
+		}
+		if (x > 0) {
 			result.put("data","信息更新成功");
+			result.put("success",true);
+			return result;
+		} else {
+			result.put("data","信息更新失败");
 			result.put("success",false);
 			return result;
 		}
