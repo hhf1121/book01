@@ -31,4 +31,6 @@ public interface userService {
 	List<User> getUserList(String name, Integer yes, Integer indexPage, Integer pagesize);
 
 	int deleteById(String[] IdList);
+
+    User getUserById(String id);
 }

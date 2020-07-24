@@ -10,18 +10,17 @@ request.setAttribute("path", path);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>会员借阅历史</title>
-<link href="css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 <div class="right">
         <div class="search">
-        	<form method="post" id="form" action="${pageContext.request.contextPath }/libraryborrow/alllibrarylist.html">
+        	<form method="post" id="libraryform" action="${pageContext.request.contextPath }/libraryborrow/alllibrarylist.html">
 				<span>图书名称：</span>
 				<input name="bookName" type="text" value="${bookName }">
 				<span>读者名称：</span>
 				<input name="userName" type="text" value="${userName }">
 				<input type="hidden" name="pageIndex" value="1"/>
-				<input value="查 询" type="submit" id="searchbutton">
+				<input value="查 询" type="submit" id="searchLibrarybutton">
 			</form>
         </div>
         <!--供应商操作表格-->
@@ -54,11 +53,11 @@ request.setAttribute("path", path);
         </table>
 	<input type="hidden" value="${path }" id="path">
         <input type="hidden" id="totalPageCount" value="${totalPageCount}"/>
-		  	<c:import url="rollpage.jsp">
+		  	<%--<c:import url="rollpage.jsp">
 	          	<c:param name="totalCount" value="${totalCount}"/>
 	          	<c:param name="pageNo" value="${pageNo}"/>
 	          	<c:param name="totalPageCount" value="${totalPageCount}"/>
-          	</c:import>
+          	</c:import>--%>
     	</div>
 </body>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/lookuser.js"></script>

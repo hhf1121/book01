@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import net.sf.json.JSONObject;
+import pojo.Book;
 import pojo.Role;
 import pojo.User;
 import pojo.listNo;
@@ -149,16 +150,19 @@ public class UserController {
 	}
 
 	// 更新用户信息
-	@RequestMapping(value = "/upateUser.html")
-	public String modifyUser(User user, Model model) {
-		System.err.println(user);
+	@RequestMapping(value = "/upateUser")
+	@ResponseBody
+	public Map<String,Object> modifyUser(User user) {
+		Map<String,Object> result=new HashMap<>();
 		int x = userService.ModifyUser(user);
 		if (x > 0) {
-			model.addAttribute("info", "信息更新成功！");
-			return "userlist";
+			result.put("data","信息更新成功");
+			result.put("success",true);
+			return result;
 		} else {
-			model.addAttribute("info", "信息更新失败！");
-			return "userlist";
+			result.put("data","信息更新成功");
+			result.put("success",false);
+			return result;
 		}
 	}
 
@@ -279,6 +283,22 @@ public class UserController {
 		}else{
 			System.err.println("........................false");
 			result="false";
+		}
+		return result;
+	}
+
+
+	@RequestMapping(value="getUserById")
+	@ResponseBody
+	public Map<String,Object> getUserById(String id){
+		Map<String,Object> result=new HashMap<>();
+		User userById = userService.getUserById(id);
+		if (null==userById){
+			result.put("data",null);
+			result.put("success",false);
+		}else{
+			result.put("data",userById);
+			result.put("success",true);
 		}
 		return result;
 	}

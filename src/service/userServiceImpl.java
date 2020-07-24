@@ -66,4 +66,9 @@ public class userServiceImpl implements userService {
 		return userMapper.deleteById(IdList);
 	}
 
+	@Override
+	public User getUserById(String id) {
+		return userMapper.getUserById(id);
+	}
+
 }

@@ -10,7 +10,6 @@ request.setAttribute("path", path);
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>图书信息</title>
-<link href="<%=path %>/css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 <div class="right">
@@ -26,7 +25,7 @@ request.setAttribute("path", path);
 				<span>作者名称：</span>
 				<input name="author" type="text" value="${author }">
 				<input type="hidden" name="pageIndex" value="1"/>
-				<input value="查 询" type="submit" id="searchbutton">
+				<input value="查 询" type="submit" id="searchBookbutton">
 			</form>
         </div>
         <!--供应商操作表格-->
@@ -63,11 +62,11 @@ request.setAttribute("path", path);
         </table>
 	<input type="hidden" value="${path }" id="path">
         <input type="hidden" id="totalPageCount" value="${totalPageCount}"/>
-		  	<c:import url="rollpage.jsp">
+		  <%--	<c:import url="rollpage.jsp">
 	          	<c:param name="totalCount" value="${totalCount}"/>
 	          	<c:param name="pageNo" value="${pageNo}"/>
 	          	<c:param name="totalPageCount" value="${totalPageCount}"/>
-          	</c:import>
+          	</c:import>--%>
     	</div>
 </body>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/allbook.js"></script>

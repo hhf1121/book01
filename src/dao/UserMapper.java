@@ -33,4 +33,6 @@ public interface UserMapper {
 	List<User> getUserList(@Param("name")String name,@Param("yes")Integer yes,@Param("indexPage")Integer indexPage,@Param("pagesize")Integer pagesize);
 	//根据id删除多个。
 	int deleteById(@Param("StringList")String [] IdList);
+
+    User getUserById(String id);
 }

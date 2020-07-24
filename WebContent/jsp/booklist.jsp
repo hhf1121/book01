@@ -61,11 +61,11 @@ request.setAttribute("path", path);
         </table>
 	<input type="hidden" value="${path }" id="path">
         <input type="hidden" id="totalPageCount" value="${totalPageCount}"/>
-		  	<c:import url="rollpage.jsp">
+		 <%-- 	<c:import url="rollpage.jsp">
 	          	<c:param name="totalCount" value="${totalCount}"/>
 	          	<c:param name="pageNo" value="${pageNo}"/>
 	          	<c:param name="totalPageCount" value="${totalPageCount}"/>
-          	</c:import>
+          	</c:import>--%>
     	</div>
     	
 </body>

@@ -11,14 +11,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>用户信息</title>
-<link href="css/pic.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 <table id="userTable" style="width: 100%;height: 650px"></table>
 <div id="queryId">
 	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="deleteUsers()">删除</a><br><br>
 	      读者名字:<input  class="easyui-textbox" name="name"  id="name" />
-	读者身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="loader:userType,mode:'remote',valueField:'id',textField:'roleName',
+	读者身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="prompt:'请选择',loader:userType,mode:'remote',valueField:'id',textField:'roleName',
         panelWidth:150"></select>
 	<a class="easyui-linkbutton" onclick="searchParamUser()">查询</a>
 	<a class="easyui-linkbutton" onclick="$('#name').textbox('clear');$('#yes').textbox('clear')">重置</a>
@@ -27,12 +26,11 @@
 <div id="dialog" class="easyui-dialog" title="编辑用户信息"
 	 style="width: 400px;height: 400px"
 	 data-options="closed:true,modal:true">
-
 </div>
 <input type="hidden" value="${path }" id="path">
 </body>
 <script type="text/javascript">
-	
+	const userTypeArray=new Array();//过滤器
 	$(function () {
 		$('#userTable').datagrid({
 			title:'用户列表',
@@ -52,7 +50,23 @@
 				{field:'passWord',title:'读者密码',width:'10%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
 				{field:'name',title:'读者名字',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
 				{field:'address',title:'读者住址',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'yes',title:'读者角色',width:'10%', sortable:true,editor:'combox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'yes',title:'读者角色',width:'10%', sortable:true,editor:{
+						type:'combobox',
+						options:{
+							url:$("#path").val()+'/base/getUserLevel',
+							method:'post',
+							valueField:'id',
+							textField:'roleName'
+						}
+					},
+					formatter: function (value, row, index) {
+					for (var j=0;j<userTypeArray.length;j++){
+						if(row.yes==userTypeArray[j].id){
+							return userTypeArray[j].roleName;
+						}
+					}
+						return "未获取";
+					}},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
 				{field:'createDate',title:'注册时间',width:'26%',formatter: function (value, row, index) {
 						return formatDateBoxFull(value);
 					}},
@@ -73,7 +87,6 @@
 	})
 
 	function searchParamUser() {
-		debugger
 		//获取表格的查询参数
 		var queryParams=$("#userTable").datagrid('options').queryParams;
 		queryParams.name=$("#name").val();
@@ -130,6 +143,9 @@
 			dataType:'json',
 			method:'post',
 			success:function (data) {
+				for (var i=0;i<data.length;i++){
+					userTypeArray.push(data[i]);
+				}
 				success(data);
 			},
 			error:function () {
