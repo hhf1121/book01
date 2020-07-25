@@ -14,7 +14,7 @@ request.setAttribute("path", path);
 <title>Insert title here</title>
 </head>
 <body >
-<table id="librarylistId" title="历史借阅列表" class="easyui-datagrid" style="height:100% "></table>
+<table id="librarylistId" title="历史借阅列表" class="easyui-datagrid" style="height:650px;width: 100%"></table>
 <script>
 	$(function () {
         initDateLibrary();
@@ -57,7 +57,7 @@ request.setAttribute("path", path);
 				else $(this).closest('div.datagrid-wrap').find('div.datagrid-pager').show();
 			},
 			columns: [[
-				{ field: 'ck', checkbox: true },
+				/*{ field: 'ck', checkbox: true },*/
 				{ field: 'bookName', title: '图书名称', width: '15%', align: 'center', sortable: true },
 				{ field: 'userName', title: '借阅者', width: '20%', align: 'left', sortable: true },
 				{ field: 'borrowTime', title: '借阅时间', width: '25%', align: 'left', sortable: true,formatter: function (value, row, index) {

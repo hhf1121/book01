@@ -13,7 +13,7 @@ request.setAttribute("path", path);
 <body>
 <input type="hidden" value="${path }" id="path">
 	<div class="right">
-		<table id="borrowlistDetail" title="图书历史借阅详情" class="easyui-datagrid" style="height:600px;width: 1200px;margin: 0 auto "></table>
+		<table id="borrowlistDetail" title="图书历史借阅详情" class="easyui-datagrid" style="height:650px;width: 100%"></table>
 	</div>
 </body>
 <script type="text/javascript" >

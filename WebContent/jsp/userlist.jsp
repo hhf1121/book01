@@ -26,6 +26,11 @@
 <input type="hidden" value="${userID }" id="userId">
 
 <div class="easyui-panel" title="个人信息" style="width:400px">
+	<div style="float: left"><br>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-back'" href="${pageContext.request.contextPath }/user/login.html">返回</a>
+	</div>
+	<br>
+	<br>
 	<div style="padding:10px 60px 20px 60px">
 		<form id="updateUser" action="${pageContext.request.contextPath }/user/upateUserByUser" enctype="multipart/form-data" method="post">
 			<table cellpadding="5">
@@ -68,7 +73,6 @@
 		</form>
 		<div style="text-align:center;padding:5px">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateregister()">更改信息</a>
-			<a class="easyui-linkbutton" href="${pageContext.request.contextPath }/user/login.html">返回</a>
 		</div>
 	</div>
 </div>
@@ -138,7 +142,7 @@
 
 	function updateloader(param, success, error) {
 		$.ajax({
-			url:'http://localhost:8083/book/base/getComboboxData.json?level=1&name='+$("#address").val(),
+			url:'${pageContext.request.contextPath }/base/getComboboxData.json?level=1&name='+$("#address").val(),
 			dataType:'json',
 			success:function (data) {
 				success(data);

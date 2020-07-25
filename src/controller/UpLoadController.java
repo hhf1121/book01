@@ -190,7 +190,12 @@ public class UpLoadController {
 		System.err.println(path);
 		File file=new File(path);
 		if(file.delete()){
-			System.err.println("......................aaaa");
+			upLoadfile u=new upLoadfile();
+			u.setId(id);
+			if(uploadfileService.DeleteFile(u)>0){
+				result="success";
+			}
+		}else{
 			upLoadfile u=new upLoadfile();
 			u.setId(id);
 			if(uploadfileService.DeleteFile(u)>0){

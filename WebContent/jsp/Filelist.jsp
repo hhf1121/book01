@@ -16,11 +16,12 @@
 </head>
 <body>
 <form action="<%=path%>/upLoad/uploadFile.html" enctype="multipart/form-data" method="post">
-	<input class="easyui-filebox" name="path" data-options="buttonAlign:'left',prompt:'选择文件',buttonText:'选择'" />
-	<input type="submit" value="上传" />
+	<br>
+	<input class="easyui-filebox" name="path" data-options="iconCls:'icon-save',buttonAlign:'left',prompt:'选择文件',buttonText:'选择'" />
+	<input class="easyui-textbox" type="submit" value="上传" />
 </form>
 
-<table id="fileList" title="文件列表" class="easyui-datagrid" style="width: 100%;height: 650px"></table>
+<table id="fileList" title="文件列表" class="easyui-datagrid" style="width: 100%;height: 600px"></table>
 
 <div id="show"></div>
         <input type="hidden" id="path" value="<%=path%>">
@@ -38,6 +39,7 @@
 			singleSelect: false,
 			striped: true,
 			nowrap: true,
+			rownumbers: true,
 			collapsible: true,
 			fitColumns: true,
 			remoteSort: false,

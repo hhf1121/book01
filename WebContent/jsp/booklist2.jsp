@@ -13,14 +13,15 @@ request.setAttribute("path", path);
 <body>
 <input type="hidden" value="${path }" id="path">
 <form id="formFindList">
-	<div  class="easyui-accordion">
+	<div  class="easyui-accordion" style="width: 100%">
 		<div title="查询条件" data-options="selected:true">
 			<ul class="search-form" style="list-style-type:none;">
-				<li><input name="name" class="easyui-textbox" label="图书名称：" labelWidth="100px;"  data-options="prompt:'支持模糊查询'" style="width:20%"> </li>
-				<li ><input name="author" class="easyui-textbox" label="作者名字：" labelWidth="100px;"  style="width:20%"> </li>
-				<li ><input name="startTime"  class="easyui-datetimebox"  label="发起时间：" labelWidth="100px;" id="q_startTime" style="width:20%"></li>
-				<li ><input name="endTime"  class="easyui-datetimebox"  label="至：" labelWidth="100px;" id="q_endTime" data-options="validType:['endTimeDate[\'#q_startTime\',\'结束时间必须大于或等于发起时间\']']" style="width:20%"></li>
-				<li >
+				<li><input name="name" class="easyui-textbox" label="图书名称："   data-options="prompt:'支持模糊查询'" style="width:20%">
+					<input name="author" class="easyui-textbox" label="作者名字：" style="width:20%">
+					 时间：<input name="startTime"  class="easyui-datetimebox"   id="q_startTime" style="width:12%">至
+					<input name="endTime"  class="easyui-datetimebox"  id="q_endTime" data-options="validType:['endTimeDate[\'#q_startTime\',\'结束时间必须大于或等于发起时间\']']" style="margin-left:0px;width:12%">
+				</li>
+				<li style="float: right">
 					<a href="#" class="easyui-linkbutton search" onclick="findFlowData()">查询</a>
 					<a href="#" class="easyui-linkbutton" onclick="formReset()">重置</a>
 				</li>
@@ -28,7 +29,7 @@ request.setAttribute("path", path);
 		</div>
 	</div>
 </form>
-<table id="dataGridInbound" title="图书列表" class="easyui-datagrid" style="width: 100%;height: 650px"></table>
+<table id="dataGridInbound" title="图书列表" class="easyui-datagrid" style="width: 100%;height: 540px"></table>
 </body>
 <script>
 	$(function () {

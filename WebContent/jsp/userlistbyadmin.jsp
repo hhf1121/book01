@@ -135,7 +135,7 @@ String path = request.getContextPath();
 
 	function addressloader(param, success, error) {
 		$.ajax({
-			url:'http://localhost:8083/book/base/getComboboxData.json?level=1&name='+$("#address").val(),
+			url:'${pageContext.request.contextPath }/base/getComboboxData.json?level=1&name='+$("#address").val(),
 			dataType:'json',
 			success:function (data) {
 				success(data);
