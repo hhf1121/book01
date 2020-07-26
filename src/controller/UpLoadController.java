@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,38 +45,38 @@ public class UpLoadController {
 	private  userService userService;
 
 	// 文件上传
-	@RequestMapping(value = "/uploadFile.html", method = RequestMethod.POST)
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> addUploadfile(@RequestParam("path") MultipartFile uploadfile, Model model,
+	public Map<String,Object> addUploadfile(@RequestParam("myuploadfile") MultipartFile myuploadfile, Model model,
 								HttpServletRequest request) {
 		Map<String,Object> result=new HashMap<>();
 		String idpath = null;
 		// 判断文件是否为空
-		if (!uploadfile.isEmpty()) {
+		if (!myuploadfile.isEmpty()) {
 			String path = request.getSession().getServletContext()
 					.getRealPath("statics" + File.separator + "uploadfiles");//文件存放路径
 			//File.separator   ：自动识别系统。此句含义：创建了一个/statics/uploadfiles文件夹
-			String oldFileName = uploadfile.getOriginalFilename();// 原文件名
+			String oldFileName = myuploadfile.getOriginalFilename();// 原文件名
 			String prefix = FilenameUtils.getExtension(oldFileName);// 原文件后缀
 			int filesize = 5000000;//设置文件大小。
 			System.err.println("uploadFile path ============== > " + path);
 			System.err.println("uploadFile oldFileName ============== > " + oldFileName);
 			System.err.println("uploadFile prefix============> " + prefix);
-			System.err.println("uploadFile size============> " + uploadfile.getSize());
-			if (uploadfile.getSize() > filesize) {// 上传大小不得超过 500k
+			System.err.println("uploadFile size============> " + myuploadfile.getSize());
+			if (myuploadfile.getSize() > filesize) {// 上传大小不得超过 500k
 				result.put("data", " * 上传大小不得超过 500k");
 				result.put("success",false);
 				return result;
 			} else if (prefix.equalsIgnoreCase("txt")) {// 上传图片格式
 				String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000) + "_Personal.txt";
-				System.err.println("new fileName======== " + uploadfile.getName());
+				System.err.println("new fileName======== " + myuploadfile.getName());
 				File targetFile = new File(path, fileName);
 				if (!targetFile.exists()) {
 					targetFile.mkdirs();
 				}
 				try {
 					// 保存文件
-					uploadfile.transferTo(targetFile);
+					myuploadfile.transferTo(targetFile);
 				} catch (Exception e) {
 					e.printStackTrace();
 					result.put("data", " * 上传失败");
@@ -208,7 +209,8 @@ public class UpLoadController {
 	//查看文件内容
 	@RequestMapping(value="fileshow.html",produces={"text/html;charset=utf-8"})
 	@ResponseBody
-	public Object getShow(@RequestParam("id") String id) throws Exception{
+	public Map<String,Object> getShow(@RequestParam("id") String id,@RequestParam(value = "currentPage",required = false) String currentPage) throws Exception{
+		Map<String,Object> reslut=new HashMap<>();
 		System.err.println("查看文件。。。。。。。。。。。。。。。。。。。。");
 		upLoadfile load=uploadfileService.upLoadfileById(Integer.parseInt(id));
 		String show=load.getPath();
@@ -217,12 +219,33 @@ public class UpLoadController {
 		InputStream is = new FileInputStream(file);
 		BufferedReader br=new BufferedReader(new InputStreamReader(is));
 		String str=null;
+		Integer start=0;
+		Integer pageSize=50;
+		if(StringUtils.isEmpty(currentPage)){
+		    start=1;
+        }else {
+            start=Integer.parseInt(currentPage);
+        }
+         start=(start-1)*pageSize;
+		int i=0;
+		int j=0;
 		while(((str=br.readLine())!=null)){
-			info.append(str);
+		    if(i>=start){
+                info.append(str);
+                j++;
+                if(j==pageSize){
+                    break;
+                }
+            }
+            i++;
 		}
 		br.close();
 		is.close();
-		return info.toString();
+		reslut.put("content",new String(info.toString().getBytes("utf-8")));
+		reslut.put("currentPage",StringUtils.isEmpty(currentPage)?0+"":currentPage+"");
+		reslut.put("id",id);
+		reslut.put("bookname",load.getUpName());
+		return reslut;
 	}
 
 

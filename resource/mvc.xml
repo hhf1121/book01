@@ -120,6 +120,7 @@
             <mvc:exclude-mapping path="/**/*.jpg" />
             <mvc:exclude-mapping path="/**/*.gif" />
             <mvc:exclude-mapping path="/**/*.json" />
+            <!--<mvc:exclude-mapping path="/upLoad/fileshow" />-->
             <bean class="tools.SystemSessionInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
