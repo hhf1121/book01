@@ -173,9 +173,15 @@ public class bookController {
 	public String addBook() {
 		return "addbook";
 	}
+
+
 	@RequestMapping(value = "/SaveaddBook")
 	@ResponseBody
 	public String SaveaddBook(Model model,Book book) {
+		Book exits = bookService.getExits(book);
+		if(exits!=null&&exits.getId()!=null){
+			return "exits";
+		}
 		int x=bookService.addBook(book);
 		if(x>0){
 			return "true";

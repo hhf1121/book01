@@ -32,5 +32,7 @@ public interface BookMapper {
 
 	//查询库存。
 	Book QueryCC(Book book);
+	//是否存在
+	Book getExits(Book book);
 
 }

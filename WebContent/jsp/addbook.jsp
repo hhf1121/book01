@@ -61,7 +61,9 @@
                     $.messager.alert("提示","新增成功");
                     $('#userbookdialog').dialog('close');
                     $("#bookTable").datagrid('load');
-                }else{
+                }else if(data=='"exits"'){
+                    $.messager.alert("提示","已存在重复数据");
+                }else {
                     $.messager.alert("提示","新增失败");
                 }
             }

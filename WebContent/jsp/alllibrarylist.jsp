@@ -12,53 +12,61 @@ request.setAttribute("path", path);
 <title>会员借阅历史</title>
 </head>
 <body>
-<div class="right">
-        <div class="search">
-        	<form method="post" id="libraryform" action="${pageContext.request.contextPath }/libraryborrow/alllibrarylist.html">
-				<span>图书名称：</span>
-				<input name="bookName" type="text" value="${bookName }">
-				<span>读者名称：</span>
-				<input name="userName" type="text" value="${userName }">
-				<input type="hidden" name="pageIndex" value="1"/>
-				<input value="查 询" type="submit" id="searchLibrarybutton">
-			</form>
-        </div>
-        <!--供应商操作表格-->
-        <table class="bookTable" cellpadding="0" cellspacing="0">
-            <tr class="firstTr">
-                <th width="10%">图书名称</th>
-                <th width="10%">借阅者</th>
-                <th width="10%">借阅时间</th>
-                <th width="10%">归还时间</th>
-            </tr>
-            <c:forEach var="Library" items="${Librarylist }" varStatus="status">
-				<tr>
-					<td>
-					<span>${Library.bookName }</span>
-					</td>
-					<td>
-					<span>${Library.userName }</span>
-					</td>
-					<td>
-					<span>${Library.borrowTime }</span>
-					</td>
-					<td>
-					<span>${Library.bakeTime }</span>
-					</td>
-					<td>
-					<span><a  href="javascript:lookuser('${Library.userId }');">查看读者信息</a></span>
-					</td>
-				</tr>
-			</c:forEach>
-        </table>
-	<input type="hidden" value="${path }" id="path">
-        <input type="hidden" id="totalPageCount" value="${totalPageCount}"/>
-		  	<%--<c:import url="rollpage.jsp">
-	          	<c:param name="totalCount" value="${totalCount}"/>
-	          	<c:param name="pageNo" value="${pageNo}"/>
-	          	<c:param name="totalPageCount" value="${totalPageCount}"/>
-          	</c:import>--%>
-    	</div>
+<table id="librarylistTable" style="width: 100%;height: 650px"></table>
+<div id="querylibraryId">
+	图书名称:<input  class="easyui-textbox" name="bookName"  id="bookName" />
+	读者名称:<input  class="easyui-textbox" name="userName"  id="userName" />
+	<a class="easyui-linkbutton" onclick="searchParamLibrary()">查询</a>
+	<a class="easyui-linkbutton" onclick="$('#userName').textbox('clear');$('#bookName').textbox('clear')">重置</a>
+	<br>
+</div>
 </body>
+<script type="text/javascript">
+	$(function () {
+		$('#librarylistTable').datagrid({
+			title:'历史借阅列表',
+			url:'${pageContext.request.contextPath }/libraryborrow/getalllibrarylist',
+			method:'get',
+			pagination: true,//显示分页工具栏
+			rownumbers:true,
+			singleSelect:false,
+			toolbar:'#querylibraryId',//绑定工具栏
+			loadMsg:'正在加载,请稍后...',
+			columns:[[
+				{field:'bookName',title:'图书名称',width:'20%', sortable:true,editor:'textbox'},
+				{field:'userName',title:'借阅者',width:'20%', sortable:true,editor:'textbox'},
+				{field:'borrowTime',title:'借阅时间',width:'23%', sortable:true,formatter: function (value, row, index) {
+						return formatDateBoxFull(value);
+					}},
+				{field:'bakeTime',title:'归还时间',width:'23%', sortable:true,formatter: function (value, row, index) {
+						return formatDateBoxFull(value);
+					}},
+				{
+					field: 'deal',
+					title: '操作',
+					align: 'center',
+					width: '12%',
+					formatter: function(value, rec, index) {
+						debugger
+						var result = '<a  title="查看借阅者信息" class="easyui-linkbutton"  onclick="lookuser(\''+rec.userId+'\')" href="javascript:void(0)">查看借阅者信息</a>';
+						return result;
+					}
+				},
+			]],
+			onLoadSuccess:function (data) {//请求成功，返回的数据
+
+			}
+		});
+	})
+
+	function searchParamLibrary() {
+		//获取表格的查询参数
+		var queryParams=$("#librarylistTable").datagrid('options').queryParams;
+		queryParams.bookName=$("#bookName").val();
+		queryParams.userName=$("#userName").val();
+		//重新加载表格数据
+		$("#librarylistTable").datagrid('load');
+	}
+</script>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/lookuser.js"></script>
 </html>

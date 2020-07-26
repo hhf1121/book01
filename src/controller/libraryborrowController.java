@@ -93,4 +93,23 @@ public class libraryborrowController {
         return "alllibrarylist";
     }
 
+
+    // 管理员查看所有的记录
+    @RequestMapping(value = "/getalllibrarylist")
+    @ResponseBody
+    public Map<String,Object> getalllibrarylist(LibraryBorrow libraryBorrow,Page page) {
+        Map<String,Object> result=new HashMap<>();
+        Page page1 = new Page();
+        int CountSize = libraryBorrowService.QueryCountByName2(libraryBorrow.getUserName(), libraryBorrow.getBookName());//总条数
+        page1.setCountSize(CountSize);
+        int PageSize = Integer.parseInt(page.getRows());// 页面容量
+        int currentPage = Integer.parseInt(page.getPage());// 当前页
+        int xx = (currentPage - 1) * PageSize;
+        List<LibraryBorrow> list = libraryBorrowService.QueryByAllList(libraryBorrow.getUserName(), libraryBorrow.getBookName(), xx, PageSize);
+        result.put("rows",list);
+        result.put("total",CountSize);
+        result.put("success",true);
+        return result;
+    }
+
 }

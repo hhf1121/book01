@@ -70,4 +70,9 @@ public class bookServiceImpl implements bookService {
 		return bookMapper.QueryCC(book);
 	}
 
+	@Override
+	public Book getExits(Book book) {
+		return bookMapper.getExits(book);
+	}
+
 }
