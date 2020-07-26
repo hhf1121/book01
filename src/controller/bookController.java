@@ -150,20 +150,37 @@ public class bookController {
 		return "allbooklist";
 	}
 
+	@RequestMapping(value = "/getallbooklist",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> getallbooklist(Book book,Page page) {
+		Map<String,Object> result=new HashMap<>();
+		Page page1 = new Page();
+		int countSize = bookService.CountBooks(book.getName(), book.getAuthor());// 总条数
+		page1.setCountSize(countSize);
+		int PageSize = Integer.parseInt(page.getRows());// 页面容量
+		int currentPage = Integer.parseInt(page.getPage());// 当前页
+		int xx = (currentPage - 1) * PageSize;
+		List<Book> booklist = bookService.getList(book.getName(), book.getAuthor(), xx, PageSize);
+		result.put("rows",booklist);
+		result.put("total",countSize);
+		result.put("success",true);
+		return result;
+	}
+
 
 	// 增加书籍
 	@RequestMapping(value = "/addBook.html")
 	public String addBook() {
 		return "addbook";
 	}
-	@RequestMapping(value = "/SaveaddBook.html")
+	@RequestMapping(value = "/SaveaddBook")
+	@ResponseBody
 	public String SaveaddBook(Model model,Book book) {
 		int x=bookService.addBook(book);
 		if(x>0){
-			return "redirect:/book/allbooklist.html";
+			return "true";
 		}else{
-			model.addAttribute("addbookInfo","添加失败,不合法");
-			return "addbook";
+			return "false";
 		}
 	}
 

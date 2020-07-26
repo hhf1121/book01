@@ -54,7 +54,6 @@
 
 
 	function isSelect(selTab) {
-		debugger
 		var selTab = $('#tables').tabs('getSelected');
 		var url = $(selTab.panel('options')).attr('href');
 		$('#tabs').tabs('update', {

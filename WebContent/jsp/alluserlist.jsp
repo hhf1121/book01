@@ -15,7 +15,7 @@
 <body>
 <table id="userTable" style="width: 100%;height: 650px"></table>
 <div id="queryId">
-	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="deleteUsers()">删除</a><br><br>
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" style="margin: 5px" onclick="deleteUsers()">删除</a><br><br>
 	      读者名字:<input  class="easyui-textbox" name="name"  id="name" />
 	读者身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="prompt:'请选择',loader:userType,mode:'remote',valueField:'id',textField:'roleName',
         panelWidth:150"></select>

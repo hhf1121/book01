@@ -1,4 +1,4 @@
-function allborrow(id,pageNo){
+function allborrow(id){
 	var bid=id;
 	var path=$("#path").val();
 	$.ajax({
@@ -9,13 +9,13 @@ function allborrow(id,pageNo){
 		success:function(result){
 			if(result=="true"){
 				alert("删除成功！");
-				window.location.href=path+"/book/allbooklist.html?pageIndex="+pageNo;
+				initBooksData();
 			}else if(result=="xxx"){
-				alert("删除书籍发生意外！");
-				window.location.href=path+"/book/allbooklist.html?pageIndex="+pageNo;
+				alert("删除书籍异常！");
+				initBooksData();
 			}else{
 				alert("删除失败，此书籍存在外借...")
-				window.location.href=path+"/book/allbooklist.html?pageIndex="+pageNo;
+				initBooksData();
 			}
 		},
 		error:function(){

@@ -12,62 +12,84 @@ request.setAttribute("path", path);
 <title>图书信息</title>
 </head>
 <body>
-<div class="right">
-        <div class="location">
-             <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" href="<%=path%>/book/addBook.html">增加图书</a>
-             <span style="color:red">${sessionScope.infox }</span>
-        </div>
-        <div class="search">
-        	<form method="post" id="form" action="${pageContext.request.contextPath }/book/allbooklist.html">
-				<span>图书名称：</span>
-				<input name="name" type="text" value="${name }">
-				
-				<span>作者名称：</span>
-				<input name="author" type="text" value="${author }">
-				<input type="hidden" name="pageIndex" value="1"/>
-				<input value="查 询" type="submit" id="searchBookbutton">
-			</form>
-        </div>
-        <!--供应商操作表格-->
-        <table class="bookTable" cellpadding="0" cellspacing="0">
-            <tr class="firstTr">
-                <th width="20%">图书编码</th>
-                <th width="25%">图书名称</th>
-                <th width="25%">图书作者</th>
-                <th width="10%">剩余库存</th>
-                <th width="10%">总数</th>
-            </tr>
-            <c:forEach var="book" items="${booklist }" varStatus="status">
-				<tr>
-					<td>
-					<span>${book.id }</span>
-					</td>
-					<td>
-					<span>${book.name }</span>
-					</td>
-					<td>
-					<span>${book.author}</span>
-					</td>
-					<td>
-					<span>${book.count}</span>
-					</td>
-					<td>
-					<span>${book.countSize}</span>
-					</td>
-					<td>
-					<span><a  href="javascript:allborrow(${book.id },${pageNo});">删除</a></span>
-					</td>
-				</tr>
-			</c:forEach>
-        </table>
-	<input type="hidden" value="${path }" id="path">
-        <input type="hidden" id="totalPageCount" value="${totalPageCount}"/>
-		  <%--	<c:import url="rollpage.jsp">
-	          	<c:param name="totalCount" value="${totalCount}"/>
-	          	<c:param name="pageNo" value="${pageNo}"/>
-	          	<c:param name="totalPageCount" value="${totalPageCount}"/>
-          	</c:import>--%>
-    	</div>
+<table id="bookTable"  style="width: 100%;height: 650px"></table>
+
+<div id="querybook" style="margin: 5px;">
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="margin: 5px" onclick="addBook()">新增</a><br><br>
+	图书名称:<input  class="easyui-textbox" name="name"  id="bookname" />
+	作者名称:<input  class="easyui-textbox" name="author"  id="bookauthor" />
+	<a class="easyui-linkbutton" onclick="searchBook()">查询</a>
+	<a class="easyui-linkbutton" onclick="$('#bookname').textbox('clear');$('#bookauthor').textbox('clear')">重置</a>
+	<br>
+</div>
+
+<div id="userbookdialog" ></div>
 </body>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/allbook.js"></script>
+<script type="text/javascript" >
+	$(function () {
+		initBooksData();
+		$('#userbookdialog').dialog({
+			width: 500,
+			height: 320,
+			maximizable: true,
+			closed: true,
+			modal: true
+		});
+	})
+
+	function initBooksData() {
+		$('#bookTable').datagrid({
+			title:'图书列表',
+			url:'${pageContext.request.contextPath }/book/getallbooklist',
+			method:'post',
+			pagination: true,//显示分页工具栏
+			rownumbers:true,
+			singleSelect:false,
+			pageSize: 10,//每页显示的记录条数，默认为10
+			pageList: [5,10,20,50],//可以设置每页记录条数的列表
+			toolbar:'#querybook',//绑定工具栏
+			loadMsg:'正在加载,请稍后...',
+			columns:[[
+				/*{field:'ck',checkbox:true},*/
+				{field:'id',title:'图书编码',width:'10%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'name',title:'图书名称',width:'20%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'author',title:'图书作者',width:'20%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'count',title:'剩余库存',width:'20%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'countSize',title:'总数',width:'20%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{
+					field: 'deal',
+					title: '操作',
+					align: 'center',
+					width: '10%',
+					formatter: function(value, rec, index) {
+						var result = '<a  title="删除"  onclick="allborrow(\''+rec.id+'\')" href="javascript:void(0)">删除</a>';
+						return result;
+					}
+				},
+			]],
+			onLoadSuccess:function (data) {//请求成功，返回的数据
+				data;
+			}
+		});
+	}
+	
+	function searchBook() {
+		//获取表格的查询参数
+		var queryParams=$("#bookTable").datagrid('options').queryParams;
+		queryParams.name=$("#bookname").val();
+		queryParams.author=$("#bookauthor").val();
+		//重新加载表格数据
+		$("#bookTable").datagrid('load');
+	}
+
+	function addBook() {
+		$('#userbookdialog').dialog({
+			title:'新增图书',
+			href:'${pageContext.request.contextPath }/book/addBook.html'
+		});
+		$('#userbookdialog').dialog('open');
+	}
+	
+</script>
 </html>

@@ -7,45 +7,65 @@
 <title>新增图书</title>
 </head>
 <body>
-<span style="color:red">${addbookInfo }</span>
-<form action="${pageContext.request.contextPath}/book/SaveaddBook.html" method="post" id="form">
-书名：<input type="text" name="name" id="name"/><span id="s1"></span><br/>
-作者：<input type="text" name="author" id="author"/><span id="s2"></span><br/>
-库存：<input type="text" name="count" id="count"/><span id="s3"></span><br/>
-<input type="button" value="添加" onclick="add();"/>
-</form>
-<a href="${pageContext.request.contextPath}/book/allbooklist.html">返回书籍列表页面</a>
-<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
+
+    <div style="float: left"><br>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-back'" href="${pageContext.request.contextPath }/user/login.html">返回首页</a>
+    </div>
+    <br>
+    <br>
+    <div style="padding:10px 60px 20px 60px">
+        <form id="addBook"   method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td class="mytd">书名:</td>
+                    <td><input class="easyui-validatebox easyui-textbox" data-options="required:true,missingMessage:'书名不能为空'" type="text" style="height: 30px" name="name" id="bookName"></input></td>
+                </tr>
+                <tr>
+                    <td class="mytd">作者:</td>
+                    <td><input class="easyui-validatebox easyui-textbox" type="text" style="height: 30px" name="author" id="authorName" data-options="required:true,missingMessage:'作者不能为空'"></input></td>
+                </tr>
+                <tr>
+                    <td class="mytd">库存总数:</td>
+                    <td><input class="easyui-validatebox easyui-textbox" type="text" style="height: 30px" name="count" id="countName" data-options="required:true,missingMessage:'总数不能为空'"></input></td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="isOk()">确定</a>
+        </div>
+    </div>
+
 <script type="text/javascript">
-	function add(){
-		var name=document.getElementById("name").value;
-		var author=document.getElementById("author").value;
-		var count=document.getElementById("count").value;
-		var f=false;
-		var f1=false;
-		var f2=false;
-		if(name==null||name==''){
-			$("#s1").html("请填入合法的书名").css("color","red");
-			f=false;
-		}else{
-			f=true;
-		}
-		if(author==null||author==''){
-			$("#s2").html("请填入合法的名字").css("color","red");
-			f1=false;
-		}else{
-			f1=true;
-		}
-		var co=parseInt(count);
-		if(isNaN(co)){
-			$("#s3").html("请填入合法的库存").css("color","red");
-			f2=false;
-		}else{
-			f2=true;
-		}
-		if(f==true&&f1==true&&f2==true){
-			$("#form").submit();
-		}
+    //提交
+	function isOk(){
+        $('#addBook').form('submit', {
+            url:"${pageContext.request.contextPath }/book/SaveaddBook",
+            onSubmit: function(){
+                var flag= $(this).form('validate');
+                if(!flag){
+                    $.messager.show({
+                        title:'提示',
+                        msg:'请先校验表单再提交',
+                        showType:'show',
+                        style: {
+                            right:'',
+                            top:document.body.scrollTop+document.documentElement.scrollTop,
+                            bottom:''
+                        }
+                    })
+                }
+                return flag;
+            },
+            success:function(data){
+                if(data=='"true"'){
+                    $.messager.alert("提示","新增成功");
+                    $('#userbookdialog').dialog('close');
+                    $("#bookTable").datagrid('load');
+                }else{
+                    $.messager.alert("提示","新增失败");
+                }
+            }
+        });
 	}
 </script>
 </body>
