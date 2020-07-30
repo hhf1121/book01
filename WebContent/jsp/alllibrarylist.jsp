@@ -13,7 +13,7 @@ request.setAttribute("path", path);
 </head>
 <body>
 <table id="librarylistTable" style="width: 100%;height: 650px"></table>
-<div id="querylibraryId">
+<div id="querylibraryId" style="margin: 10px">
 	图书名称:<input  class="easyui-textbox" name="bookName"  id="bookName" />
 	读者名称:<input  class="easyui-textbox" name="userName"  id="userName" />
 	<a class="easyui-linkbutton" onclick="searchParamLibrary()">查询</a>
