@@ -125,4 +125,17 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<!-- 定义默认的异常处理页面 -->
+		<property name="defaultErrorView" value="/Exception500"/>
+		<!-- 定义需要特殊处理的异常，这是重要点 -->
+		<!--<property name="exceptionMappings">
+			<props>
+				<prop key="ssm.exception.CustomException">/WEB-INF/jsp/custom_error.jsp</prop>
+			</props>
+		</property>-->
+	</bean>
+	<!-- 全局异常配置 end -->
+
 </beans>
