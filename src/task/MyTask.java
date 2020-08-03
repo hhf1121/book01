@@ -19,19 +19,19 @@ public class MyTask implements SimpleJob {
         System.out.println("分片:"+shardingContext.getShardingItem());
         System.out.println("----------执行----------"+ LocalDateTime.now());
         List<Boolean> result=Lists.newArrayList();
-        for (Boolean list : lists) {
-            System.out.println("源数据:"+lists);
-            if(result.size()==lists.size()){
-                break;
-            }
-            list=true;
-            result.add(list);
-            System.out.println("结果："+result);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-
-            }
-        }
+//        for (Boolean list : lists) {
+//            System.out.println("源数据:"+lists);
+//            if(result.size()==lists.size()){
+//                break;
+//            }
+//            list=true;
+//            result.add(list);
+//            System.out.println("结果："+result);
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//
+//            }
+//        }
     }
 }

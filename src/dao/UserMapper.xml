@@ -20,6 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="passWord!=null and passWord!=''">passWord=#{passWord},</if>
 			<if test="address!=null and address!=''">address=#{address},</if>
 			<if test="yes!=null and yes!=0">yes=#{yes},</if>
+			<if test="picPath!=null and picPath!='' ">picPath=#{picPath},</if>
 		</trim>
 	</update>
 

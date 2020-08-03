@@ -4,13 +4,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.dangdang.ddframe.job.reg.base.CoordinatorRegistryCenter;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import dao.UserMapper;
 import pojo.User;
+import task.RunTask;
 
 @Service
-public class userServiceImpl implements userService {
+public class userServiceImpl implements userService, InitializingBean {
 
 	@Resource
 	private UserMapper userMapper;
@@ -71,4 +74,9 @@ public class userServiceImpl implements userService {
 		return userMapper.getUserById(id);
 	}
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		CoordinatorRegistryCenter coordinatorRegistryCenter = RunTask.initZK();
+		RunTask.startTask(coordinatorRegistryCenter);
+	}
 }
