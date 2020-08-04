@@ -16,9 +16,9 @@ public class MyTask implements SimpleJob {
 
     @Override
     public void execute(ShardingContext shardingContext) {
-        System.out.println("分片:"+shardingContext.getShardingItem());
-        System.out.println("----------执行----------"+ LocalDateTime.now());
-        List<Boolean> result=Lists.newArrayList();
+//        System.out.println("分片:"+shardingContext.getShardingItem());
+        System.out.println("----------elastic-job执行----------"+ LocalDateTime.now());
+//        List<Boolean> result=Lists.newArrayList();
 //        for (Boolean list : lists) {
 //            System.out.println("源数据:"+lists);
 //            if(result.size()==lists.size()){
