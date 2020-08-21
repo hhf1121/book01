@@ -90,6 +90,7 @@
 		</property>
 	</bean>
 
+	<!--将自定义的转换器，注入到spring容器中-->
 	<bean id="conversionService"
 		  class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">

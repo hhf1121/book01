@@ -26,7 +26,7 @@ public class RunTask {
 
     public static void startTask(CoordinatorRegistryCenter zookeeperRegistryCenter){
         //创建：JobCoreConfiguration       任务名，调度表达式，分片数量
-        JobCoreConfiguration.Builder jobCoreConfiguration = JobCoreConfiguration.newBuilder("my-task-job", "0/60 * * * * ?", 3);
+        JobCoreConfiguration.Builder jobCoreConfiguration = JobCoreConfiguration.newBuilder("my-task-job", "0/60 * * * * ?", 1);
         //创建：SimpleJobConfiguration      任务配置，任务执行类的完全限定名
         SimpleJobConfiguration simpleJobConfiguration = new SimpleJobConfiguration(jobCoreConfiguration.build(), MyTask.class.getCanonicalName());
         //启动任务
