@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -18,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +48,9 @@ public class UpLoadController {
 	@Resource
 	private  userService userService;
 
+	@Value("${system.filePath}")
+	private String filePath;
+
 	// 文件上传
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 	@ResponseBody
@@ -53,12 +60,12 @@ public class UpLoadController {
 		String idpath = null;
 		// 判断文件是否为空
 		if (!myuploadfile.isEmpty()) {
-			String path = request.getSession().getServletContext()
-					.getRealPath("statics" + File.separator + "uploadfiles");//文件存放路径
+//			String realPath = request.getServletContext().getRealPath("/file/");
+			String path = filePath+"\\book01\\WebContent\\file";//文件存放路径
 			//File.separator   ：自动识别系统。此句含义：创建了一个/statics/uploadfiles文件夹
 			String oldFileName = myuploadfile.getOriginalFilename();// 原文件名
 			String prefix = FilenameUtils.getExtension(oldFileName);// 原文件后缀
-			int filesize = 5000000;//设置文件大小。
+			int filesize = 500*1024;//设置文件大小。
 			System.err.println("uploadFile path ============== > " + path);
 			System.err.println("uploadFile oldFileName ============== > " + oldFileName);
 			System.err.println("uploadFile prefix============> " + prefix);
@@ -167,17 +174,19 @@ public class UpLoadController {
 
 	//下载：
 	@RequestMapping("/download.html")
-	public ResponseEntity<byte[]> download(HttpServletRequest request,@RequestParam("file")String filex) throws IOException {
-		System.err.println("......................................................");
-		File file = new File(filex);
-		byte[] body = null;
-		InputStream is = new FileInputStream(file);
-		body = new byte[is.available()];
-		is.read(body);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "attchement;filename=" + file.getName());
-		HttpStatus statusCode = HttpStatus.OK;
-		ResponseEntity<byte[]> entity = new ResponseEntity<byte[]>(body, headers, statusCode);
+	public ResponseEntity<byte[]> download(HttpServletRequest request,@RequestParam("id")String id) throws IOException {
+		ResponseEntity<byte[]> entity=null;
+		if(!StringUtils.isEmpty(id)){
+			upLoadfile upLoadfile = uploadfileService.upLoadfileById(Integer.parseInt(id));
+			File file = new File(upLoadfile.getPath());
+			byte[] body = null;
+			InputStream is = new FileInputStream(file);
+			body = new byte[is.available()];
+			is.read(body);
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Disposition", "attchement;filename=" + file.getName());
+			entity = new ResponseEntity<byte[]>(body, headers, HttpStatus.OK);
+		}
 		return entity;
 	}
 
@@ -211,7 +220,6 @@ public class UpLoadController {
 	@ResponseBody
 	public Map<String,Object> getShow(@RequestParam("id") String id,@RequestParam(value = "currentPage",required = false) String currentPage) throws Exception{
 		Map<String,Object> reslut=new HashMap<>();
-		System.err.println("查看文件。。。。。。。。。。。。。。。。。。。。");
 		upLoadfile load=uploadfileService.upLoadfileById(Integer.parseInt(id));
 		String show=load.getPath();
 		StringBuffer info=new StringBuffer();
@@ -241,8 +249,36 @@ public class UpLoadController {
 		}
 		br.close();
 		is.close();
-		reslut.put("content",new String(info.toString().getBytes("utf-8")));
-		reslut.put("currentPage",StringUtils.isEmpty(currentPage)?0+"":currentPage+"");
+		if(StringUtils.isEmpty(info.toString().trim())){//最后一页，回查上一页，并加标识isEnd
+			reslut.put("isEnd",true);
+			reslut.put("currentPage",StringUtils.isEmpty(currentPage)?0+"":(Integer.parseInt(currentPage)-1)+"");
+			currentPage = Integer.parseInt(currentPage)-1+"";
+			StringBuffer sb=new StringBuffer("");
+			if(StringUtils.isEmpty(currentPage)){
+				start=1;
+			}else {
+				start=Integer.parseInt(currentPage);
+			}
+			start=(start-1)*pageSize;
+			int ii=0;
+			int jj=0;
+			while(((str=br.readLine())!=null)){
+				if(ii>=start){
+					sb.append(str);
+					jj++;
+					if(jj==pageSize){
+						break;
+					}
+				}
+				ii++;
+			}
+			br.close();
+			is.close();
+			reslut.put("content",new String(sb.toString().getBytes("UTF-8")));
+		}else {
+			reslut.put("content",new String(info.toString().getBytes("UTF-8")));
+			reslut.put("currentPage",StringUtils.isEmpty(currentPage)?0+"":currentPage+"");
+		}
 		reslut.put("id",id);
 		reslut.put("bookname",load.getUpName());
 		return reslut;
@@ -257,7 +293,7 @@ public class UpLoadController {
 		String result="";
 		try{
 			// 构建上传文件的存放 “文件夹” 路径
-			String fileDirPath = new String("book01/resources/static/file");
+			String fileDirPath = new String("book01/resource/statics/file");
 			File fileDir = new File(fileDirPath);
 			if(!fileDir.exists()){
 				// 递归生成文件夹

@@ -9,6 +9,8 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
+
+	<context:property-placeholder location="classpath:application.properties" ignore-unresolvable="true"/>
 	<context:component-scan base-package="controller"></context:component-scan>
 	<mvc:annotation-driven conversion-service="conversionService" content-negotiation-manager="contentNegotiationManager" ignoreDefaultModelOnRedirect="true">
 		<!-- 设置不使用默认的消息转换器 -->

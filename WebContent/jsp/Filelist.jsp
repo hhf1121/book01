@@ -25,7 +25,7 @@
 <div id="bookdialog" ></div>
 <div id="bb">
 	<a href="#" class="easyui-linkbutton" onclick="preData()">上一页</a>
-	<a href="#" class="easyui-linkbutton" onclick="nextData()">下一页</a>
+	<a href="#" class="easyui-linkbutton" id="nextPaper" onclick="nextData()">下一页</a>
 </div>
 </div>
         <input type="hidden" id="mypath" value="<%=mypath%>">
@@ -111,8 +111,9 @@
 					align: 'center',
 					width: '200',
 					formatter: function(value, rec, index) {
+						debugger
 						var result = '<a  title="删除" class="easyui-linkbutton"  onclick="deletefile(\''+rec.id+'\')" href="javascript:void(0)">删除</a> '
-								+'<a  href="<%=mypath %>/upLoad/download.html?file='+rec.path+'">下载 </a>'
+								+'<a  href="<%=mypath %>/upLoad/download.html?id='+rec.id+'">下载 </a>'
 								+ '<a  style="margin-left:10px" title="查看"  onclick="showFile(\''+ rec.id + '\',\''+ rec.upName + '\')" href="javascript:void(0)">查看</a>';
 						return result;
 					}
@@ -153,6 +154,11 @@
 					$('#bookdialog').dialog({title:id+"&"+name+"&"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
 					$('#bookdialog').dialog('open');
                     $("#isTop").scrollTop(0);
+					if(fileData.isEnd){
+						$("#nextPaper").css("disabled",true);
+					}else {
+						$("#nextPaper").css("disabled",false);
+					}
 				}
 			},
 			error:function(){
@@ -218,6 +224,11 @@
 						$('#bookdialog').dialog({title:id+"&"+fileData.bookname+"&"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
 						$('#bookdialog').dialog('open');
                         $("#isTop").scrollTop(0);
+                        if(fileData.isEnd){
+                        	$("#nextPaper").css("disabled",true);
+						}else {
+							$("#nextPaper").css("disabled",false);
+						}
 					}
 				},
 				error:function(){

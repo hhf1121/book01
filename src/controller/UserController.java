@@ -62,16 +62,17 @@ public class UserController {
 			System.err.println("------------------------头像文件上传");
 			String Name=file.getOriginalFilename();//文件名
 			String fileEndName=FilenameUtils.getExtension(Name);//后缀
-			String path=request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadPath");//存储路径
+			String path="book01/resource/"+("statics"+File.separator+"uploadPath");//存储路径
 			if(fileEndName.equalsIgnoreCase("jpg")||fileEndName.equalsIgnoreCase("png")
 					||fileEndName.equalsIgnoreCase("jpeg")||fileEndName.equalsIgnoreCase("pneg")){
 				String fileName=System.currentTimeMillis()+RandomUtils.nextInt(10000000)+"_pic.jpg";
-				File f=new File(path,fileName);
+				File f=new File(path);
 				if(!f.exists()){
 					f.mkdirs();
 				}
 				try {
-					file.transferTo(f);
+					File newFile = new File(f.getAbsolutePath() + File.separator + fileName);
+					file.transferTo(newFile);
 					picPath=path+File.separator+fileName;//完整路径名字。
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
@@ -174,7 +175,7 @@ public class UserController {
 		if(!file.isEmpty()){
 			String Name=file.getOriginalFilename();//文件名
 			String fileEndName=FilenameUtils.getExtension(Name);//后缀
-			String path=request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadPath");//存储路径
+			String path="book01/resource/"+("statics"+File.separator+"uploadPath");//存储路径
 			if(fileEndName.equalsIgnoreCase("jpg")||fileEndName.equalsIgnoreCase("png")
 					||fileEndName.equalsIgnoreCase("jpeg")||fileEndName.equalsIgnoreCase("pneg")){
 				String fileName=System.currentTimeMillis()+RandomUtils.nextInt(10000000)+"_pic.jpg";
