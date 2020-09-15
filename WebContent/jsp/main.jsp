@@ -17,7 +17,7 @@
 <div id="cc" class="easyui-layout" style="width:1200px;height:800px;margin: 0 auto">
 	<div data-options="region:'north',title:' 用户信息 '" style="height:150px;">
 		<div style="margin: 0 auto;font-size: 20px">
-			<img  src="<%=path %>/${currentUser.picPath }"  width="100px" height="100px"  class="pic"/>
+			<img  src="${currentUser.picPath }"  width="100px" height="100px"  class="pic"/>
 			<div style="float: right;margin-right: 300px;margin-top: 10px"><span style="color: #b447ff">${currentUser.userName }</span>, 欢迎你！您的身份是：<span style="color:red;">${role }</span></div>
 			<c:if test="${currentUser.yes==1 }"><span style="color:red; font-size: 12px">升级为vip会员将开启图书借阅功能！请联系管理员..</span></c:if>
 			${infoup }

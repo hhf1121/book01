@@ -61,7 +61,7 @@ public class UpLoadController {
 		// 判断文件是否为空
 		if (!myuploadfile.isEmpty()) {
 //			String realPath = request.getServletContext().getRealPath("/file/");
-			String path = filePath+"\\book01\\WebContent\\file";//文件存放路径
+			String path = filePath+"\\book01\\WebContent\\resource\\file";//文件存放路径
 			//File.separator   ：自动识别系统。此句含义：创建了一个/statics/uploadfiles文件夹
 			String oldFileName = myuploadfile.getOriginalFilename();// 原文件名
 			String prefix = FilenameUtils.getExtension(oldFileName);// 原文件后缀
@@ -293,7 +293,7 @@ public class UpLoadController {
 		String result="";
 		try{
 			// 构建上传文件的存放 “文件夹” 路径
-			String fileDirPath = new String("book01/resource/statics/file");
+			String fileDirPath  = filePath+"\\book01\\WebContent\\resource\\file";//文件存放路径
 			File fileDir = new File(fileDirPath);
 			if(!fileDir.exists()){
 				// 递归生成文件夹

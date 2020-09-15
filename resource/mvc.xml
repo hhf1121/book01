@@ -41,13 +41,16 @@
 			</bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
+	<mvc:default-servlet-handler/>
 	<mvc:resources location="/css/" mapping="/css/**" />
 	<mvc:resources location="/easyui/" mapping="/easyui/**"/>
 	<mvc:resources location="/js/" mapping="/js/**" />
 	<!--<mvc:resources location="/images/" mapping="/images/**" />-->
 	<mvc:resources location="/statics/" mapping="/statics/**"/>
-	<!--<mvc:resources location="/calendar/" mapping="/calendar/**" />-->
-
+	<!--<
+	mvc:resources location="/calendar/" mapping="/calendar/**" />-->
+	<mvc:resources  location="/resource/file/"  mapping="/resource/file/**"></mvc:resources>
+	<mvc:resources  location="/resource/photo/"  mapping="/resource/photo/**"></mvc:resources>
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/jsp/"></property>

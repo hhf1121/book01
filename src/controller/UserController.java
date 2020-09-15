@@ -2,6 +2,8 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +45,9 @@ public class UserController {
 	private listNoService listNoService;
 	@Resource
 	private RoleService roleService;
+
+    @Value("${system.filePath}")
+    private String filePath;
 	
 	// 验证账号是否存在
 	@RequestMapping(value = "/ifExist")
@@ -62,7 +68,8 @@ public class UserController {
 			System.err.println("------------------------头像文件上传");
 			String Name=file.getOriginalFilename();//文件名
 			String fileEndName=FilenameUtils.getExtension(Name);//后缀
-			String path="book01/resource/"+("statics"+File.separator+"uploadPath");//存储路径
+//			String path="book01/resource/"+("statics"+File.separator+"uploadPath");//存储路径
+			String path=filePath+"\\book01\\WebContent\\resource\\photo";//图片存放路径
 			if(fileEndName.equalsIgnoreCase("jpg")||fileEndName.equalsIgnoreCase("png")
 					||fileEndName.equalsIgnoreCase("jpeg")||fileEndName.equalsIgnoreCase("pneg")){
 				String fileName=System.currentTimeMillis()+RandomUtils.nextInt(10000000)+"_pic.jpg";
@@ -85,8 +92,9 @@ public class UserController {
 		}
 		int x = 0;
 		try {
-			picPath=picPath.equals("")? "": picPath.substring(picPath.indexOf("statics"));//截取路径、保存。
-			user.setPicPath(picPath);
+			String showUrl="http://"+getHostAddress()+":"+request.getServerPort()+"book\\"+picPath.split("WebContent")[1];
+//			picPath=picPath.equals("")? "": picPath;//截取路径、保存。
+			user.setPicPath(showUrl);
 			x = userService.addUser(user);
 		} catch (Exception e) {
 			System.err.println("用户注册失败！");
@@ -175,7 +183,8 @@ public class UserController {
 		if(!file.isEmpty()){
 			String Name=file.getOriginalFilename();//文件名
 			String fileEndName=FilenameUtils.getExtension(Name);//后缀
-			String path="book01/resource/"+("statics"+File.separator+"uploadPath");//存储路径
+//			String path="book01/resource/"+("statics"+File.separator+"uploadPath");//存储路径
+			String path=filePath+"\\book01\\WebContent\\resource\\photo";//图片存放路径
 			if(fileEndName.equalsIgnoreCase("jpg")||fileEndName.equalsIgnoreCase("png")
 					||fileEndName.equalsIgnoreCase("jpeg")||fileEndName.equalsIgnoreCase("pneg")){
 				String fileName=System.currentTimeMillis()+RandomUtils.nextInt(10000000)+"_pic.jpg";
@@ -351,6 +360,17 @@ public class UserController {
 			result.put("success",true);
 		}
 		return result;
+	}
+
+
+	private String getHostAddress(){
+		String hostAddress = null;
+		try {
+			hostAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			hostAddress="localhost";
+		}
+		return hostAddress;
 	}
 
 }
