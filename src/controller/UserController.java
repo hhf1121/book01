@@ -92,7 +92,7 @@ public class UserController {
 		}
 		int x = 0;
 		try {
-			String showUrl="http://"+getHostAddress()+":"+request.getServerPort()+"book\\"+picPath.split("WebContent")[1];
+			String showUrl="http://"+getHostAddress()+":"+request.getServerPort()+"\\book\\"+picPath.split("WebContent")[1];
 //			picPath=picPath.equals("")? "": picPath;//截取路径、保存。
 			user.setPicPath(showUrl);
 			x = userService.addUser(user);
@@ -204,11 +204,16 @@ public class UserController {
 				result.put("data","图片格式不对");
 				result.put("success",false);
 			}
+		}else {
+			result.put("data","图片不能为空");
+			result.put("success",false);
+			return result;
 		}
 		int x = 0;
 		try {
-			picPath=picPath.equals("")? "": picPath.substring(picPath.indexOf("statics"));//截取路径、保存。
-			user.setPicPath(picPath);
+			String showUrl="http://"+getHostAddress()+":"+request.getServerPort()+"\\book\\"+picPath.split("WebContent")[1];
+//			picPath=picPath.equals("")? "": picPath.substring(picPath.indexOf("statics"));//截取路径、保存。
+			user.setPicPath(showUrl);
 			x = userService.ModifyUser(user);
 		} catch (Exception e) {
 			result.put("data","系统出错");

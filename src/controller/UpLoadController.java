@@ -65,13 +65,13 @@ public class UpLoadController {
 			//File.separator   ：自动识别系统。此句含义：创建了一个/statics/uploadfiles文件夹
 			String oldFileName = myuploadfile.getOriginalFilename();// 原文件名
 			String prefix = FilenameUtils.getExtension(oldFileName);// 原文件后缀
-			int filesize = 500*1024;//设置文件大小。
+			int filesize = 5000*1024;//设置文件大小。
 			System.err.println("uploadFile path ============== > " + path);
 			System.err.println("uploadFile oldFileName ============== > " + oldFileName);
 			System.err.println("uploadFile prefix============> " + prefix);
 			System.err.println("uploadFile size============> " + myuploadfile.getSize());
 			if (myuploadfile.getSize() > filesize) {// 上传大小不得超过 500k
-				result.put("data", " * 上传大小不得超过 500k");
+				result.put("data", " * 上传大小不得超过 5M");
 				result.put("success",false);
 				return result;
 			} else if (prefix.equalsIgnoreCase("txt")) {// 上传图片格式

@@ -24,6 +24,7 @@
 <table id="fileList" title="文件列表" class="easyui-datagrid" style="width: 100%;height: 600px"></table>
 <div id="bookdialog" ></div>
 <div id="bb">
+    第<span id="currentpaper">1</span>页
 	<a href="#" class="easyui-linkbutton" onclick="preData()">上一页</a>
 	<a href="#" class="easyui-linkbutton" id="nextPaper" onclick="nextData()">下一页</a>
 </div>
@@ -35,7 +36,7 @@
 		initDateFile();
 		$("#filemyForm").form({
 			onSubmit: function(){
-				debugger
+
 			},
 			success:function(data){
 				var result=JSON.parse(data);//字符串转换成json对象
@@ -65,7 +66,11 @@
 			height: 400,
             maximizable: true,
 			closed: true,
-			modal: true
+			modal: true,
+			onClose: function () {
+				$("#currentpaper").text("1");
+			}
+
 		});
 	})
 
@@ -111,7 +116,6 @@
 					align: 'center',
 					width: '200',
 					formatter: function(value, rec, index) {
-						debugger
 						var result = '<a  title="删除" class="easyui-linkbutton"  onclick="deletefile(\''+rec.id+'\')" href="javascript:void(0)">删除</a> '
 								+'<a  href="<%=mypath %>/upLoad/download.html?id='+rec.id+'">下载 </a>'
 								+ '<a  style="margin-left:10px" title="查看"  onclick="showFile(\''+ rec.id + '\',\''+ rec.upName + '\')" href="javascript:void(0)">查看</a>';
@@ -151,7 +155,7 @@
 			success:function(result){
 				var fileData=JSON.parse(result);//字符串转换成json对象
 				if(fileData!=null||fileData.content.length>0){// id-名字-页码
-					$('#bookdialog').dialog({title:id+"&"+name+"&"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
+					$('#bookdialog').dialog({title:id+"-["+name+"]"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
 					$('#bookdialog').dialog('open');
                     $("#isTop").scrollTop(0);
 					if(fileData.isEnd){
@@ -171,8 +175,8 @@
 	}
 	function preData() {//上一页 id&名字&页码
 		var title=$('#bookdialog').panel('options').title;
-		var page=title.split('&')[2];
-		var id=title.split('&')[0];
+		var page=$("#currentpaper").text();
+		var id=title.split('-')[0];
 		if(parseInt(page)-1>0){
 			var currentPage=parseInt(page)-1;
 			$.ajax({
@@ -183,9 +187,9 @@
 				success:function(result){
 					var fileData=JSON.parse(result);//字符串转换成json对象
 					if(fileData!=null||fileData.content.length>0){
-						$('#bookdialog').dialog({title:id+"&"+fileData.bookname+"&"+fileData.currentPage,content:fileData.content});
+						$('#bookdialog').dialog({title:id+"-["+fileData.bookname+"]",content:fileData.content});
 						$('#bookdialog').dialog('open');
-                        $('#bookdialog').dialog('scrollTo',0);
+                        $("#currentpaper").text(fileData.currentPage);
                     }
 				},
 				error:function(){
@@ -209,8 +213,8 @@
 	}
 	function nextData() {//下一页 id&名字&页码
 		var title=$('#bookdialog').panel('options').title;
-		var page=title.split('&')[2];
-		var id=title.split('&')[0];
+		var page=$("#currentpaper").text();
+		var id=title.split('-')[0];
 		if(parseInt(page)+1>0){
 			var currentPage=parseInt(page)+1;
 			$.ajax({
@@ -221,9 +225,11 @@
 				success:function(result){
 					var fileData=JSON.parse(result);//字符串转换成json对象
 					if(fileData!=null||fileData.content.length>0){
-						$('#bookdialog').dialog({title:id+"&"+fileData.bookname+"&"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
+                        $('#bookdialog').dialog({title:id+"-["+fileData.bookname+"]",content:fileData.content});
+						// $('#bookdialog').dialog({title:id+"&"+fileData.bookname+"&"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
 						$('#bookdialog').dialog('open');
                         $("#isTop").scrollTop(0);
+						$("#currentpaper").text(fileData.currentPage);
                         if(fileData.isEnd){
                         	$("#nextPaper").css("disabled",true);
 						}else {
