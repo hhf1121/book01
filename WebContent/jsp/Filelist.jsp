@@ -156,8 +156,9 @@
 				var fileData=JSON.parse(result);//字符串转换成json对象
 				if(fileData!=null||fileData.content.length>0){// id-名字-页码
 					$('#bookdialog').dialog({title:id+"-["+name+"]"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
-					$('#bookdialog').dialog('open');
-                    $("#isTop").scrollTop(0);
+					// $('#bookdialog').dialog('open');
+					$('#bookdialog').dialog({ modal: true }).dialog('open');
+					$("#bookdialog").scrollTop(0);
 					if(fileData.isEnd){
 						$("#nextPaper").css("disabled",true);
 					}else {
@@ -188,7 +189,9 @@
 					var fileData=JSON.parse(result);//字符串转换成json对象
 					if(fileData!=null||fileData.content.length>0){
 						$('#bookdialog').dialog({title:id+"-["+fileData.bookname+"]",content:fileData.content});
-						$('#bookdialog').dialog('open');
+						// $('#bookdialog').dialog('open');
+						$('#bookdialog').dialog({ modal: true }).dialog('open');
+						$("#bookdialog").scrollTop(0);
                         $("#currentpaper").text(fileData.currentPage);
                     }
 				},
@@ -227,8 +230,9 @@
 					if(fileData!=null||fileData.content.length>0){
                         $('#bookdialog').dialog({title:id+"-["+fileData.bookname+"]",content:fileData.content});
 						// $('#bookdialog').dialog({title:id+"&"+fileData.bookname+"&"+fileData.currentPage,content:'<div id="isTop" style="font-size: 10px;color: royalblue">'+fileData.content+'</div>'});
-						$('#bookdialog').dialog('open');
-                        $("#isTop").scrollTop(0);
+						// $('#bookdialog').dialog('open');
+						$('#bookdialog').dialog({ modal: true }).dialog('open');
+                        $("#bookdialog").scrollTop(0);
 						$("#currentpaper").text(fileData.currentPage);
                         if(fileData.isEnd){
                         	$("#nextPaper").css("disabled",true);

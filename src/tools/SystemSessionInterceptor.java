@@ -74,7 +74,7 @@ public class SystemSessionInterceptor implements HandlerInterceptor {
         Object obj = session.getAttribute("currentUser");
         if (obj==null||"".equals(obj.toString())) {
             System.out.println("未登录");
-            response.sendRedirect(request.getSession().getServletContext().getContextPath()+LOGIN_URL);
+            response.sendRedirect(request.getContextPath()+LOGIN_URL);
             return false;
         }else {
             System.out.println("当前用户session过期时间："+session.getMaxInactiveInterval());

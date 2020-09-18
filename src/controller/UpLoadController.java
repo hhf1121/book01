@@ -239,7 +239,7 @@ public class UpLoadController {
 		int j=0;
 		while(((str=br.readLine())!=null)){
 		    if(i>=start){
-                info.append(str);
+                info.append(str+"<br/>");
                 j++;
                 if(j==pageSize){
                     break;
@@ -264,7 +264,7 @@ public class UpLoadController {
 			int jj=0;
 			while(((str=br.readLine())!=null)){
 				if(ii>=start){
-					sb.append(str);
+					sb.append(str+"<br/>");
 					jj++;
 					if(jj==pageSize){
 						break;
@@ -274,9 +274,9 @@ public class UpLoadController {
 			}
 			br.close();
 			is.close();
-			reslut.put("content",new String(sb.toString().getBytes("UTF-8")));
+			reslut.put("content",sb.toString());
 		}else {
-			reslut.put("content",new String(info.toString().getBytes("UTF-8")));
+			reslut.put("content",info.toString());
 			reslut.put("currentPage",StringUtils.isEmpty(currentPage)?0+"":currentPage+"");
 		}
 		reslut.put("id",id);
