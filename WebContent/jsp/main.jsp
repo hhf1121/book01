@@ -17,8 +17,12 @@
 <div id="cc" class="easyui-layout" style="width:1200px;height:800px;margin: 0 auto">
 	<div data-options="region:'north',title:' 用户信息 '" style="height:150px;">
 		<div style="margin: 0 auto;font-size: 20px">
-			<img  src="${currentUser.picPath }"  width="100px" height="100px"  class="pic"/>
-			<div style="float: right;margin-right: 300px;margin-top: 10px"><span style="color: #b447ff">${currentUser.userName }</span>, 欢迎你！您的身份是：<span style="color:red;">${role }</span></div>
+			<img  src="${currentUser.picPath }"  width="100px" height="100px" style="border-radius: 10px;"  class="pic"/>
+			<div style="float: right;margin-right: 300px;margin-top: 10px"><span style="color: #b447ff">${currentUser.userName }</span>, 欢迎你！您的身份是：<span style="color:red;">${role }
+				<div style="position: absolute;right: 0px;top: 30px"><a style="font-size: 8px"  href="https://www.jeasyui.net/plugins" target="_blank">技术支持♬</a></div></span>
+				<%--<div style="height: 10px;width: 5em;margin-top: 50px;margin-left:1100px;">
+				</div>--%>
+			</div>
 			<c:if test="${currentUser.yes==1 }"><span style="color:red; font-size: 12px">升级为vip会员将开启图书借阅功能！请联系管理员..</span></c:if>
 			${infoup }
 		</div>

@@ -79,7 +79,16 @@ request.setAttribute("path", path);
                     formatter: function(value, rec, index) {
                         var result = '<a  title="查看"  onclick="look(\''+rec.name+'\',\''+rec.count+'\')" href="javascript:void(0)">查看</a>'
                             + '<a  style="margin-left:10px" title="借阅"  onclick="borrow(\'' + rec.id + '\',${currentUser.id},$(\'#dataGridInbound\').datagrid(\'options\').pageNumber)" href="javascript:void(0)">借阅</a>';
-                        return result;
+						if(rec){//已收藏
+							result=result+'  <a onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
+									'<img width="15px" height="15px"  src="/book/resource/images/star.png" id="starId'+index+'" title="收藏">' +
+									'</a>';
+						}else {
+							result=result+'  <a onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
+									'<img width="15px" height="15px"  src="/book/resource/images/star-empty.png" id="starId'+index+'" title="收藏">' +
+									'</a>';
+						}
+						return result;
                     }
                 },
             ]],
@@ -195,6 +204,36 @@ request.setAttribute("path", path);
 			}
 		//请求
 		$('#dataGridInbound').datagrid('load',paramObjs);
+	}
+	function noticeLibrary(index) {
+		var row = $('#dataGridInbound').datagrid('getRows')[index];
+		// $.ajax({
+		// 	type: "GET",
+		// 	url: "library/noticeLibrary.do",
+		// 	data: { noticeId: row.id },
+		// 	success: function (data, textStatus) {
+		// 		if('success'===data){
+		// 			// $.messager.alert('提示','操作成功');
+		// 			//改变星标
+		// 			var starId="starId"+index;
+		// 			console.info(starId);
+		// 			if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
+		// 				$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
+		// 			}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
+		// 				$("#"+starId+"").attr('src','/book/resource/images/star.png');
+		// 			}
+		// 		}else {
+		// 			$.messager.alert('提示','操作失败,请稍后重试');
+		// 		}
+		// 	}
+		// });
+		$.messager.alert('提示','操作成功(假操作)');
+		var starId="starId"+index;
+		if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
+			$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
+		}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
+			$("#"+starId+"").attr('src','/book/resource/images/star.png');
+		}
 	}
 
 </script>

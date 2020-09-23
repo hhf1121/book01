@@ -51,6 +51,7 @@
 	mvc:resources location="/calendar/" mapping="/calendar/**" />-->
 	<mvc:resources  location="/resource/file/"  mapping="/resource/file/**"></mvc:resources>
 	<mvc:resources  location="/resource/photo/"  mapping="/resource/photo/**"></mvc:resources>
+	<mvc:resources  location="/resource/images/"  mapping="/resource/images/**"></mvc:resources>
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/jsp/"></property>
