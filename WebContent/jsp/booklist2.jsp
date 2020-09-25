@@ -29,8 +29,16 @@ request.setAttribute("path", path);
 		</div>
 	</div>
 </form>
-<table id="dataGridInbound" title="图书列表" class="easyui-datagrid" style="width: 100%;height: 540px"></table>
+<%--<div id="app">
+	<input type="text" v-model="info" />
+	{{info}}
+	<button @click="test(1)">点击</button>
+</div>--%>
+	<table id="dataGridInbound" title="图书列表" class="easyui-datagrid" style="width: 100%;height: 540px"></table>
 </body>
+<script src="../js/vue-2.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="//unpkg.com/element-ui@2.3.2/lib/index.js"></script>
+<link rel="stylesheet" type="text/css" href="//unpkg.com/element-ui@2.3.2/lib/theme-chalk/index.css" />
 <script>
 	$(function () {
         initDate();
@@ -42,7 +50,6 @@ request.setAttribute("path", path);
 			afterPageText: '页    共 {pages} 页',
 			displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
 		});
-
 	})
 
     function initDate(){
@@ -77,18 +84,18 @@ request.setAttribute("path", path);
                     align: 'center',
                     width: '200',
                     formatter: function(value, rec, index) {
-                        var result = '<a  title="查看"  onclick="look(\''+rec.name+'\',\''+rec.count+'\')" href="javascript:void(0)">查看</a>'
+                        var result = '<div id="caozuo" ><a  title="查看"  onclick="look(\''+rec.name+'\',\''+rec.count+'\')" href="javascript:void(0)">查看</a>'
                             + '<a  style="margin-left:10px" title="借阅"  onclick="borrow(\'' + rec.id + '\',${currentUser.id},$(\'#dataGridInbound\').datagrid(\'options\').pageNumber)" href="javascript:void(0)">借阅</a>';
 						if(rec){//已收藏
-							result=result+'  <a onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
-									'<img width="15px" height="15px"  src="/book/resource/images/star.png" id="starId'+index+'" title="收藏">' +
-									'</a>';
+							result=result+'<div style="display: inline"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
+									'<img width="15px" height="15px"  src="/book/resource/images/star.png" id="starId'+index+'" :title="isTitle">' +
+									'</a></div>';
 						}else {
-							result=result+'  <a onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
-									'<img width="15px" height="15px"  src="/book/resource/images/star-empty.png" id="starId'+index+'" title="收藏">' +
-									'</a>';
+							result=result+'<div style="display: inline"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
+									'<img width="15px" height="15px"  src="/book/resource/images/star-empty.png" id="starId'+index+'" :title="isTitle">' +
+									'</a></div>';
 						}
-						return result;
+						return result+'</div>';
                     }
                 },
             ]],
@@ -205,36 +212,70 @@ request.setAttribute("path", path);
 		//请求
 		$('#dataGridInbound').datagrid('load',paramObjs);
 	}
+	//普通方法调用vue
 	function noticeLibrary(index) {
-		var row = $('#dataGridInbound').datagrid('getRows')[index];
-		// $.ajax({
-		// 	type: "GET",
-		// 	url: "library/noticeLibrary.do",
-		// 	data: { noticeId: row.id },
-		// 	success: function (data, textStatus) {
-		// 		if('success'===data){
-		// 			// $.messager.alert('提示','操作成功');
-		// 			//改变星标
-		// 			var starId="starId"+index;
-		// 			console.info(starId);
-		// 			if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
-		// 				$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
-		// 			}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
-		// 				$("#"+starId+"").attr('src','/book/resource/images/star.png');
-		// 			}
-		// 		}else {
-		// 			$.messager.alert('提示','操作失败,请稍后重试');
-		// 		}
-		// 	}
-		// });
-		$.messager.alert('提示','操作成功(假操作)');
-		var starId="starId"+index;
-		if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
-			$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
-		}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
-			$("#"+starId+"").attr('src','/book/resource/images/star.png');
-		}
+		myVue.vue_noticeLibrary(index);
 	}
-
+	var myVue=new Vue({
+		el: "#vueScope",
+		data:{
+			isTitle:'收藏'
+		},
+		methods:{
+				vue_noticeLibrary: function(index) {
+				debugger
+				var row = $('#dataGridInbound').datagrid('getRows')[index];
+				//后端请求，落库。
+				// $.ajax({
+				// 	type: "GET",
+				// 	url: "library/noticeLibrary.do",
+				// 	data: { noticeId: row.id },
+				// 	success: function (data, textStatus) {
+				// 		if('success'===data){
+				// 			// $.messager.alert('提示','操作成功');
+				// 			//改变星标
+				// 			var starId="starId"+index;
+				// 			console.info(starId);
+				// 			if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
+				// 				$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
+				// 			}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
+				// 				$("#"+starId+"").attr('src','/book/resource/images/star.png');
+				// 			}
+				// 		}else {
+				// 			$.messager.alert('提示','操作失败,请稍后重试');
+				// 		}
+				// 	}
+				// });
+				var starId="starId"+index;
+				if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
+					$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
+					this.$message({
+						message: '取消收藏(假操作)!',
+						type: 'success'
+					});
+				}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
+					$("#"+starId+"").attr('src','/book/resource/images/star.png');
+					this.$message({
+						message: '已收藏(假操作)!',
+						type: 'success'
+					});
+				}
+			}
+		}
+	});
+	var app=new Vue({
+		el:'#app',
+		data:{
+			info:'我是app'
+		},
+		methods:{
+			test : function(index){
+				this.$message({
+					message: '操作成功(假操作)!'+this.info,
+					type: 'success'
+				});
+			}
+		}
+	})
 </script>
 </html>
