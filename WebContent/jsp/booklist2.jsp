@@ -87,11 +87,11 @@ request.setAttribute("path", path);
                         var result = '<div id="caozuo" ><a  title="查看"  onclick="look(\''+rec.name+'\',\''+rec.count+'\')" href="javascript:void(0)">查看</a>'
                             + '<a  style="margin-left:10px" title="借阅"  onclick="borrow(\'' + rec.id + '\',${currentUser.id},$(\'#dataGridInbound\').datagrid(\'options\').pageNumber)" href="javascript:void(0)">借阅</a>';
 						if(rec){//已收藏
-							result=result+'<div style="display: inline"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
+							result=result+'<div style="display: inline;margin-left: 5px"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
 									'<img width="15px" height="15px"  src="/book/resource/images/star.png" id="starId'+index+'" :title="isTitle">' +
 									'</a></div>';
 						}else {
-							result=result+'<div style="display: inline"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
+							result=result+'<div style="display: inline;margin-left: 5px"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
 									'<img width="15px" height="15px"  src="/book/resource/images/star-empty.png" id="starId'+index+'" :title="isTitle">' +
 									'</a></div>';
 						}
@@ -250,8 +250,7 @@ request.setAttribute("path", path);
 				if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
 					$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
 					this.$message({
-						message: '取消收藏(假操作)!',
-						type: 'success'
+						message: '取消收藏(假操作)!'
 					});
 				}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
 					$("#"+starId+"").attr('src','/book/resource/images/star.png');
