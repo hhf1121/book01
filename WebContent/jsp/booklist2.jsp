@@ -88,11 +88,11 @@ request.setAttribute("path", path);
                             + '<a  style="margin-left:10px" title="借阅"  onclick="borrow(\'' + rec.id + '\',${currentUser.id},$(\'#dataGridInbound\').datagrid(\'options\').pageNumber)" href="javascript:void(0)">借阅</a>';
 						if(rec){//已收藏
 							result=result+'<div style="display: inline;margin-left: 5px"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
-									'<img width="15px" height="15px"  src="/book/resource/images/star.png" id="starId'+index+'" :title="isTitle">' +
+									'<img width="15px" height="15px"  src="/book/resource/images/star.png" id="starId'+index+'" title="收藏">' +
 									'</a></div>';
 						}else {
 							result=result+'<div style="display: inline;margin-left: 5px"><a  onclick="noticeLibrary(\'' + index + '\')"  href="javascript:void(0)" >' +
-									'<img width="15px" height="15px"  src="/book/resource/images/star-empty.png" id="starId'+index+'" :title="isTitle">' +
+									'<img width="15px" height="15px"  src="/book/resource/images/star-empty.png" id="starId'+index+'" title="收藏">' +
 									'</a></div>';
 						}
 						return result+'</div>';
@@ -250,13 +250,15 @@ request.setAttribute("path", path);
 				if($("#"+starId+"")[0].src.indexOf('/images/star.png')!==-1){
 					$("#"+starId+"").attr('src','/book/resource/images/star-empty.png');
 					this.$message({
-						message: '取消收藏(假操作)!'
+						message: '取消收藏(假操作)!',
+                        center: true
 					});
 				}else if($("#"+starId+"")[0].src.indexOf('/images/star-empty.png')!==-1){
 					$("#"+starId+"").attr('src','/book/resource/images/star.png');
 					this.$message({
 						message: '已收藏(假操作)!',
-						type: 'success'
+						type: 'success',
+                        center: true
 					});
 				}
 			}

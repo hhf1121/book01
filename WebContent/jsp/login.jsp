@@ -15,10 +15,19 @@
 			text-align: center;
 		}
 		.mycss{
-			padding-top: 150px;
-			width: 800px;
+			padding-top: 360px;
+			width: 280px;
 			display: block;
 			margin: 0 auto;
+		}
+		.mybody{
+			background:url(${pageContext.request.contextPath }/resource/images/beijing.png);
+			background-position: center;
+			width:1420px;
+			height:900px;
+			margin: auto;
+			background-repeat:no-repeat;
+			text-align:center;
 		}
 	</style>
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/easyui/themes/icon.css" type="text/css"></link>
@@ -27,7 +36,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.easyui.min.js"></script>
 </head>
-<body style="width: 800px;margin: 0 auto">
+<body class="mybody">
 <div class="mycss">
 	<div class="easyui-panel" title="用户登录" style="width:400px;text-align: center">
 		<div style="padding:10px 60px 20px 60px">
@@ -128,4 +137,5 @@
 	}
 </script>
 </body>
+
 </html>
