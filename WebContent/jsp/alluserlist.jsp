@@ -157,7 +157,7 @@
 			}
 		})
 	}
-	var socket = io.connect('http://learn.hhf.com:9092');
+	/*var socket = io.connect('http://learn.hhf.com:9092');
 	socket.on('messageevent', function (data) {
 		let html = document.createElement('p')
 		html.innerHTML = `系统消息：<span>${data.hello}</span>`
@@ -171,18 +171,50 @@
 		html.innerHTML = `你细声说：<span>${t}</span>`
 		document.getElementById('content').appendChild(html)
 		socket.emit('messageevent', { my: t});
+	}*/
+
+	/**
+	 * 前端js的 socket.emit("事件名","参数数据")方法，是触发后端自定义消息事件的时候使用的,
+	 * 前端js的 socket.on("事件名",匿名函数(服务器向客户端发送的数据))为监听服务器端的事件
+	 **/
+	var socket = io.connect('http://127.0.0.1:9092?empCode=050069');
+	var firstconnect = true;
+
+	function connect() {
+		if(firstconnect) {
+			socket.on('reconnect', function(){ status_update("Reconnected to Server"); });
+			socket.on('reconnecting', function( nextRetry ){ status_update("Reconnecting in "
+			+ nextRetry + " seconds"); });
+			socket.on('reconnect_failed', function(){ message("Reconnect Failed"); });
+			firstconnect = false;
+		} else {
+			socket.reconnect();
+		}
 	}
-	<%--socket.on('news', function (data) {--%>
-		<%--console.log(data);--%>
-		<%--let html = document.createElement('p')--%>
-		<%--html.innerHTML = `小皮咖说：<span>我知道了，你说“${data.hello}”</span>`--%>
-		<%--document.getElementById('content').appendChild(html)--%>
-	<%--});--%>
-	<%--socket.on('eating', function (data) {--%>
-		<%--console.log(data);--%>
-		<%--let html = document.createElement('p')--%>
-		<%--html.innerHTML = `小皮咖说：${data.hello}`--%>
-		<%--document.getElementById('content').appendChild(html)--%>
-	<%--});--%>
+
+	//监听服务器连接事件
+	// socket.on('connect', function(){ console.info("Connected to Server"); });
+	// socket.on('message', function(data){ console.info(data); });
+	// //监听服务器关闭服务事件
+	// socket.on('disconnect', function(){ console.info("Disconnected from Server"); });
+	// //监听服务器端发送消息事件
+	// socket.on('messageevent', function(data) {
+	// 	message(data)
+	// 	//console.log("服务器发送的消息是："+data);
+	// });
+
+	function message(data) {
+		console.info("Server says: " + data);
+	}
+
+	//点击发送消息触发
+	function say() {
+		console.log("点击了发送消息，开始向服务器发送消息")
+		var msg = "我很好的,是的．";
+		socket.emit('connect', {empCode: msg});
+		socket.emit('message', {empCode: msg});
+		socket.emit('messageevent', {empCode: msg});
+		socket.emit('disconnect');
+	};
 </script>
 </html>
