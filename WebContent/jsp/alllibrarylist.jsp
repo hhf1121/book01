@@ -47,7 +47,6 @@ request.setAttribute("path", path);
 					align: 'center',
 					width: '12%',
 					formatter: function(value, rec, index) {
-						debugger
 						var result = '<a  title="查看借阅者信息" class="easyui-linkbutton"  onclick="lookuser(\''+rec.userId+'\')" href="javascript:void(0)">查看借阅者信息</a>';
 						return result;
 					}

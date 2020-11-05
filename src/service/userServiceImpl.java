@@ -77,7 +77,7 @@ public class userServiceImpl implements userService, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 	    //启动定时任务elastic-job
-		CoordinatorRegistryCenter coordinatorRegistryCenter = RunTask.initZK();
-		RunTask.startTask(coordinatorRegistryCenter);
+//		CoordinatorRegistryCenter coordinatorRegistryCenter = RunTask.initZK();
+//		RunTask.startTask(coordinatorRegistryCenter);
 	}
 }

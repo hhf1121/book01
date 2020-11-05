@@ -16,11 +16,14 @@
 <table id="userTable" style="width: 100%;height: 650px"></table>
 <div id="queryId">
 	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" style="margin: 5px" onclick="deleteUsers()">删除</a><br><br>
+	<div id="content"></div>
 	      读者名字:<input  class="easyui-textbox" name="name"  id="name" />
 	读者身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="prompt:'请选择',loader:userType,mode:'remote',valueField:'id',textField:'roleName',
         panelWidth:150"></select>
 	<a class="easyui-linkbutton" onclick="searchParamUser()">查询</a>
 	<a class="easyui-linkbutton" onclick="$('#name').textbox('clear');$('#yes').textbox('clear')">重置</a>
+	<input type="text" id="saySend">
+	<button class="easyui-linkbutton" type="button" onclick="say()"><span>发送消息</span></button>
 	<br>
 </div>
 <div id="dialog" class="easyui-dialog" title="编辑用户信息"
@@ -29,6 +32,7 @@
 </div>
 <input type="hidden" value="${path }" id="path">
 </body>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/socket.io.js"></script>
 <script type="text/javascript">
 	const userTypeArray=new Array();//过滤器
 	$(function () {
@@ -153,6 +157,32 @@
 			}
 		})
 	}
-
+	var socket = io.connect('http://learn.hhf.com:9092');
+	socket.on('messageevent', function (data) {
+		let html = document.createElement('p')
+		html.innerHTML = `系统消息：<span>${data.hello}</span>`
+		document.getElementById('content').appendChild(html)
+		console.log(data);
+	});
+	function say() {
+		let t = document.getElementById('saySend').value
+		if (!t) return
+		let html = document.createElement('p')
+		html.innerHTML = `你细声说：<span>${t}</span>`
+		document.getElementById('content').appendChild(html)
+		socket.emit('messageevent', { my: t});
+	}
+	<%--socket.on('news', function (data) {--%>
+		<%--console.log(data);--%>
+		<%--let html = document.createElement('p')--%>
+		<%--html.innerHTML = `小皮咖说：<span>我知道了，你说“${data.hello}”</span>`--%>
+		<%--document.getElementById('content').appendChild(html)--%>
+	<%--});--%>
+	<%--socket.on('eating', function (data) {--%>
+		<%--console.log(data);--%>
+		<%--let html = document.createElement('p')--%>
+		<%--html.innerHTML = `小皮咖说：${data.hello}`--%>
+		<%--document.getElementById('content').appendChild(html)--%>
+	<%--});--%>
 </script>
 </html>
