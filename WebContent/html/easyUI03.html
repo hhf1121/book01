@@ -55,6 +55,18 @@
     <h3>分页联想框</h3>
     <input id="pageSearch" style="width: 200px" />
 </div>
+
+<div>
+    <h3>多选-树-搜索框</h3>
+    <!--http://local.sso.uc56.com:8889/omg-portal-main/permission/findPermissionTreeByLevelNew.do-->
+    <!--http://localhost:8083/book/base/getSelectDistrictByLevel.json?level=1,2&name=-->
+    <button  href="#" class="easyui-linkbutton" onclick="submittreeform()">提交tree</button>
+      <select id="permissionCodeNames"   label="籍贯：" name="permissionCodeNames"
+                style="width:256px;" onblur="submittreeform()"/>
+    <input hidden id="ones" />
+    <input hidden id="twos" />
+</div>
+
 <script type="text/javascript">
     $(function () {
         //初始化表单
@@ -124,6 +136,45 @@
             }
         });
 
+// 加载搜索树 permissionCodeNames
+        $('#permissionCodeNames').combotree({
+            url: 'http://localhost:8083/book/base/getSelectDistrictByLevel.json?level=1,2,3&name=',
+            editable:true,
+            multiple:true,
+            state:closed,
+            // editable: false,
+            //lines: true,
+            // valueField: 'AE_TYPE_ID',
+            // textField: 'AE_TYPE_NAME',
+            onLoadSuccess: function () {
+                // $('#permissionCodeNames').combotree('tree').tree("collapseAll");
+            },
+            onChange: function (item) {
+                debugger
+                var tree = $('#permissionCodeNames').combotree('tree');
+                //通过节点ID找到默认赋值的节点
+                var parentArr = new Array();
+                for (var i=0;i<item.length;i++){
+                    var parent = tree.tree('find',item[i]);
+                    do {
+                        if(!parentArr.includes(parent.text)){
+                            parentArr.unshift(parent.text);
+                        }
+                        parent = tree.tree('getParent', parent.target);
+                    } while (parent);
+                }
+
+                var ones=new Array();
+                var twos=new Array();;
+                for(var j=0;j<parentArr.length;j++){
+                    var node=parentArr[j].split(',');
+                    ones[j]=node[0];
+                    twos[j]=node[1];
+                }
+                $("#ones").val(ones);
+                $("#twos").val(twos);
+            }
+        });
     })
     
     
@@ -149,6 +200,13 @@
         queryParams.author=$("#queryAuthor").val();
         //重新加载表格数据
         $("#myTable").datagrid('load');
+    }
+    
+    function submittreeform() {
+        debugger
+       var list= $("#permissionCodeNames").combotree("getValues");
+        console.info($("#ones").val())
+        console.info($("#twos").val())
     }
 
 </script>
