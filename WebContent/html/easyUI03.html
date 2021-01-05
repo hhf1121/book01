@@ -141,7 +141,10 @@
                     if (children && children.length > 0) {
                         for (var i = 0; i < children.length; i++) {
                             if ($(children[i].target).is(":hidden")) {
-                                $(children[i].target).show();
+                                //展示子节点-符合条件的
+                                if(isMatch(searchText, children[i].text)){
+                                    $(children[i].target).show();
+                                }
                             }
                         }
                     }
