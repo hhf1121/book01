@@ -124,7 +124,7 @@
 
 
                     for (var i = 0; i < matchedNodeList.length; i++) {
-                        showMatchedNode(jqTree, tree, matchedNodeList[i]);
+                        showMatchedNode(searchText,jqTree, tree, matchedNodeList[i]);
                     }
                 }
             },
@@ -175,7 +175,7 @@
         });
         /**
          * 展示搜索匹配的节点      */
-        function showMatchedNode(jqTree, tree, node) {
+        function showMatchedNode(searchText,jqTree, tree, node) {
             //展示所有父节点
             $(node.target).show();
             $(".tree-title", node.target).addClass("tree-node-targeted");
@@ -195,7 +195,9 @@
                 if (children && children.length > 0) {
                     for (var i = 0; i < children.length; i++) {
                         if ($(children[i].target).is(":hidden")) {
-                            $(children[i].target).show();
+                            if(isMatch(searchText, children[i].text)){
+                                $(children[i].target).show();
+                            }
                         }
                     }
                 }
