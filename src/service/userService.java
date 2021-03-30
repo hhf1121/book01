@@ -33,4 +33,12 @@ public interface userService {
 	int deleteById(String[] IdList);
 
     User getUserById(String id);
+
+    List<String> queryAllUserName();
+
+    List<User> queryListByUserName(List<String> codes);
+
+    int insertList(List<User> users);
+
+    int updateUserById(User user);
 }

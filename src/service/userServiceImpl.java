@@ -75,6 +75,26 @@ public class userServiceImpl implements userService, InitializingBean {
 	}
 
 	@Override
+	public List<String> queryAllUserName() {
+		return userMapper.queryAllUserName();
+	}
+
+    @Override
+    public List<User> queryListByUserName(List<String> codes) {
+        return userMapper.queryListByUserName(codes);
+    }
+
+    @Override
+    public int insertList(List<User> users) {
+        return userMapper.insertList(users);
+    }
+
+    @Override
+    public int updateUserById(User user) {
+        return userMapper.updateUserById(user);
+    }
+
+    @Override
 	public void afterPropertiesSet() throws Exception {
 	    //启动定时任务elastic-job
 //		CoordinatorRegistryCenter coordinatorRegistryCenter = RunTask.initZK();

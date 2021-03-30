@@ -77,6 +77,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</trim>
 	</select>
 
+	<select id="queryAllUserName" resultType="java.lang.String">
+		select userName from `user` where isDelete=0;
+	</select>
 
+	<select id="queryListByUserName" resultType="user">
+		select * from user where isDelete=0
+		<foreach collection="list" item="code" open="and userName in (" close=")" separator="," index="index">
+			#{code}
+		</foreach>
+	</select>
+
+	<insert id="insertList" parameterType="java.util.List">
+		<selectKey resultType ="java.lang.Integer" keyProperty= "id"
+				   order= "AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey >
+		insert into `user`(`userName`,`passWord`,`name`,`address`,`yes`)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.userName},#{item.passWord},#{item.name},#{item.address},#{item.yes})
+		</foreach>
+	</insert>
+
+	<update id="updateUserById" parameterType="user">
+		update `user` set
+		<if test="userName!=null and userName!='' ">
+			 userName = #{userName},
+		</if>
+		<if test="passWord!=null and passWord!='' ">
+			 passWord = #{passWord},
+		</if>
+		<if test="name!=null and name!='' ">
+			 name = #{name},
+		</if>
+		<if test="yes!=null and yes!='' ">
+			 address = #{address},
+		</if>
+		<if test="yes!=null and yes!='' ">
+			 yes = #{yes}
+		</if>
+		where id = #{id};
+	</update>
 
 </mapper>

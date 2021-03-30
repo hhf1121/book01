@@ -2,12 +2,12 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import dto.UserColumnDto;
 import dto.UserExportDto;
+import dto.UserImportDto;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import net.sf.json.JSONObject;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import pojo.Book;
 import pojo.Role;
 import pojo.User;
@@ -310,6 +317,126 @@ public class UserController {
 	}
 
 
+	@RequestMapping(value = "/dealImportUser", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> importFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		List<User> successEntity = Lists.newArrayList();
+		List<UserImportDto> errorEntity = Lists.newArrayList();
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf-8");
+		try {
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			MultipartFile multipartFile = multipartRequest.getFile("file");
+			InputStream is = multipartFile.getInputStream();
+			LinkedHashMap<String, String> map = positionExcelMap();
+			List<UserImportDto> list = ExcelUtil.excelToList(is, "用户表", UserImportDto.class, map);
+			//查询所有账号
+//			List<String> userNames=userService.queryAllUserName();
+			List<Role> roles=roleService.queryAllRole();
+			Map<String,Integer> roleMap=Maps.newHashMap();
+			for (Role role : roles) {
+				roleMap.put(role.getRoleName(),role.getId());
+			}
+			HttpSession session = request.getSession();
+			User user=(User) session.getAttribute("currentUser");
+			Set<String> successSet = Sets.newHashSet();
+			//补全数据
+			String regex = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{1,10}$";
+			Pattern pat = Pattern.compile("^(\\d+)[\u4E00-\u9FA5]{1,5}$");
+			for (UserImportDto excelModel : list) {
+				Boolean flag=false;
+				StringBuffer sb = new StringBuffer("");
+				User entity = new User();
+				UserImportDto error = new UserImportDto();
+				//用户名
+				if (StringUtils.isEmpty(excelModel.getUserName()) || successSet.contains(excelModel.getUserName())) {
+					sb.append(StringUtils.isEmpty(excelModel.getUserName())?"账号为空":"文件中已有重复的账号,");
+					flag=true;
+				} else {
+					entity.setUserName(excelModel.getUserName());
+				}
+				//密码
+				if (StringUtils.isEmpty(excelModel.getPassWord()) || !excelModel.getPassWord().matches(regex)) {
+					sb.append("密码为空或者太过简单(数字+字母),");
+					flag=true;
+				} else {
+					entity.setPassWord(excelModel.getPassWord());
+				}
+				//角色
+				if (StringUtils.isEmpty(excelModel.getYesText()) || roleMap.get(excelModel.getYesText())==null) {
+					sb.append("角色为空或者不存在,");
+					flag=true;
+				} else {
+					entity.setYes(roleMap.get(excelModel.getYesText()));
+				}
+				//地址
+				if (StringUtils.isEmpty(excelModel.getAddress()) || excelModel.getAddress().length() > 50) {
+					sb.append("地址为空或大于50个字符,");
+					flag=true;
+				} else {
+					entity.setAddress(excelModel.getAddress());
+				}
+				//名字
+				if (StringUtils.isEmpty(excelModel.getName()) || pat.matcher(excelModel.getName()).matches()) {
+					sb.append("名字为空或不合法,");
+					flag=true;
+				} else {
+					entity.setName(excelModel.getName());
+				}
+				//问题数据
+				if(flag){
+					BeanUtils.copyProperties(excelModel,error);
+					error.setErrInfo(sb.toString());
+					errorEntity.add(error);
+				}else {
+                    successEntity.add(entity);
+                    successSet.add(excelModel.getUserName());
+                }
+			}
+		} catch (Exception e) {
+			log.error("解析失败", e);
+			return ResultUtils.getFailResult(e.getMessage());
+		}
+		if (!successEntity.isEmpty()) {//处理数据
+			List<String> codes = Lists.newArrayList("");
+			for (User user : successEntity) {
+				codes.add(user.getUserName());
+			}
+			List<User> lists = userService.queryListByUserName(codes);
+			Map<String,Long> idsMap= Maps.newHashMap();
+			for (User list : lists) {
+				idsMap.put(list.getUserName(),list.getId());
+			}
+			//补全id,分有id和无id的list
+			List<User> update=Lists.newArrayList();
+			List<User> insert=Lists.newArrayList();
+			for (User sitContract : successEntity) {
+				if(idsMap.get(sitContract.getUserName())!=null){
+					sitContract.setId(idsMap.get(sitContract.getUserName()));
+					update.add(sitContract);
+				}else {
+					insert.add(sitContract);
+				}
+			}
+			//拆分小list
+			List<List<User>> insertPartition = Lists.partition(insert, 500);
+			int i = 0;
+			for (List<User> users : insertPartition) {
+				//批量新增，一次500条
+				i += userService.insertList(users);
+			}
+			//更新
+			for (User user : update) {
+				i +=userService.updateUserById(user);
+			}
+		}
+		if(!errorEntity.isEmpty()){
+			log.error("导入完成!校验没通过的数据："+errorEntity.size()+"条");
+			return ResultUtils.getFailResult(errorEntity);
+		}
+		return ResultUtils.getSuccessResult("导入完成");
+	}
+
 	@RequestMapping(value = "exportAlluserlist", method = RequestMethod.POST)
 	@Transactional
 	public void exportAlluserlist(UserExportDto dto, Page page, HttpServletResponse response, HttpServletRequest request) throws Exception {
@@ -429,6 +556,17 @@ public class UserController {
 			hostAddress="localhost";
 		}
 		return hostAddress;
+	}
+
+	public LinkedHashMap<String, String> positionExcelMap() {
+		// excel的表头与文字对应
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("账号", "userName");
+		map.put("密码", "passWord");
+		map.put("名字", "name");
+		map.put("住址", "address");
+		map.put("角色", "yesText");
+		return map;
 	}
 
 }

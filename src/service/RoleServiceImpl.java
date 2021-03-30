@@ -20,4 +20,9 @@ public class RoleServiceImpl implements RoleService {
 		return roleMapper.Querylist(role);
 	}
 
+	@Override
+	public List<Role> queryAllRole() {
+		return roleMapper.queryAllRole();
+	}
+
 }

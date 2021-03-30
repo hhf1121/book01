@@ -6,4 +6,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="Querylist" resultType="role">
 	select * from role
 	</select>
+
+	<select id="queryAllRole" resultType="role">
+		select id,roleName from role;
+	</select>
 </mapper>

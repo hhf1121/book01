@@ -35,4 +35,12 @@ public interface UserMapper {
 	int deleteById(@Param("StringList")String [] IdList);
 
     User getUserById(String id);
+
+	List<String> queryAllUserName();
+
+	List<User> queryListByUserName(List<String> codes);
+
+	int insertList(List<User> users);
+
+	int updateUserById(User user);
 }

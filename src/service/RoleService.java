@@ -7,4 +7,7 @@ import pojo.Role;
 public interface RoleService {
 	// 查询
 	List<Role> Querylist(Role role);
+
+    List<Role> queryAllRole();
+
 }
