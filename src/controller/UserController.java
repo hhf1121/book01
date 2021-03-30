@@ -469,6 +469,8 @@ public class UserController {
 			}
 		}
 		List<User> userlist=userService.getUserList(dto.getName(), dto.getYes(),dto.getRegisterTime(),null, null);
+		// 中文显示Text
+		userlist = converterList(userlist);
 		ExcelUtil.listToExcel(userlist, map, "优速网点合同信息", response);
 	}catch (Exception e){
 		log.error("导出用户失败", e);
@@ -477,7 +479,28 @@ public class UserController {
 
 	return;
 }
-	
+
+	private List<User> converterList(List<User> userlist) {
+		List<Role> roles=roleService.queryAllRole();
+		Map<Integer,String> roleMap=Maps.newHashMap();
+		for (Role role : roles) {
+			roleMap.put(role.getId(),role.getRoleName());
+		}
+		for (User user : userlist) {
+			user.setYesText(roleMap.get(user.getYes()));
+		}
+		//跳出多重循环
+//		i:for (User user : userlist) {
+//			for (Map.Entry<String, Integer> entry : roleMap.entrySet()) {
+//				if(entry.getValue().intValue()==user.getYes()){
+//					user.setYesText(entry.getKey());
+//					break i;
+//				}
+//			}
+//		}
+		return userlist;
+	}
+
 	//管理员查看用户信息。Rest风格。
 	@RequestMapping(value = "/usershow/{id}", method = RequestMethod.GET)
 	public String showUser(Model model, @PathVariable("id") Integer id) {

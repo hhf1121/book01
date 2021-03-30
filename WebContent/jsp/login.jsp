@@ -8,6 +8,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="shortcut icon" href="/book/resource/images/blue_book.ico" type="image/x-icon">
 	<title>登录页面</title>
 	<style type="text/css">
 		#px{

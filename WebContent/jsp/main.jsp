@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>首页</title>
+	<link rel="shortcut icon" href="/book/resource/images/blue_book.ico" type="image/x-icon">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/easyui/themes/icon.css" type="text/css"></link>
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/easyui/themes/default/easyui.css" type="text/css"></link>
 	<script type="text/javascript" src="${pageContext.request.contextPath }/easyui/jquery.min.js"></script>
