@@ -8,7 +8,7 @@
     <packaging>war</packaging>
     <properties>
         <!-- spring版本号 -->
-        <spring.version>4.2.2.RELEASE</spring.version>
+        <spring.version>5.3.0</spring.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
