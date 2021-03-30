@@ -52,15 +52,15 @@ public class userServiceImpl implements userService, InitializingBean {
 	}
 
 	@Override
-	public int getUserCount(String name, Integer yes) {
+	public int getUserCount(String name, Integer yes,String registerTime) {
 		// TODO Auto-generated method stub
-		return userMapper.getUserCount(name, yes);
+		return userMapper.getUserCount(name, yes,registerTime);
 	}
 
 	@Override
-	public List<User> getUserList(String name, Integer yes, Integer indexPage, Integer pagesize) {
+	public List<User> getUserList(String name, Integer yes,String registerTime, Integer indexPage, Integer pagesize) {
 		// TODO Auto-generated method stub
-		return userMapper.getUserList(name, yes, indexPage, pagesize);
+		return userMapper.getUserList(name, yes,registerTime, indexPage, pagesize);
 	}
 
 	@Override

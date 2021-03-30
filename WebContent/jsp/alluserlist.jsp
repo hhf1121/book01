@@ -15,13 +15,30 @@
 <body>
 <table id="userTable" style="width: 100%;height: 650px"></table>
 <div id="queryId">
-	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" style="margin: 5px" onclick="deleteUsers()">删除</a><br><br>
+	<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" style="margin: 5px" plain="true"  onclick="deleteUsers()">删除</a>
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-redo'" plain="true" onclick="exportUsers()" plain="true">导出</a>
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" plain="true" onclick="importUsers()" plain="true">批量导入用户</a>
+	<a  data-options="iconCls:'icon-print'" class="easyui-linkbutton" plain="true"  href="${pageContext.request.contextPath}/resource/excelTemplate/userTemplate.xls">导入模板下载</a><br>
 	<div id="content"></div>
-	      读者名字:<input  class="easyui-textbox" name="name"  id="name" />
-	读者身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="prompt:'请选择',loader:userType,mode:'remote',valueField:'id',textField:'roleName',
+	      用户名字:<input  class="easyui-textbox" name="name"  id="name" />
+	用户身份:<select class="easyui-combobox" name="yes" id="yes" style="width: 150px" data-options="prompt:'请选择',loader:userType,mode:'remote',valueField:'id',textField:'roleName',
         panelWidth:150"></select>
+	<input class="easyui-combobox" label="注册时间:" id="registerTime" name="registerTime" data-options="valueField: 'value',textField: 'label',
+								data: [{
+								   label: '一年内',
+								   value: '365'
+								   },{
+								   label: '半年内',
+								   value: '180'
+								   },{
+								   label: '30天内',
+								   value: '30'
+								   },
+								   {label: '10天内',
+								   value: '10'
+								   }]">
 	<a class="easyui-linkbutton" onclick="searchParamUser()">查询</a>
-	<a class="easyui-linkbutton" onclick="$('#name').textbox('clear');$('#yes').textbox('clear')">重置</a>
+	<a class="easyui-linkbutton" onclick="$('#name').textbox('clear');$('#yes').textbox('clear');$('#registerTime').textbox('clear')">重置</a>
 	<input type="text" id="saySend">
 	<button class="easyui-linkbutton" type="button" onclick="say()"><span>发送消息</span></button>
 	<br>
@@ -31,10 +48,60 @@
 	 data-options="closed:true,modal:true">
 </div>
 <input type="hidden" value="${path }" id="path">
+<div id="contractExcel" class="easyui-dialog" data-options="closed:true"
+	 style="width: 500px; height: 200px">
+	<form id="wgks_form" name="wgks_form" method="post" enctype="multipart/form-data">
+		<input  class="easyui-filebox" name="file"  id="import_file" required="required" data-options="accept:'application/vnd.ms-excel',buttonText: '选择文件'">
+		<button type="button"  class="easyui-linkbutton  save" onclick="importFile(this)">开始导入</button>
+	</form>
+</div>
+<div id="errorExcel" class="easyui-dialog" closed="true" data-options="closable:false"  style="width: 1100px" buttons="#errorOK" >
+	<div id="errorData">
+	</div>
+	<div id="errorOK">
+		<a href="javascript:void(0)" class="easyui-linkbutton  save" onclick="isCloseShow()">确定</a>
+	</div>
+</div>
+
+<form method="post" target="_blank" id="exportUserForm">
+	<input type="hidden" id="ex_userColums" name="userColums"/>
+	<input type="hidden" id="ex_name" name="name"/>
+	<input type="hidden" id="ex_yes"  name="yes"/>
+	<input type="hidden" id="ex_registerTime"  name="registerTime"/>
+</form>
+
 </body>
 <script type="text/javascript" src="${pageContext.request.contextPath }/js/socket.io.js"></script>
 <script type="text/javascript">
 	const userTypeArray=new Array();//过滤器
+	const userColums=[[
+				{field:'ck',checkbox:true},
+				{field:'id',title:'用户id',width:'5%',isExport:true, sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'userName',title:'用户账号',width:'15%',isExport:true, sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'passWord',title:'用户密码',width:'10%',isExport:false, sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'name',title:'用户名字',width:'15%',isExport:true, sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'address',title:'用户住址',width:'15%',isExport:true, sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'yes',title:'用户角色',width:'10%', isText:true,isExport:true, sortable:true,editor:{
+						type:'combobox',
+						options:{
+							url:$("#path").val()+'/base/getUserLevel',
+							method:'post',
+							valueField:'id',
+							textField:'roleName'
+						}
+					},
+					formatter: function (value, row, index) {
+						for (var j=0;j<userTypeArray.length;j++){
+							if(row.yes==userTypeArray[j].id){
+								return userTypeArray[j].roleName;
+							}
+						}
+						return "未获取";
+					}},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
+				{field:'createDate',title:'注册时间',isExport:true,width:'26%',formatter: function (value, row, index) {
+						return formatDateBoxFull(value);
+					}},
+			]]
 	$(function () {
 		$('#userTable').datagrid({
 			title:'用户列表',
@@ -47,34 +114,7 @@
 			// fitColumns: true,
 			// frozenColumns:[[{field:'id',title:'主键',width:'100'}]],//冻结
 			loadMsg:'正在加载,请稍后...',
-			columns:[[
-				{field:'ck',checkbox:true},
-				{field:'id',title:'读者id',width:'5%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'userName',title:'读者账号',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'passWord',title:'读者密码',width:'10%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'name',title:'读者名字',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'address',title:'读者住址',width:'15%', sortable:true,editor:'textbox'},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'yes',title:'读者角色',width:'10%', sortable:true,editor:{
-						type:'combobox',
-						options:{
-							url:$("#path").val()+'/base/getUserLevel',
-							method:'post',
-							valueField:'id',
-							textField:'roleName'
-						}
-					},
-					formatter: function (value, row, index) {
-					for (var j=0;j<userTypeArray.length;j++){
-						if(row.yes==userTypeArray[j].id){
-							return userTypeArray[j].roleName;
-						}
-					}
-						return "未获取";
-					}},/*动态列表，每次点击排序的时候，会发起请求。需要服务端处理*/
-				{field:'createDate',title:'注册时间',width:'26%',formatter: function (value, row, index) {
-						return formatDateBoxFull(value);
-					}},
-			]],
+			columns:userColums,
 			onLoadSuccess:function (data) {//请求成功，返回的数据
 
 			},
@@ -95,6 +135,7 @@
 		var queryParams=$("#userTable").datagrid('options').queryParams;
 		queryParams.name=$("#name").val();
 		queryParams.yes=$("#yes").combobox("getValue");
+		queryParams.registerTime=$("#registerTime").combobox("getValue");
 		//重新加载表格数据
 		$("#userTable").datagrid('load');
 	}
@@ -138,8 +179,6 @@
 		}
 
 	}
-
-
 	//请求用户类型
 	function userType(param, success, error) {
 		$.ajax({
@@ -216,5 +255,31 @@
 		socket.emit('messageevent', {empCode: msg});
 		socket.emit('disconnect');
 	};
+
+	function importUsers() {
+		$("#wgks_form").form("clear");
+		$("#contractExcel").dialog({
+			title : '用户导入',
+			iconCls:'icon-title',
+
+		});
+		$('#contractExcel').dialog('open');
+	}
+	function exportUsers() {
+		//获取表格的查询参数
+		var queryParams=$("#userTable").datagrid('options').queryParams;
+		queryParams.name=$("#name").val();
+		queryParams.yes=$("#yes").combobox("getValue");
+		queryParams.registerTime=$("#registerTime").combobox("getValue");
+		if (queryParams != undefined && queryParams != null) {
+			$("#ex_userColums").val(JSON.stringify(userColums[0]));
+			$("#ex_name").val(queryParams.name?queryParams.name:undefined);
+			$("#ex_yes").val(queryParams.yes?queryParams.yes:undefined);
+			$("#ex_registerTime").val(queryParams.registerTime?queryParams.registerTime:undefined);
+			var from = document.getElementById("exportUserForm");
+			from.action =  "/book/user/exportAlluserlist.do";
+			from.submit();
+		}
+	}
 </script>
 </html>

@@ -27,10 +27,10 @@ public interface UserMapper {
 	int ifExist(String userName);
 
 	//总数。
-	int getUserCount(@Param("name")String name,@Param("yes")Integer yes);
+	int getUserCount(@Param("name")String name,@Param("yes")Integer yes,@Param("registerTime")String registerTime);
 
 	//分页、列表。
-	List<User> getUserList(@Param("name")String name,@Param("yes")Integer yes,@Param("indexPage")Integer indexPage,@Param("pagesize")Integer pagesize);
+	List<User> getUserList(@Param("name")String name,@Param("yes")Integer yes,@Param("registerTime")String registerTime,@Param("indexPage")Integer indexPage,@Param("pagesize")Integer pagesize);
 	//根据id删除多个。
 	int deleteById(@Param("StringList")String [] IdList);
 

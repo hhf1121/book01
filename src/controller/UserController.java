@@ -5,17 +5,25 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
+import dto.UserColumnDto;
+import dto.UserExportDto;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +40,7 @@ import pojo.listNo;
 import service.RoleService;
 import service.listNoService;
 import service.userService;
+import tools.ExcelUtil;
 import tools.Page;
 import tools.ResultUtils;
 
@@ -48,6 +57,8 @@ public class UserController {
 
     @Value("${system.filePath}")
     private String filePath;
+
+	private final Log log = LogFactory.getLog(this.getClass());
 	
 	// 验证账号是否存在
 	@RequestMapping(value = "/ifExist")
@@ -255,8 +266,9 @@ public class UserController {
 	@RequestMapping(value = "/alluserlist.html")
 	public String allList(Model model, @RequestParam(value="name",required=false) String name, 
 			@RequestParam(value="yes",required=false) Integer yes,
+			@RequestParam(value="registerTime",required=false) String registerTime,
 			@RequestParam(value="pageIndex",required=false) String indexPage) {
-		int countsize=userService.getUserCount(name, yes);//总数
+		int countsize=userService.getUserCount(name, yes,registerTime);//总数
 		Page page=new Page();
 		page.setCountSize(countsize);
 		int countPage=page.getPageCount();//总页数。
@@ -266,7 +278,7 @@ public class UserController {
 			currentPage=Integer.parseInt(indexPage);
 		}
 		int x=(currentPage-1)*pageSize;
-		List<User> userlist=userService.getUserList(name, yes,x, pageSize);
+		List<User> userlist=userService.getUserList(name, yes,registerTime,x, pageSize);
 		List<Role> roleList=roleService.Querylist(new Role());
 		model.addAttribute("userlist",userlist);
 		model.addAttribute("rolelist",roleList);
@@ -282,27 +294,68 @@ public class UserController {
 	//全部用户信息
 	@RequestMapping(value = "/getAlluserlist")
 	@ResponseBody
-	public Map<String,Object> allList(String name,Integer yes,Page page) {
+	public Map<String,Object> allList(String name,Integer yes,String registerTime,Page page) {
 		Map<String,Object> result=new HashMap<>();
-		int countsize=userService.getUserCount(name, yes);//总数
+		int countsize=userService.getUserCount(name, yes,registerTime);//总数
 		Page page1 = new Page();
 		page1.setCountSize(countsize);
 		int PageSize = Integer.parseInt(page.getRows());// 页面容量
 		int currentPage = Integer.parseInt(page.getPage());// 当前页
 		int xx = (currentPage - 1) * PageSize;
-		List<User> userlist=userService.getUserList(name, yes,xx, PageSize);
+		List<User> userlist=userService.getUserList(name, yes,registerTime,xx, PageSize);
 		result.put("rows",userlist);
 		result.put("total",countsize);
 		result.put("success",true);
 		return result;
 	}
 
+
+	@RequestMapping(value = "exportAlluserlist", method = RequestMethod.POST)
+	@Transactional
+	public void exportAlluserlist(UserExportDto dto, Page page, HttpServletResponse response, HttpServletRequest request) throws Exception {
+	int countsize=userService.getUserCount(dto.getName(), dto.getYes(),dto.getRegisterTime());//总数
+	if(countsize<1){
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().write("没有任何数据可导出！");
+		return;
+	}
+	try{
+		String columnsStr = dto.getUserColums();
+		if(columnsStr == null || columnsStr.isEmpty()){
+			response.setContentType("text/html");
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write("缺少字段配置参数！");
+			return;
+		}
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		List<UserColumnDto> siteOrgcolumnDtos = JSON.parseArray(columnsStr,UserColumnDto.class);
+		for (UserColumnDto siteOrgcolumnDto : siteOrgcolumnDtos) {
+			//筛选导出字段
+			if(siteOrgcolumnDto.getIsExport() != null && siteOrgcolumnDto.getIsExport()){
+				//判断是否需要添加Text取出中文
+				if(siteOrgcolumnDto.getIsText() != null && siteOrgcolumnDto.getIsText()){
+					map.put(siteOrgcolumnDto.getField() + "Text", siteOrgcolumnDto.getTitle());
+				}else{
+					map.put(siteOrgcolumnDto.getField(), siteOrgcolumnDto.getTitle());
+				}
+			}
+		}
+		List<User> userlist=userService.getUserList(dto.getName(), dto.getYes(),dto.getRegisterTime(),null, null);
+		ExcelUtil.listToExcel(userlist, map, "优速网点合同信息", response);
+	}catch (Exception e){
+		log.error("导出用户失败", e);
+		throw e;
+	}
+
+	return;
+}
 	
 	//管理员查看用户信息。Rest风格。
 	@RequestMapping(value = "/usershow/{id}", method = RequestMethod.GET)
 	public String showUser(Model model, @PathVariable("id") Integer id) {
 		User u = new User();
-		u.setId(id);
+		u.setId(id.longValue());
 		User User = userService.QueryUserById(u);
 		Role role=new Role();
 		List<Role> roleList=roleService.Querylist(role);
@@ -322,7 +375,7 @@ public class UserController {
 	//produces={"text/html;charset=UTF-8"}设置ajax返回之后中文乱码
 	public Object showUserAJAX(@RequestParam("id") Integer id) {
 		User u = new User();
-		u.setId(id);
+		u.setId(id.longValue());
 		User User = userService.QueryUserById(u);
 //		Role role=new Role();
 //		List<Role> roleList=roleService.Querylist(role);

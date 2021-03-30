@@ -25,10 +25,10 @@ public interface userService {
 	int ifExist(String userName);
 
 	// 总数。
-	int getUserCount(String name, Integer yes);
+	int getUserCount(String name, Integer yes,String registerTime);
 
 	// 分页、列表。
-	List<User> getUserList(String name, Integer yes, Integer indexPage, Integer pagesize);
+	List<User> getUserList(String name, Integer yes,String registerTime, Integer indexPage, Integer pagesize);
 
 	int deleteById(String[] IdList);
 

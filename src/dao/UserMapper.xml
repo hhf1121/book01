@@ -41,6 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="where" prefixOverrides="and|or">
 			<if test="name!=null and name!=''">and name like concat('%',#{name},'%')</if>
 			<if test="yes!=null and yes!=''">and yes=#{yes}</if>
+			<if test="registerTime!=null and registerTime!=''">
+				<![CDATA[ AND createDate between DATE_ADD(NOW(), INTERVAL  -#{registerTime} DAY) and NOW()  ]]>
+			</if>
 		</trim>
 	</select>
 
@@ -49,9 +52,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="where" prefixOverrides="and|or">
 			<if test="name!=null and name!=''">and name like concat('%',#{name},'%')</if>
 			<if test="yes!=null and yes!=''">and yes=#{yes}</if>
+			<if test="registerTime!=null and registerTime!=''">
+				<![CDATA[ AND createDate between DATE_ADD(NOW(), INTERVAL  -${registerTime} DAY) and NOW()  ]]>
+			</if>
 		</trim>
-		order by createDate 
-		limit #{indexPage},#{pagesize}
+		order by createDate
+		<if test="indexPage!=null and pagesize!=null">
+			limit #{indexPage},#{pagesize}
+		</if>
 	</select>
 
 	<delete id="deleteById" parameterType="String">
